@@ -1,0 +1,15 @@
+---
+title: "final_project_proposal"
+author: "Stella Koo"
+date: "2024-10-31"
+output: github_document
+---
+
+The group members (names and UNIs)
+The tentative project title
+The motivation for this project
+The intended final products
+The anticipated data sources
+The planned analyses / visualizations / coding challenges
+The planned timeline
+
