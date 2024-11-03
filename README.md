@@ -1,5 +1,7 @@
-group member:
+## Group Members
+Stella Koo
 
-question to discuss:
+## General Topic
 
-general topic:
+## Questions to discuss
+
