@@ -14,25 +14,25 @@ The planned analyses / visualizations / coding challenges
 The planned timeline
 
 ```{r import data author: Yixin Zheng}
-save_path <- "~/Desktop/Data Science/Final/final project/data"
+save_path <- "./data"
 
 column_names <- c("age", "sex", "cp", "trestbps", "chol", "fbs", 
                   "restecg", "thalach", "exang", "oldpeak", "slope", 
                   "ca", "thal", "num")
 
-data <- read.table("~/Desktop/Data Science/Final/final project/heart+disease/processed.cleveland.data", sep = ",", header = FALSE)
+data <- read.table("./heart+disease/processed.cleveland.data", sep = ",", header = FALSE)
 colnames(data) <- column_names
 write.csv(data, file.path(save_path, "cleveland.csv"), row.names = FALSE)
 
-data <- read.table("~/Desktop/Data Science/Final/final project/heart+disease/processed.hungarian.data", sep = ",", header = FALSE)
+data <- read.table("./heart+disease/processed.hungarian.data", sep = ",", header = FALSE)
 colnames(data) <- column_names
 write.csv(data, file.path(save_path, "hungarian.csv"), row.names = FALSE)
 
-data <- read.table("~/Desktop/Data Science/Final/final project/heart+disease/processed.va.data", sep = ",", header = FALSE)
+data <- read.table("./heart+disease/processed.va.data", sep = ",", header = FALSE)
 colnames(data) <- column_names
 write.csv(data, file.path(save_path, "long_beach_va.csv"), row.names = FALSE)
 
-data <- read.table("~/Desktop/Data Science/Final/final project/heart+disease/processed.switzerland.data", sep = ",", header = FALSE)
+data <- read.table("./heart+disease/processed.switzerland.data", sep = ",", header = FALSE)
 colnames(data) <- column_names
 write.csv(data, file.path(save_path, "switzerland.csv"), row.names = FALSE)
 
