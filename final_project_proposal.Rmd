@@ -18,29 +18,26 @@ Stella Koo (bk2959)
 
 
 ## Data Sources
-```{r import data author: Yixin Zheng}
+```{r import data author: Yixin Zheng, Stella Koo}
 save_path <- "./data"
 
 column_names <- c("age", "sex", "cp", "trestbps", "chol", "fbs", 
                   "restecg", "thalach", "exang", "oldpeak", "slope", 
                   "ca", "thal", "num")
 
-data <- read.table("./heart+disease/processed.cleveland.data", sep = ",", header = FALSE)
-colnames(data) <- column_names
-write.csv(data, file.path(save_path, "cleveland.csv"), row.names = FALSE)
+process_data <- function(file_path, save_name) {
 
-data <- read.table("./heart+disease/processed.hungarian.data", sep = ",", header = FALSE)
-colnames(data) <- column_names
-write.csv(data, file.path(save_path, "hungarian.csv"), row.names = FALSE)
+    data <- read.table(file_path, sep = ",", header = FALSE)
+    
+    colnames(data) <- column_names
+    
+    write.csv(data, file.path(save_path, save_name), row.names = FALSE)
+}
 
-data <- read.table("./heart+disease/processed.va.data", sep = ",", header = FALSE)
-colnames(data) <- column_names
-write.csv(data, file.path(save_path, "long_beach_va.csv"), row.names = FALSE)
-
-data <- read.table("./heart+disease/processed.switzerland.data", sep = ",", header = FALSE)
-colnames(data) <- column_names
-write.csv(data, file.path(save_path, "switzerland.csv"), row.names = FALSE)
-
+process_data("./heart+disease/processed.cleveland.data", "cleveland.csv")
+process_data("./heart+disease/processed.hungarian.data", "hungarian.csv")
+process_data("./heart+disease/processed.va.data", "long_beach_va.csv")
+process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
 ```
 
 ## Planned analyses, Visualizations, Coding Challenges
