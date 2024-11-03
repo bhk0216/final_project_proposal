@@ -1,24 +1,21 @@
----
-title: "Final Project Proposal"
-author: "Stella Koo"
-date: "2024-10-31"
-output: github_document
----
+Final Project Proposal
+================
+Stella Koo
+2024-10-31
 
 ## Group members (names and UNIs)
+
 Stella Koo (bk2959)
 
 ## Project Title
 
-
 ## Motivation
-
 
 ## Intended Final Products
 
-
 ## Data Sources
-```{r import data author: Yixin Zheng}
+
+``` r
 save_path <- "./data"
 
 column_names <- c("age", "sex", "cp", "trestbps", "chol", "fbs", 
@@ -40,11 +37,8 @@ write.csv(data, file.path(save_path, "long_beach_va.csv"), row.names = FALSE)
 data <- read.table("./heart+disease/processed.switzerland.data", sep = ",", header = FALSE)
 colnames(data) <- column_names
 write.csv(data, file.path(save_path, "switzerland.csv"), row.names = FALSE)
-
 ```
 
 ## Planned analyses, Visualizations, Coding Challenges
 
-
 ## Planned Timeline
-
