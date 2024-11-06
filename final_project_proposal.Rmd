@@ -18,7 +18,7 @@ The Influence of Diagnostic Attributes on Heart Disease Across Regions (with Var
 
 
 ## Data Sources (Stella)
-The Heart Disease datasets were obtained from UC Irvine's Machine Learning Repository that can be accessed [here](https://archive.ics.uci.edu/dataset/45/heart+disease). This directory includes four datasets related to heart disease diagnosis, with all attributes represented as numeric values. The data was gathered from the following four locations:
+The Heart Disease datasets were obtained from UC Irvine's Machine Learning Repository that can be accessed [here](https://archive.ics.uci.edu/dataset/45/heart+disease). This directory contains four datasets focused on heart disease diagnosis, each representing a distinct geographic location and with attributes recorded as numeric values. The data was gathered from the following four locations:
 
     1. Cleveland Clinic Foundation (cleveland.data)
     2. Hungarian Institute of Cardiology, Budapest (hungarian.data) 
