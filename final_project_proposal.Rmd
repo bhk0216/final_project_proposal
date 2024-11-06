@@ -10,7 +10,10 @@ Stella Koo (bk2959)
 Yixin Zheng (yz4993)
 
 ## Project Title
-
+   1. Cleveland Clinic Foundation (cleveland.data)
+     2. Hungarian Institute of Cardiology, Budapest (hungarian.data)
+     3. V.A. Medical Center, Long Beach, CA (long-beach-va.data)
+     4. University Hospital, Zurich, Switzerland (switzerland.data)
 
 ## Motivation
 
