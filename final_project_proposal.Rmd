@@ -16,7 +16,9 @@ Yixin Zheng (yz4993)
      4. University Hospital, Zurich, Switzerland (switzerland.data)
 
 ## Motivation
+Exploring the Impact of Different (WE HAVE TO SPECIFY) Variables on Heart Disease Across Locations of Varying Development Levels
 
+* How do the effects of various risk factors for heart disease vary across locations with different levels of development?
 
 ## Intended Final Products
 
