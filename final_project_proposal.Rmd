@@ -9,21 +9,23 @@ output: github_document
 Stella Koo (bk2959)
 Yixin Zheng (yz4993)
 
-## Project Title
-   1. Cleveland Clinic Foundation (cleveland.data)
-     2. Hungarian Institute of Cardiology, Budapest (hungarian.data)
-     3. V.A. Medical Center, Long Beach, CA (long-beach-va.data)
-     4. University Hospital, Zurich, Switzerland (switzerland.data)
+## Project Title 
+Exploring the Impact of Different (WE HAVE TO SPECIFY) Variables on Heart Disease Across Locations (Based on Development Levels or Climate Groups?)
 
-## Motivation
-Exploring the Impact of Different (WE HAVE TO SPECIFY) Variables on Heart Disease Across Locations of Varying Development Levels
+* How do the effects of various risk factors for heart disease vary across locations?
 
-* How do the effects of various risk factors for heart disease vary across locations with different levels of development?
-
-## Intended Final Products
+## Motivation (Ian)
 
 
-## Data Sources
+## Intended Final Products (Yixin)
+
+
+## Data Sources (Stella)
+    1. Cleveland Clinic Foundation (cleveland.data) 06MAR1990
+    2. Hungarian Institute of Cardiology, Budapest (hungarian.data) 14AUG1991
+    3. V.A. Medical Center, Long Beach, CA (long-beach-va.data) 14AUG1991
+    4. University Hospital, Zurich, Switzerland (switzerland.data) 14AUG1991
+    
 ```{r import data author: Yixin Zheng, Stella Koo}
 save_path <- "./data"
 
@@ -46,8 +48,15 @@ process_data("./heart+disease/processed.va.data", "long_beach_va.csv")
 process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
 ```
 
-## Planned analyses, Visualizations, Coding Challenges
+## Planned analyses, Visualizations, Coding Challenges (Thomas, Yonghao)
+* Linear Regression Model 
+    * Diagnostics: Check assumptions for linear regression
+    * Address hypothesis, R squared value
+    * QQ Plot
+* Correlation Heatmap
+* Interactive Variables
+* Exploratory Analysis (Graphic Displays)
+Try different approaches (maybe merge Cleveland and Long Beach, both same country) and check which approach works better.
 
-
-## Planned Timeline
+## Planned Timeline (Stella)
 
