@@ -124,15 +124,7 @@ process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
     * Convert '?' to NaNs, handle missing values through imputation or deletion, and ensure consistency in variable types across datasets, especially if merging Cleveland and Long Beach data.
     * Create age groups, examine exercise-induced angina, and introduce other potential interaction terms (e.g., age and cholesterol) that might enhance model predictive accuracy.
     * Explore different metrics (e.g., R-squared, adjusted R-squared) to compare models across datasets and regions, highlighting which approach (e.g., separate vs. merged datasets) performs best.
------------------------------------------------------------------------------------------
-    * Linear Regression Model 
-    * Diagnostics: Check assumptions for linear regression
-    * Address hypothesis, R squared value
-    * QQ Plot
-* Correlation Heatmap
-* Interactive Variables
-* Exploratory Analysis (Graphic Displays)
- Try different approaches (maybe merge Cleveland and Long Beach, both same country) and check which approach works better.
+
 
 ## Planned Timeline (Stella)
 **November 11th to 17th:** 
