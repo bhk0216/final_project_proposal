@@ -6,7 +6,7 @@ output: github_document
 ---
 
 ## Group members (names and UNIs)
-Stella Koo (bk2959), Yixin Zheng (yz4993)，Thomas Tang (tt3022) 
+Stella Koo (bk2959), Yixin Zheng (yz4993)，Thomas Tang (tt3022), Yanhao Shen(ys3875)
 
 ## Project Title 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions (with Varying on Development Levels or Climate Groups?)
@@ -23,7 +23,11 @@ Alternative Title/Questions and Analysis Ideas:
 4. Examining Predictive Power of Clinical Indicators for Heart Disease in Diverse Populations: predictive accuracy of clinical indicators (like cholesterol, blood pressure) for heart disease across various demographics.
 
 ## Motivation (Ian)
+Heart disease continues to be one of the primary causes of death globally, presenting diverse challenges across different regions, each with its unique set of risk factors. While medical advancements have improved diagnostic methods, there remain significant disparities in healthcare access and diagnostic accuracy, particularly in low-resource regions. These disparities can be exacerbated by environmental factors, such as climate and lifestyle, as well as varying levels of healthcare infrastructure and socioeconomic conditions.
 
+This project seeks to explore the predictive power of clinical indicators across multiple regions with diverse developmental and environmental backgrounds. By leveraging datasets from four geographically distinct regions (the U.S., Hungary, and Switzerland) in the [UCI Heart Disease dataset](https://archive.ics.uci.edu/dataset/45/heart+disease), we aim to determine whether certain diagnostic features (such as cholesterol levels, blood pressure, and exercise induced angina) demonstrate stronger associations with heart disease in some regions compared to others. Additionally, understanding these differences could enable us to design targeted interventions and improve diagnostic tools, making heart disease detection more adaptable to diverse settings.
+
+In the era where data-driven insights are reshaping healthcare, we hope this project could provide accurate predictive models that are adaptable to diverse settings, which can support early intervention and potentially save lives across a wide array of populations and regions.
 
 ## Intended Final Products (Yixin)
 

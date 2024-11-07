@@ -5,14 +5,70 @@ Stella Koo
 
 ## Group members (names and UNIs)
 
-Stella Koo (bk2959), Yixin Zheng (yz4993)
+Stella Koo (bk2959), Yixin Zheng (yz4993)，Thomas Tang (tt3022), Yanhao
+Shen(ys3875)
 
 ## Project Title
 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions
 (with Varying on Development Levels or Climate Groups?)
 
+\*Challenge: Climate Data: To analyze by climate, we would need climate
+classification data or average environmental conditions (temperature,
+humidity) that can be associated with each region. While this is
+technically possible, finding or linking appropriate climate data for
+each location in the heart disease dataset may require additional data
+collection and preprocessing.
+
+Development Level Data: Development level, often assessed using
+indicators like GDP per capita would similarly require obtaining
+additional socioeconomic data specific to each region. Matching these
+indicators to the heart disease dataset’s geographic locations would add
+complexity and require control for multiple factors.
+
+Alternative Title/Questions and Analysis Ideas: 1. Comparing Diagnostic
+Factors for Heart Disease Across Regions: explore whether certain
+diagnostic factors (e.g., cholesterol levels, exercise-induced angina)
+are more predictive of heart disease in one region compared to others.
+2. The Influence of Age and Lifestyle Factors on Heart Disease Across
+International Datasets: narrows down the analysis to age and
+lifestyle-related variables (e.g., chest pain type, cholesterol,
+exercise-induced angina). 3. Regional Patterns in Heart Disease
+Diagnostic Attributes: focusing on comparing the prevalence and
+distribution of key diagnostic attributes (like age, cholesterol, etc.)
+across the four datasets. 4. Examining Predictive Power of Clinical
+Indicators for Heart Disease in Diverse Populations: predictive accuracy
+of clinical indicators (like cholesterol, blood pressure) for heart
+disease across various demographics.
+
 ## Motivation (Ian)
+
+Heart disease continues to be one of the primary causes of death
+globally, presenting diverse challenges across different regions, each
+with its unique set of risk factors. While medical advancements have
+improved diagnostic methods, there remain significant disparities in
+healthcare access and diagnostic accuracy, particularly in low-resource
+regions. These disparities can be exacerbated by environmental factors,
+such as climate and lifestyle, as well as varying levels of healthcare
+infrastructure and socioeconomic conditions.
+
+This project seeks to explore the predictive power of clinical
+indicators across multiple regions with diverse developmental and
+environmental backgrounds. By leveraging datasets from four
+geographically distinct regions (the U.S., Hungary, and Switzerland) in
+the [UCI Heart Disease
+dataset](https://archive.ics.uci.edu/dataset/45/heart+disease), we aim
+to determine whether certain diagnostic features (such as cholesterol
+levels, blood pressure, and exercise induced angina) demonstrate
+stronger associations with heart disease in some regions compared to
+others. Additionally, understanding these differences could enable us to
+design targeted interventions and improve diagnostic tools, making heart
+disease detection more adaptable to diverse settings.
+
+In the era where data-driven insights are reshaping healthcare, we hope
+this project could provide accurate predictive models that are adaptable
+to diverse settings, which can support early intervention and
+potentially save lives across a wide array of populations and regions.
 
 ## Intended Final Products (Yixin)
 
@@ -59,9 +115,83 @@ under consideration.
 
 ## Planned analyses, Visualizations, Coding Challenges (Thomas, Yonghao)
 
-- Linear Regression Model
+- Exploratory Data Analysis (EDA):
+  - Graphic Displays: Use histograms, density plots, and box plots to
+    visualize distributions of key variables, such as cholesterol, age,
+    thalach (maximum heart rate), and compare distributions between
+    those with and without heart disease.
+  - Correlation Analysis: Create a correlation heatmap to identify
+    relationships between variables and detect multicollinearity,
+    especially for predictors that may be used in regression models.
+- Linear Regression Model:
+  - Model Goal: Assess the relationship between continuous clinical
+    features (e.g., cholesterol, age, trestbps) and heart disease risk
+    scores (or likelihood of heart disease as defined by num).
+  - Diagnostics and Assumptions:
+    - Check assumptions of linear regression (normality,
+      homoscedasticity, independence) to validate model appropriateness.
+      For example, plot residuals to check for constant variance and use
+      variance inflation factor (VIF) to check for multicollinearity.
+    - R-squared Analysis: Evaluate the R-squared and adjusted R-squared
+      values to determine how well the model explains variance in heart
+      disease risk scores.
+    - Hypothesis Testing: Perform significance tests on model
+      coefficients to evaluate each predictor’s impact on the dependent
+      variable.
+    - QQ Plot: Use a QQ plot to visually inspect normality of residuals,
+      which supports the model’s reliability.
+- Comparative Approaches:
+  - Combining Cleveland and Long Beach Data: Since both datasets are
+    from the U.S., merge these two datasets to assess if a larger
+    combined sample improves model performance compared to analyzing
+    each separately.
+  - Model Comparisons: Compare predictive power and variable
+    significance across regions to see if combining datasets yields
+    better insights or predictive accuracy.
+- Visualizations
+  1.  Correlation Heatmap: \* Variables to Include: Age, cholesterol
+      (chol), resting blood pressure (trestbps), maximum heart rate
+      achieved (thalach), ST depression induced by exercise (oldpeak),
+      and number of major vessels colored by fluoroscopy (ca). \*
+      Purpose: This heatmap will help identify the relationships between
+      these key clinical variables, guiding decisions on which variables
+      to include in predictive models and flagging any multicollinearity
+      issues.
+  2.  Interactive Variables Visualization: Primary Variables:
+      - Age vs. Maximum Heart Rate (thalach): Use this to explore how
+        age relates to heart rate, and color points based on heart
+        disease status (num) for additional insight.
+      - Age vs. ST Depression (oldpeak): This can reveal if age affects
+        exercise-induced ST depression differently for those with and
+        without heart disease.
+      - Purpose: Scatter plots provide an interactive way to explore
+        relationships between continuous variables, making it easier to
+        detect patterns by heart disease status.
+  3.  QQ Plot and Residual Plots: Diagnostic plots, including a QQ plot,
+      will assess model assumptions. Residual vs. fitted value plots can
+      further validate if linear model assumptions hold.
+  4.  Histograms or Density Plots for Distribution Insights
+      - Variables:Age, Cholesterol (chol), num
+      - Purpose: These plots allow you to assess the general
+        distribution of variables and identify any outliers or unusual
+        patterns that could impact model accuracy.
+- Coding Challenges:
+  - Convert ‘?’ to NaNs, handle missing values through imputation or
+    deletion, and ensure consistency in variable types across datasets,
+    especially if merging Cleveland and Long Beach data.
+
+  - Create age groups, examine exercise-induced angina, and introduce
+    other potential interaction terms (e.g., age and cholesterol) that
+    might enhance model predictive accuracy.
+
+  - ## Explore different metrics (e.g., R-squared, adjusted R-squared) to compare models across datasets and regions, highlighting which approach (e.g., separate vs. merged datasets) performs best.
+
+  - Linear Regression Model
+
   - Diagnostics: Check assumptions for linear regression
+
   - Address hypothesis, R squared value
+
   - QQ Plot
 - Correlation Heatmap
 - Interactive Variables
