@@ -1,9 +1,8 @@
 ---
 title: "Final Project Proposal"
-author: "Stella Koo Yixin Zheng"
+author: "Stella Koo, Yixin Zheng, Thomas Tang, Yonghao YU, "
 date: "2024-10-31"
 output:
-  pdf_document: default
   github_document: default
 ---
 
@@ -13,7 +12,7 @@ Stella Koo (bk2959), Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3
 ## Project Title 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions (with Varying on Development Levels or Climate Groups?)
 
-*Challenge:
+* Challenge:
 Climate Data: To analyze by climate, we would need climate classification data or average environmental conditions (temperature, humidity) that can be associated with each region. While this is technically possible, finding or linking appropriate climate data for each location in the heart disease dataset may require additional data collection and preprocessing.
 
 Development Level Data: Development level, often assessed using indicators like GDP per capita would similarly require obtaining additional socioeconomic data specific to each region. Matching these indicators to the heart disease dataset’s geographic locations would add complexity and require control for multiple factors.

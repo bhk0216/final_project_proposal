@@ -1,23 +1,24 @@
 Final Project Proposal
 ================
-Stella Koo
+Stella Koo, Yixin Zheng, Thomas Tang, Yonghao YU,
 2024-10-31
 
 ## Group members (names and UNIs)
 
-Stella Koo (bk2959), Yixin Zheng (yz4993)，Thomas Tang (tt3022)
+Stella Koo (bk2959), Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao
+YU (yy3564)
 
 ## Project Title
 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions
 (with Varying on Development Levels or Climate Groups?)
 
-\*Challenge: Climate Data: To analyze by climate, we would need climate
-classification data or average environmental conditions (temperature,
-humidity) that can be associated with each region. While this is
-technically possible, finding or linking appropriate climate data for
-each location in the heart disease dataset may require additional data
-collection and preprocessing.
+- Challenge: Climate Data: To analyze by climate, we would need climate
+  classification data or average environmental conditions (temperature,
+  humidity) that can be associated with each region. While this is
+  technically possible, finding or linking appropriate climate data for
+  each location in the heart disease dataset may require additional data
+  collection and preprocessing.
 
 Development Level Data: Development level, often assessed using
 indicators like GDP per capita would similarly require obtaining
@@ -135,24 +136,23 @@ under consideration.
   - Diagnostics and Assumptions:
     - Check assumptions of linear regression (normality,
       homoscedasticity, independence) to validate model appropriateness.
-      For example, plot residuals to check for constant variance and use
-      variance inflation factor (VIF) to check for multicollinearity.
-    - R-squared Analysis: Evaluate the R-squared and adjusted R-squared
-      values to determine how well the model explains variance in heart
-      disease risk scores.
-    - Hypothesis Testing: Perform significance tests on model
+      (For example, plot residuals to check for constant variance and
+      use variance inflation factor (VIF) to check for
+      multicollinearity.)
+    - Analysis of our model: Perform hypothesis testing on model
       coefficients to evaluate each predictor’s impact on the dependent
-      variable.
+      variable and evaluate the R-squared and adjusted R-squared values
+      to determine how well the model explains variance in heart disease
+      risk scores.
     - QQ Plot: Use a QQ plot to visually inspect normality of residuals,
       which supports the model’s reliability.
-- Comparative Approaches:
-  - Combining Cleveland and Long Beach Data: Since both datasets are
-    from the U.S., merge these two datasets to assess if a larger
-    combined sample improves model performance compared to analyzing
-    each separately.
-  - Model Comparisons: Compare predictive power and variable
-    significance across regions to see if combining datasets yields
-    better insights or predictive accuracy.
+- Comparative Approach:
+  - Combine Cleveland and Long Beach Data and do model comparison: Since
+    both datasets are from the U.S., merge these two datasets to assess
+    if a larger combined sample improves model performance compared to
+    analyzing each separately, then compare predictive power and
+    variable significance across regions to see if combining datasets
+    yields better insights or predictive accuracy.
 - Visualizations
   1.  Correlation Heatmap: \* Variables to Include: Age, cholesterol
       (chol), resting blood pressure (trestbps), maximum heart rate
