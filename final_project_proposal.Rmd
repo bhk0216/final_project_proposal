@@ -1,12 +1,14 @@
 ---
 title: "Final Project Proposal"
-author: "Stella Koo"
+author: "Stella Koo Yixin Zheng"
 date: "2024-10-31"
-output: github_document
+output:
+  pdf_document: default
+  github_document: default
 ---
 
 ## Group members (names and UNIs)
-Stella Koo (bk2959), Yixin Zheng (yz4993)，Thomas Tang (tt3022) 
+Stella Koo (bk2959), Yixin Zheng (yz4993), Thomas Tang (tt3022) 
 
 ## Project Title 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions (with Varying on Development Levels or Climate Groups?)
