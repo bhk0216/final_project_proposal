@@ -63,9 +63,7 @@ dataset](https://archive.ics.uci.edu/dataset/45/heart+disease), we aim
 to determine whether certain diagnostic features (such as cholesterol
 levels, blood pressure, and exercise induced angina) demonstrate
 stronger associations with heart disease in some regions compared to
-others. Additionally, understanding these differences could enable us to
-design targeted interventions and improve diagnostic tools, making heart
-disease detection more adaptable to diverse settings.
+others.
 
 In the era where data-driven insights are reshaping healthcare, we hope
 this project could provide accurate predictive models that are adaptable
