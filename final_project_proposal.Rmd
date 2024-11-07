@@ -6,7 +6,7 @@ output: github_document
 ---
 
 ## Group members (names and UNIs)
-Stella Koo (bk2959), Yixin Zheng (yz4993)  
+Stella Koo (bk2959), Yixin Zheng (yz4993)，Thomas Tang (tt3022) 
 
 ## Project Title 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions (with Varying on Development Levels or Climate Groups?)
@@ -67,14 +67,40 @@ process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
 ```
 
 ## Planned analyses, Visualizations, Coding Challenges (Thomas, Yonghao)
-* Linear Regression Model 
+
+* Exploratory Data Analysis (EDA):
+    * Graphic Displays: Use histograms, density plots, and box plots to visualize distributions of key variables, such as cholesterol, age, thalach (maximum heart rate), and compare distributions between those with and without heart disease.
+    * Correlation Analysis: Create a correlation heatmap to identify relationships between variables and detect multicollinearity, especially for predictors that may be used in regression models.
+    
+* Linear Regression Model:
+    * Model Goal: Assess the relationship between continuous clinical features (e.g., cholesterol, age, trestbps) and heart disease risk scores (or likelihood of heart disease as defined by num).
+    * Diagnostics and Assumptions:
+        * Check assumptions of linear regression (normality, homoscedasticity, independence) to validate model appropriateness. For example, plot residuals to check for constant variance and use variance inflation factor (VIF) to check for multicollinearity.
+        * R-squared Analysis: Evaluate the R-squared and adjusted R-squared values to determine how well the model explains variance in heart disease risk scores.
+        * Hypothesis Testing: Perform significance tests on model coefficients to evaluate each predictor's impact on the dependent variable.
+        * QQ Plot: Use a QQ plot to visually inspect normality of residuals, which supports the model’s reliability.
+* Comparative Approaches:
+    * Combining Cleveland and Long Beach Data: Since both datasets are from the U.S., merge these two datasets to assess if a larger combined sample improves model performance compared to analyzing each separately.
+    * Model Comparisons: Compare predictive power and variable significance across regions to see if combining datasets yields better insights or predictive accuracy.        
+    
+* Visualizations
+    * Correlation Heatmap: A heatmap will highlight correlations between variables, helping to identify pairs of features that might be redundant due to high correlation. This can guide feature selection and highlight which variables are more informative for predicting heart disease.
+    * Interactive Variables Visualization: Use Plotly for interactive scatter plots and box plots, enabling deeper exploration of specific relationships (e.g., thalach vs. age, categorized by presence or absence of heart disease). This allows users to explore the data dynamically, focusing on specific variables or subgroups.
+    * QQ Plot and Residual Plots: Diagnostic plots, including a QQ plot, will assess model assumptions. Residual vs. fitted value plots can further validate if linear model assumptions hold.    
+    
+* Coding Challenges:
+    * Convert '?' to NaNs, handle missing values through imputation or deletion, and ensure consistency in variable types across datasets, especially if merging Cleveland and Long Beach data.
+    * Create age groups, examine exercise-induced angina, and introduce other potential interaction terms (e.g., age and cholesterol) that might enhance model predictive accuracy.
+    * Explore different metrics (e.g., R-squared, adjusted R-squared) to compare models across datasets and regions, highlighting which approach (e.g., separate vs. merged datasets) performs best.
+    
+    * Linear Regression Model 
     * Diagnostics: Check assumptions for linear regression
     * Address hypothesis, R squared value
     * QQ Plot
 * Correlation Heatmap
 * Interactive Variables
 * Exploratory Analysis (Graphic Displays)
-Try different approaches (maybe merge Cleveland and Long Beach, both same country) and check which approach works better.
+ Try different approaches (maybe merge Cleveland and Long Beach, both same country) and check which approach works better.
 
 ## Planned Timeline (Stella)
 **November 11th to 17th:** 
