@@ -8,7 +8,7 @@ output:
 ---
 
 ## Group members (names and UNIs)
-Stella Koo (bk2959), Yixin Zheng (yz4993), Thomas Tang (tt3022) 
+Stella Koo (bk2959), Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564) 
 
 ## Project Title 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions (with Varying on Development Levels or Climate Groups?)
@@ -100,13 +100,11 @@ process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
 * Linear Regression Model:
     * Model Goal: Assess the relationship between continuous clinical features (e.g., cholesterol, age, trestbps) and heart disease risk scores (or likelihood of heart disease as defined by num).
     * Diagnostics and Assumptions:
-        * Check assumptions of linear regression (normality, homoscedasticity, independence) to validate model appropriateness. For example, plot residuals to check for constant variance and use variance inflation factor (VIF) to check for multicollinearity.
-        * R-squared Analysis: Evaluate the R-squared and adjusted R-squared values to determine how well the model explains variance in heart disease risk scores.
-        * Hypothesis Testing: Perform significance tests on model coefficients to evaluate each predictor's impact on the dependent variable.
-        * QQ Plot: Use a QQ plot to visually inspect normality of residuals, which supports the model’s reliability.
-* Comparative Approaches:
-    * Combining Cleveland and Long Beach Data: Since both datasets are from the U.S., merge these two datasets to assess if a larger combined sample improves model performance compared to analyzing each separately.
-    * Model Comparisons: Compare predictive power and variable significance across regions to see if combining datasets yields better insights or predictive accuracy.        
+        * Check assumptions of linear regression (normality, homoscedasticity, independence) to validate model appropriateness. (For example, plot residuals to check for constant variance and use variance inflation factor (VIF) to check for multicollinearity.)
+        * Analysis of our model: Perform hypothesis testing on model coefficients to evaluate each predictor's impact on the dependent variable and evaluate the R-squared and adjusted R-squared values to determine how well the model explains variance in heart disease risk scores.
+        * QQ Plot: Use a QQ plot to visually inspect normality of residuals, which supports the model's reliability.
+* Comparative Approach:
+    * Combine Cleveland and Long Beach Data and do model comparison: Since both datasets are from the U.S., merge these two datasets to assess if a larger combined sample improves model performance compared to analyzing each separately, then compare predictive power and variable significance across regions to see if combining datasets yields better insights or predictive accuracy.
     
 * Visualizations
     1. Correlation Heatmap:
@@ -121,7 +119,6 @@ process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
     4. Histograms or Density Plots for Distribution Insights
         * Variables:Age, Cholesterol (chol), num
         * Purpose: These plots allow you to assess the general distribution of variables and identify any outliers or unusual patterns that could impact model accuracy.
-    
     
 * Coding Challenges:
     * Convert '?' to NaNs, handle missing values through imputation or deletion, and ensure consistency in variable types across datasets, especially if merging Cleveland and Long Beach data.
