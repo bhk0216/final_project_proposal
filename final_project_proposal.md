@@ -1,12 +1,12 @@
 Final Project Proposal
 ================
-Stella Koo, Yixin Zheng, Thomas Tang, Yonghao YU,
+Stella Koo, Yixin Zheng, Thomas Tang, Yonghao YU, Yanhao Shen
 2024-10-31
 
 ## Group members (names and UNIs)
 
 Stella Koo (bk2959), Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao
-YU (yy3564)
+YU (yy3564), Yanhao Shen (ys3875)
 
 ## Project Title
 
@@ -42,6 +42,33 @@ of clinical indicators (like cholesterol, blood pressure) for heart
 disease across various demographics.
 
 ## Motivation (Ian)
+
+Heart disease continues to be one of the primary causes of death
+globally, presenting diverse challenges across different regions, each
+with its unique set of risk factors. While medical advancements have
+improved diagnostic methods, there remain significant disparities in
+healthcare access and diagnostic accuracy, particularly in low-resource
+regions. These disparities can be exacerbated by environmental factors,
+such as climate and lifestyle, as well as varying levels of healthcare
+infrastructure and socioeconomic conditions.
+
+This project seeks to explore the predictive power of clinical
+indicators across multiple regions with diverse developmental and
+environmental backgrounds. By leveraging datasets from four
+geographically distinct regions (the U.S., Hungary, and Switzerland) in
+the [UCI Heart Disease
+dataset](https://archive.ics.uci.edu/dataset/45/heart+disease), we aim
+to determine whether certain diagnostic features (such as cholesterol
+levels, blood pressure, and exercise induced angina) demonstrate
+stronger associations with heart disease in some regions compared to
+others. Additionally, understanding these differences could enable us to
+design targeted interventions and improve diagnostic tools, making heart
+disease detection more adaptable to diverse settings.
+
+In the era where data-driven insights are reshaping healthcare, we hope
+this project could provide accurate predictive models that are adaptable
+to diverse settings, which can support early intervention and
+potentially save lives across a wide array of populations and regions.
 
 ## Intended Final Products (Yixin)
 
@@ -184,25 +211,12 @@ under consideration.
   - Convert ‘?’ to NaNs, handle missing values through imputation or
     deletion, and ensure consistency in variable types across datasets,
     especially if merging Cleveland and Long Beach data.
-
   - Create age groups, examine exercise-induced angina, and introduce
     other potential interaction terms (e.g., age and cholesterol) that
     might enhance model predictive accuracy.
-
-  - ## Explore different metrics (e.g., R-squared, adjusted R-squared) to compare models across datasets and regions, highlighting which approach (e.g., separate vs. merged datasets) performs best.
-
-  - Linear Regression Model
-
-  - Diagnostics: Check assumptions for linear regression
-
-  - Address hypothesis, R squared value
-
-  - QQ Plot
-- Correlation Heatmap
-- Interactive Variables
-- Exploratory Analysis (Graphic Displays) Try different approaches
-  (maybe merge Cleveland and Long Beach, both same country) and check
-  which approach works better.
+  - Explore different metrics (e.g., R-squared, adjusted R-squared) to
+    compare models across datasets and regions, highlighting which
+    approach (e.g., separate vs. merged datasets) performs best.
 
 ## Planned Timeline (Stella)
 
