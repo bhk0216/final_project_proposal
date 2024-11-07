@@ -13,12 +13,14 @@ YU (yy3564), Yanhao Shen (ys3875)
 The Influence of Diagnostic Attributes on Heart Disease Across Regions
 (with Varying on Development Levels or Climate Groups?)
 
-- Challenge: Climate Data: To analyze by climate, we would need climate
-  classification data or average environmental conditions (temperature,
-  humidity) that can be associated with each region. While this is
-  technically possible, finding or linking appropriate climate data for
-  each location in the heart disease dataset may require additional data
-  collection and preprocessing.
+- Challenge:
+
+Climate Data: To analyze by climate, we would need climate
+classification data or average environmental conditions (temperature,
+humidity) that can be associated with each region. While this is
+technically possible, finding or linking appropriate climate data for
+each location in the heart disease dataset may require additional data
+collection and preprocessing.
 
 Development Level Data: Development level, often assessed using
 indicators like GDP per capita would similarly require obtaining
@@ -181,14 +183,15 @@ under consideration.
     variable significance across regions to see if combining datasets
     yields better insights or predictive accuracy.
 - Visualizations
-  1.  Correlation Heatmap: \* Variables to Include: Age, cholesterol
-      (chol), resting blood pressure (trestbps), maximum heart rate
-      achieved (thalach), ST depression induced by exercise (oldpeak),
-      and number of major vessels colored by fluoroscopy (ca). \*
-      Purpose: This heatmap will help identify the relationships between
-      these key clinical variables, guiding decisions on which variables
-      to include in predictive models and flagging any multicollinearity
-      issues.
+  1.  Correlation Heatmap:
+      - Variables to Include: Age, cholesterol (chol), resting blood
+        pressure (trestbps), maximum heart rate achieved (thalach), ST
+        depression induced by exercise (oldpeak), and number of major
+        vessels colored by fluoroscopy (ca).
+      - Purpose: This heatmap will help identify the relationships
+        between these key clinical variables, guiding decisions on which
+        variables to include in predictive models and flagging any
+        multicollinearity issues.
   2.  Interactive Variables Visualization: Primary Variables:
       - Age vs. Maximum Heart Rate (thalach): Use this to explore how
         age relates to heart rate, and color points based on heart
