@@ -1,19 +1,20 @@
 Final Project Proposal
 ================
-Stella Koo
+Stella Koo, Yixin Zheng, Thomas Tang, Yonghao YU, Yanhao Shen
 2024-10-31
 
 ## Group members (names and UNIs)
-
-Stella Koo (bk2959), Yixin Zheng (yz4993)，Thomas Tang (tt3022), Yanhao
-Shen(ys3875)
+Stella Koo (bk2959), Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao
+YU (yy3564), Yanhao Shen (ys3875)
 
 ## Project Title
 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions
 (with Varying on Development Levels or Climate Groups?)
 
-\*Challenge: Climate Data: To analyze by climate, we would need climate
+- Challenge:
+
+Climate Data: To analyze by climate, we would need climate 
 classification data or average environmental conditions (temperature,
 humidity) that can be associated with each region. While this is
 technically possible, finding or linking appropriate climate data for
@@ -71,6 +72,39 @@ to diverse settings, which can support early intervention and
 potentially save lives across a wide array of populations and regions.
 
 ## Intended Final Products (Yixin)
+
+1.  Website: A user-friendly website to display our findings with
+    interactive features, such as a density map and a R-SHINY tool to
+    predict individual heart disease risk. The website will include
+    things like following:
+
+- Homepage: Introduction to the project, motivation, data sources, and
+  some questions.
+- Data Exploration: Interactive visualizations of key diagnostic factors
+  with options to filter by heart disease status and region.
+- Comparative Analysis: Visualizations comparing the significance and
+  distribution of heart disease predictors across regions, including
+  correlation heatmaps and scatter plots etc.
+- Model Insights: Diagnostic plots to assess model assumptions. Summary
+  of model results, showcasing the most predictive attributes in each
+  region.
+- Conclusion: Summary and takeaway of regional differences in heart
+  disease diagnostics.
+- Tool: Using R’s Shiny to allow for interactive exploration.
+
+2.  Report: A comprehensive report within the website to display our
+    project steps and findings. The report will cover things like:
+    Introduction, Data Processing and Cleaning, Exploratory Data
+    Analysis (EDA), Modeling, Results, Conclusion and Limitations etc.
+
+3.  Video: A brief video walkthrough to introduce our project, explain
+    our motivations, and highlight key findings. This screencast will
+    guide viewers through the website and its interactive features.
+
+4.  Code: A link to our organized GitHub repository will be available on
+    the website, containing all data cleaning, analysis, and
+    visualization code. The repository will include a README file for
+    clear instructions on reproducing our analysis.
 
 ## Data Sources (Stella)
 
@@ -130,6 +164,7 @@ under consideration.
   - Diagnostics and Assumptions:
     - Check assumptions of linear regression (normality,
       homoscedasticity, independence) to validate model appropriateness.
+<<<<<<< HEAD
       For example, plot residuals to check for constant variance and use
       variance inflation factor (VIF) to check for multicollinearity.
     - R-squared Analysis: Evaluate the R-squared and adjusted R-squared
@@ -157,6 +192,35 @@ under consideration.
       these key clinical variables, guiding decisions on which variables
       to include in predictive models and flagging any multicollinearity
       issues.
+=======
+      (For example, plot residuals to check for constant variance and
+      use variance inflation factor (VIF) to check for
+      multicollinearity.)
+    - Analysis of our model: Perform hypothesis testing on model
+      coefficients to evaluate each predictor’s impact on the dependent
+      variable and evaluate the R-squared and adjusted R-squared values
+      to determine how well the model explains variance in heart disease
+      risk scores.
+    - QQ Plot: Use a QQ plot to visually inspect normality of residuals,
+      which supports the model’s reliability.
+- Comparative Approach:
+  - Combine Cleveland and Long Beach Data and do model comparison: Since
+    both datasets are from the U.S., merge these two datasets to assess
+    if a larger combined sample improves model performance compared to
+    analyzing each separately, then compare predictive power and
+    variable significance across regions to see if combining datasets
+    yields better insights or predictive accuracy.
+- Visualizations
+  1.  Correlation Heatmap:
+      - Variables to Include: Age, cholesterol (chol), resting blood
+        pressure (trestbps), maximum heart rate achieved (thalach), ST
+        depression induced by exercise (oldpeak), and number of major
+        vessels colored by fluoroscopy (ca).
+      - Purpose: This heatmap will help identify the relationships
+        between these key clinical variables, guiding decisions on which
+        variables to include in predictive models and flagging any
+        multicollinearity issues.
+>>>>>>> dea3932a3823e157de77e0a2ad795b52dcdafd2c
   2.  Interactive Variables Visualization: Primary Variables:
       - Age vs. Maximum Heart Rate (thalach): Use this to explore how
         age relates to heart rate, and color points based on heart
@@ -179,6 +243,7 @@ under consideration.
   - Convert ‘?’ to NaNs, handle missing values through imputation or
     deletion, and ensure consistency in variable types across datasets,
     especially if merging Cleveland and Long Beach data.
+<<<<<<< HEAD
 
   - Create age groups, examine exercise-induced angina, and introduce
     other potential interaction terms (e.g., age and cholesterol) that
@@ -198,6 +263,14 @@ under consideration.
 - Exploratory Analysis (Graphic Displays) Try different approaches
   (maybe merge Cleveland and Long Beach, both same country) and check
   which approach works better.
+=======
+  - Create age groups, examine exercise-induced angina, and introduce
+    other potential interaction terms (e.g., age and cholesterol) that
+    might enhance model predictive accuracy.
+  - Explore different metrics (e.g., R-squared, adjusted R-squared) to
+    compare models across datasets and regions, highlighting which
+    approach (e.g., separate vs. merged datasets) performs best.
+>>>>>>> dea3932a3823e157de77e0a2ad795b52dcdafd2c
 
 ## Planned Timeline (Stella)
 
