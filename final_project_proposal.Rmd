@@ -11,6 +11,26 @@ Stella Koo (bk2959), Yixin Zheng (yz4993)，Thomas Tang (tt3022)
 ## Project Title 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions (with Varying on Development Levels or Climate Groups?)
 
+*Challenge: 
+Climate Data: To analyze by climate, we would need climate classification data or average environmental conditions (temperature, humidity) that can be associated with each region. While this is technically possible, finding or linking appropriate climate data for each hospital/clinic location in the heart disease dataset may require substantial additional data collection and preprocessing.
+Development Level Data: Development level, often assessed using indicators like GDP per capita would similarly require obtaining additional socioeconomic data specific to each region. Matching these indicators to the heart disease dataset’s geographic locations would add complexity and require control for multiple factors.
+
+
+Assessing the project title, the current phrasing—“The Influence of Diagnostic Attributes on Heart Disease Across Regions: A Comparative Analysis by Development Level or Climate”—is intriguing but may present challenges, especially if development level or climate data is not directly available or easily linked to the heart disease datasets.
+
+Here are some points to consider:
+
+Feasibility Challenges:
+Climate Data: To analyze by climate, you would need climate classification data (e.g., Köppen climate classification) or average environmental conditions (temperature, humidity) that can be associated with each region. While this is technically possible, finding or linking appropriate climate data for each hospital/clinic location in the heart disease dataset may require substantial additional data collection and preprocessing.
+
+Development Level Data: Development level, often assessed using indicators like GDP per capita, Human Development Index (HDI), or healthcare accessibility metrics, would similarly require obtaining additional socioeconomic data specific to each region (e.g., Hungary, Switzerland, Cleveland). Matching these indicators to your heart disease dataset’s geographic locations would add complexity and require you to control for multiple factors.
+
+Alternative Title/Questions and Analysis Ideas:
+1. Comparing Diagnostic Factors for Heart Disease Across Regions:  explore whether certain diagnostic factors (e.g., cholesterol levels, exercise-induced angina) are more predictive of heart disease in one region compared to others.
+2. The Influence of Age and Lifestyle Factors on Heart Disease Across International Datasets: narrows down the analysis to age and lifestyle-related variables (e.g., chest pain type, cholesterol, exercise-induced angina).
+3. Regional Patterns in Heart Disease Diagnostic Attributes: focusing on comparing the prevalence and distribution of key diagnostic attributes (like age, cholesterol, etc.) across the four datasets.
+4. Examining Predictive Power of Clinical Indicators for Heart Disease in Diverse Populations: predictive accuracy of clinical indicators (like cholesterol, blood pressure) for heart disease across various demographics.
+
 ## Motivation (Ian)
 
 
