@@ -26,7 +26,19 @@ Alternative Title/Questions and Analysis Ideas:
 
 
 ## Intended Final Products (Yixin)
+1. Website: A user-friendly website to display our findings with interactive features, such as a density map and a R-SHINY tool to predict individual heart disease risk. The website will include things like following:
+- Homepage: Introduction to the project, motivation, data sources, and some questions.
+- Data Exploration: Interactive visualizations of key diagnostic factors with options to filter by heart disease status and region.
+- Comparative Analysis: Visualizations comparing the significance and distribution of heart disease predictors across regions, including correlation heatmaps and scatter plots etc.
+- Model Insights: Diagnostic plots to assess model assumptions. Summary of model results, showcasing the most predictive attributes in each region. 
+- Conclusion: Summary and takeaway of regional differences in heart disease diagnostics.
+- Tool: Using R’s Shiny to allow for interactive exploration.
 
+2. Report: A comprehensive report within the website to display our project steps and findings. The report will cover things like: Introduction, Data Processing and Cleaning, Exploratory Data Analysis (EDA), Modeling, Results, Conclusion and Limitations etc. 
+
+3. Video: A brief video walkthrough to introduce our project, explain our motivations, and highlight key findings. This screencast will guide viewers through the website and its interactive features.
+
+4. Code: A link to our organized GitHub repository will be available on the website, containing all data cleaning, analysis, and visualization code. The repository will include a README file for clear instructions on reproducing our analysis.
 
 ## Data Sources (Stella)
 The Heart Disease datasets were obtained from UC Irvine's Machine Learning Repository that can be accessed [here](https://archive.ics.uci.edu/dataset/45/heart+disease). This directory contains four datasets focused on heart disease diagnosis, each representing a distinct geographic location and with attributes recorded as numeric values. The data was gathered from the following four locations:
