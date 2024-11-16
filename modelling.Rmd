@@ -1,0 +1,8 @@
+---
+title: "Modelling"
+author: "Stella Koo"
+date: "2024-11-16"
+output: github_document
+---
+
+## Thomas, Cecily, Yonghao
