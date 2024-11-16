@@ -1,7 +1,13 @@
 ---
-title: "Comparative Analysis"
+title: "EDA"
 author: "Stella Koo"
 date: "2024-11-16"
 output: github_document
 ---
 
+## Ian, Stella
+
+Histograms/boxplots (univariate)
+Correlation heatmap
+Depending on correlation, explore bivariate or multivariate
+Reader friendly table
