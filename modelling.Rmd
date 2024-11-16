@@ -7,17 +7,3 @@ output: github_document
 
 ## Thomas, Cecily, Yonghao
 
-* The name and/or source of your data, a description of all relevant variables, and the observational unit (i.e., row). 
-Exploratory Data Analysis (EDA):
-* Appropriate summary statistics with adequate explanation and interpretation.  	
-    * examine binary or other relationships, as well as describing individual distributions.
-    * Consider making an appropriate table 
-* Graphical displays with adequate explanation and interpretation. 
-    * histograms, density plots, and box plots   to visualize distributions of key variables, such as cholesterol, age, thalach (maximum heart rate)
-    * create a correlation heatmap to identify relationships between variables and detect multicollinearity, especially for predictors that may be used in regression models.
-* Interactive Variables Visualization: Primary Variables:
-    * Age vs. Maximum Heart Rate (thalach): Use this to explore how age relates to heart rate, and color points based on heart disease status (num) for additional insight.
-    * Age vs. ST Depression (oldpeak): This can reveal if age affects exercise-induced ST depression differently for those with and without heart disease.
-* Histograms or Density Plots for Distribution Insights
-    * Variables:Age, Cholesterol (chol), num
-Sent
