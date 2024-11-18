@@ -20,9 +20,9 @@ switzerland = read_csv("./data/switzerland.csv", na = "?")
 
 ``` r
 dfs = list(cleveland, hungary, long_beach, switzerland)
-locations = c("Cleveland", "Hungary", "Long Beach", "Switzerland")
+regions = c("Cleveland", "Hungary", "Long Beach", "Switzerland")
 
-combined_df = purrr::map2(dfs, locations, ~ mutate(.x, region = .y)) |>
+combined_df = purrr::map2(dfs, regions, ~ mutate(.x, region = .y)) |>
   bind_rows()
 ```
 
@@ -57,14 +57,31 @@ continuous_var
 | Long Beach  |    59.35 |   7.81 |         60 |        133.76 |       21.54 |             130 |    178.75 |  114.04 |         216 |       122.80 |      21.99 |            120 |         1.32 |       1.11 |            1.5 |
 | Switzerland |    55.32 |   9.03 |         56 |        130.21 |       22.56 |             125 |      0.00 |    0.00 |           0 |       121.56 |      25.98 |            121 |         0.65 |       1.06 |            0.3 |
 
-### Correlation Heatmap
+### Correlation heatmap for each region
 
 ``` r
-corr_matrix = cor(combined_df[, c("age", "trestbps", "chol", "thalach", "oldpeak")], use = "complete.obs")
-corrplot::corrplot(corr_matrix, method = "color", addCoef.col = "black", tl.col = "black")
+cols_to_include = c("age", "trestbps", "chol", "thalach", "oldpeak")
+corr_plots = list()
+
+for(r in regions) {
+  region_data = combined_df |> filter(region == r)
+  
+  corr_matrix = cor(region_data[, cols_to_include], use = "complete.obs")
+  
+  corr_plots[[r]] = corrplot::corrplot(corr_matrix, 
+                                       method = "color", 
+                                       addCoef.col = "black", 
+                                       tl.col = "black", 
+                                       main = paste("Correlation Heatmap for", r))
+}
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
+
+    ## Warning in cor(region_data[, cols_to_include], use = "complete.obs"): the
+    ## standard deviation is zero
+
+![](EDA_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->
 
 ## Discrete Variables
 

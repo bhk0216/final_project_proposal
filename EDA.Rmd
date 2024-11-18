@@ -21,9 +21,9 @@ switzerland = read_csv("./data/switzerland.csv", na = "?")
 
 ```{r}
 dfs = list(cleveland, hungary, long_beach, switzerland)
-locations = c("Cleveland", "Hungary", "Long Beach", "Switzerland")
+regions = c("Cleveland", "Hungary", "Long Beach", "Switzerland")
 
-combined_df = purrr::map2(dfs, locations, ~ mutate(.x, region = .y)) |>
+combined_df = purrr::map2(dfs, regions, ~ mutate(.x, region = .y)) |>
   bind_rows()
 ```
 
@@ -44,10 +44,23 @@ continuous_var = combined_df |>
 continuous_var
 ```
 
-### Correlation Heatmap
+### Correlation heatmap for each region
 ```{r}
-corr_matrix = cor(combined_df[, c("age", "trestbps", "chol", "thalach", "oldpeak")], use = "complete.obs")
-corrplot::corrplot(corr_matrix, method = "color", addCoef.col = "black", tl.col = "black")
+cols_to_include = c("age", "trestbps", "chol", "thalach", "oldpeak")
+corr_plots = list()
+
+for(r in regions) {
+  region_data = combined_df |> filter(region == r)
+  
+  corr_matrix = cor(region_data[, cols_to_include], use = "complete.obs")
+  
+  corr_plots[[r]] = corrplot::corrplot(corr_matrix, 
+                                       method = "color", 
+                                       addCoef.col = "black", 
+                                       tl.col = "black", 
+                                       main = paste("Correlation Heatmap for", r))
+}
+
 ```
 
 ## Discrete Variables
