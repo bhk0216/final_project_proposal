@@ -1,11 +1,11 @@
 ---
 title: "Modelling"
-author: "Thomas, Yixin Zheng, Yonghao"
+author: "Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)"
 date: "2024-11-16"
 output: github_document
 ---
 
-## Thomas, Cecily, Yonghao
+## Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)
 ```{r setup}
 library(tidyverse)
 library(janitor)
@@ -33,24 +33,51 @@ process_data("./heart+disease/processed.va.data", "long_beach_va.csv")
 process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
 ```
 
+
+Interpreting num (author: Yixin Zheng):
+The values for `num` represent the degree of narrowing in the coronary arteries:
+0: No disease (< 50% diameter narrowing).
+1-4: Increasing severity of disease (> 50% diameter narrowing, with different severities).
+
+For convenience, this variable will binarized:
+0: No heart disease (value 0 in num).
+1: Presence of heart disease (values 1-4 in num).
+
+*but if we want to analyze the severity of heart disease num will be treated as a categorical variable.
+example code:
+cleaned_data <- data |> 
+  mutate(num = factor(num, levels = c(0, 1, 2, 3, 4), 
+                      labels = c("No Disease", "Mild", "Moderate", "Severe", "Very Severe")))
+                      
 ```{r data cleaning author: Yixin Zheng}
 cleveland <- read_csv("./data/cleveland.csv", na = "?") |> 
-  clean_names() # |> drop_na() Removes rows with any missing values (optional, adjust as needed)
+  clean_names() |> 
+  mutate(num = if_else(num == 0, 0, 1)) # Binarize the `num` variable: 0 = no heart disease, 1 = heart disease
+
+# |> drop_na() Removes rows with any missing values (optional, adjust as needed)
 
 hungary = read_csv("./data/hungarian.csv", na = "?") |> 
-  clean_names() # |> drop_na() Removes rows with any missing values (optional, adjust as needed)
+  clean_names() |> 
+  mutate(num = if_else(num == 0, 0, 1))
+# |> drop_na() Removes rows with any missing values (optional, adjust as needed)
 
 long_beach = read_csv("./data/long_beach_va.csv", na = "?") |> 
-  clean_names() # |> drop_na() Removes rows with any missing values (optional, adjust as needed)
+  clean_names() |> 
+  mutate(num = if_else(num == 0, 0, 1))
+# |> drop_na() Removes rows with any missing values (optional, adjust as needed)
 
 switzerland = read_csv("./data/switzerland.csv", na = "?") |> 
-  clean_names() # |> drop_na() Removes rows with any missing values (optional, adjust as needed) 
+  clean_names() |> 
+  mutate(num = if_else(num == 0, 0, 1))
+# |> drop_na() Removes rows with any missing values (optional, adjust as needed) 
+
 ```
 hypothesis (author: Yixin Zheng)
 * need to run some test choose explanatory variables?
 
 1. Comparing Diagnostic Factors for Heart Disease Across Regions
-
+ explore whether certain diagnostic factors (e.g., cholesterol levels, exercise-induced angina) are more predictive of heart disease in one region compared to others.
+ 
 * there are many null values in the `chol` column in switzerland dataset. So maybe we need to use other diagnostic factors such as `trestbps` if we want to compare the regions
 Example Hypothesis (SLR):
 - **Null Hypothesis (H_0):** There is no linear relationship between cholesterol levels (`chol`) and the presence of heart disease (`num`).
