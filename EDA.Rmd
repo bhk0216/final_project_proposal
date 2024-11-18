@@ -7,6 +7,7 @@ output: github_document
 
 ## Ian, Stella
 
+## Data Cleaning & Preparing for Analysis
 ```{r message = FALSE}
 library(tidyverse)
 library(pheatmap)
@@ -19,8 +20,6 @@ switzerland = read_csv("./data/switzerland.csv", na = "?")
 ```
 
 ```{r}
-# Combined all datasets
-
 dfs = list(cleveland, hungary, long_beach, switzerland)
 locations = c("Cleveland", "Hungary", "Long Beach", "Switzerland")
 
@@ -35,7 +34,7 @@ colSums(is.na(combined_df))
 
 ## Continuous Variables
 ### Descriptive Statistics
-```{r}
+```{r warning = FALSE}
 # Summary of continuous variables 
 continuous_var = combined_df |>
   group_by(region) |>
@@ -53,10 +52,7 @@ corrplot::corrplot(corr_matrix, method = "color", addCoef.col = "black", tl.col 
 
 ## Discrete Variables
 ### Descriptive Statistics
-```{r}
-
-```
-
+sex, cp, fbs, restecg, exang
 
 * The name and/or source of your data, a description of all relevant variables, and the observational unit (i.e., row). 
 Exploratory Data Analysis (EDA):
