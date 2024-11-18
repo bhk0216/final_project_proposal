@@ -46,3 +46,25 @@ long_beach = read_csv("./data/long_beach_va.csv", na = "?") |>
 switzerland = read_csv("./data/switzerland.csv", na = "?") |> 
   clean_names() # |> drop_na() Removes rows with any missing values (optional, adjust as needed) 
 ```
+hypothesis:
+1. Comparing Diagnostic Factors for Heart Disease Across Regions
+
+Example Hypothesis (SLR):
+- **Null Hypothesis (H_0):** There is no linear relationship between cholesterol levels (`chol`) and the presence of heart disease (`num`).
+- **Alternative Hypothesis (H_a):** There is a positive linear relationship between cholesterol levels (`chol`) and the presence of heart disease (`num`). ($\beta_1>0$)
+  Where:
+  - `num` is the target variable indicating heart disease presence.
+  - `chol` is the predictor variable representing cholesterol levels.
+* there are many null values in the `chol` column in switzerland dataset. So maybe we need to use other diagnostic factors such as `trestbps` if we want to compare the regions
+
+$$ num = \beta_0 + \beta_1 \cdot \text{chol} + \epsilon $$
+
+Example Hypothesis (MLR):
+- **Null Hypothesis (H_0):** Cholesterol levels (`chol`), blood pressure (`trestbps`), and exercise-induced angina (`exang`) are not significant predictors of heart disease presence (`num`).
+- **Alternative Hypothesis (H_a):** At least one of these variables (`chol`, `trestbps`, `exang`) is a significant predictor of heart disease presence (`num`).
+
+$$ num = \beta_0 + \beta_1 \cdot \text{chol} + \beta_2 \cdot \text{trestbps} + \beta_3 \cdot \text{exang} + \epsilon $$
+
+2. Examining Predictive Power of Clinical Indicators for Heart Disease in Diverse Populations
+3. Influence of Age and Lifestyle Factors on Heart Disease
+4. Regional Patterns in Heart Disease Diagnostic Attributes
