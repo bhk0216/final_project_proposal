@@ -5,7 +5,14 @@ date: "2024-11-16"
 output: github_document
 ---
 
-## Ian, Stella
+# Issues to discuss
+
+* For Summary of varaibles, should categorical data be included?
+* Cannot create a proper reader friendly table 
+* Have trouble resizing correlation heatmap
+* Cholesterol variable all zero for Switzerland dataset
+
+* Need to decide which graphs to include/remove
 
 ## Data Cleaning & Preparing for Analysis
 ```{r message = FALSE}
@@ -23,63 +30,22 @@ switzerland = read_csv("./data/switzerland.csv", na = "?")
 dfs = list(cleveland, hungary, long_beach, switzerland)
 regions = c("Cleveland", "Hungary", "Long Beach", "Switzerland")
 
-combined_df = purrr::map2(dfs, regions, ~ mutate(.x, region = .y)) |>
+combined_df = map2(dfs, regions, ~ mutate(.x, region = .y)) |>
   bind_rows()
 ```
 
+## Summary of variables 
 ```{r}
-# Number of missing values: should consider NOT analyzing slope, ca, thal
-colSums(is.na(combined_df))
-```
-
-## Continuous Variables
-### Descriptive Statistics
-```{r warning = FALSE}
-# Summary of continuous variables 
-continuous_var = combined_df |>
-  group_by(region) |>
-  summarise(across(c(age, trestbps, chol, thalach, oldpeak), list(mean = mean, sd = sd, median = median), na.rm = TRUE)) |>
-  knitr::kable(digits = 2)
-
-continuous_var
-```
-
-### Correlation heatmap for each region
-```{r}
-cols_to_include = c("age", "trestbps", "chol", "thalach", "oldpeak")
-corr_plots = list()
-
-for(r in regions) {
-  region_data = combined_df |> filter(region == r)
-  
-  corr_matrix = cor(region_data[, cols_to_include], use = "complete.obs")
-
-  corr_plots[[r]] = corrplot::corrplot(corr_matrix, 
-                                       method = "color", 
-                                       addCoef.col = "black", 
-                                       tl.col = "black", 
-                                       main = paste("Correlation Heatmap for", r))
+summary_df = function(dataset) {
+  map(dataset, ~skimr::skim(.x) |>
+        select(2:6) |>
+        knitr::kable(digits = 2))
 }
 
+summary_df(dfs)
 ```
 
-## Discrete Variables
-### Descriptive Statistics
-sex, cp, fbs, restecg, exang
-
-* The name and/or source of your data, a description of all relevant variables, and the observational unit (i.e., row). 
-Exploratory Data Analysis (EDA):
-* Appropriate summary statistics with adequate explanation and interpretation.  	
-    * examine binary or other relationships, as well as describing individual distributions.
-    * Consider making an appropriate table 
-* Graphical displays with adequate explanation and interpretation. 
-    * histograms, density plots, and box plots   to visualize distributions of key variables, such as cholesterol, age, thalach (maximum heart rate)
-    * create a correlation heatmap to identify relationships between variables and detect multicollinearity, especially for predictors that may be used in regression models.
-* Interactive Variables Visualization: Primary Variables:
-    * Age vs. Maximum Heart Rate (thalach): Use this to explore how age relates to heart rate, and color points based on heart disease status (num) for additional insight.
-    * Age vs. ST Depression (oldpeak): This can reveal if age affects exercise-induced ST depression differently for those with and without heart disease.
-* Histograms or Density Plots for Distribution Insights
-    * Variables:Age, Cholesterol (chol), num
+## Age and Sex Distribution
 ```{r}
 ggplot(combined_df, aes(x = age)) +
   geom_histogram() +
@@ -95,4 +61,138 @@ ggplot(combined_df, aes(x = factor(sex, levels = c(0,1), labels = c("Female", "M
   labs(title = "Gender Distribution", x = "Sex", y = "Count")+
   theme_minimal()
 ```
+
+## Continuous Variables
+### Correlation heatmap for each region
+```{r fig.width=6, fig.height=4}
+cols_to_include = c("age", "trestbps", "chol", "thalach", "oldpeak")
+
+corr_plots = list()
+
+for(r in regions) {
+  region_data = combined_df |> filter(region == r)
+  
+  corr_matrix = cor(region_data[, cols_to_include], use = "complete.obs")
+  
+  par(mar = c(5, 4, 7, 2))
+  
+  corr_plots[[r]] = corrplot::corrplot(corr_matrix, 
+                                       method = "color", 
+                                       addCoef.col = "black", 
+                                       tl.col = "black", 
+                                       main = paste("Correlation Heatmap for", r),
+                                       cex.main = 1.5,  
+                                       tl.srt = 45,
+                                       cex.axis = 0.8)
+}
+
+```
+
+### Bivariate Analysis of Strongly Correlated Variables
+Based on the correlation heatmap, we decided to focus on comparing variables that exhibit stronger correlations with each other in each region.
+
+#### `thalach` vs `age`
+```{r}
+ggplot(combined_df, aes(x = age, y = thalach)) +
+  geom_point(aes(color = as.factor(num)), size = 2) + 
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Scatter Plot of Age vs Maximum Heart Rate",
+       x = "Age",
+       y = "Maximum Heart Rate",
+       color = "Heart Disease Status") +
+  facet_wrap(~ region, ncol = 2)
+```
+
+#### `trestbps` vs `age`
+```{r}
+ggplot(combined_df, aes(x = age, y = trestbps)) +
+  geom_point(aes(color = as.factor(num)), size = 2) + 
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Scatter Plot of Age vs Resting Blood Pressure",
+       x = "Age",
+       y = "Resting Blood Pressure (in mm Hg)",
+       color = "Heart Disease Status") +
+  facet_wrap(~ region, ncol = 2) +
+  ylim(50, 200)
+```
+
+#### `thalach` vs `trestbps`
+```{r}
+ggplot(combined_df, aes(x = thalach, y = trestbps)) +
+  geom_point(aes(color = as.factor(num)), size = 2) + 
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Scatter Plot of Maximum Heart Rate vs Resting Blood Pressure",
+       x = "Maximum Heart Rate",
+       y = "Resting Blood Pressure (in mm Hg)",
+       color = "Heart Disease Status") +
+  facet_wrap(~ region, ncol = 2) +
+  ylim(50, 200)
+```
+
+#### `thalach` vs `oldpeak`
+```{r}
+ggplot(combined_df, aes(x = thalach, y = oldpeak)) +
+  geom_point(aes(color = as.factor(num)), size = 2) + 
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Scatter Plot of Maximum Heart Rate vs T depression",
+       x = "Maximum Heart Rate",
+       y = "T depression",
+       color = "Heart Disease Status") +
+  facet_wrap(~ region, ncol = 2) 
+```
+
+
+### Relationship Between Key Variables and Heart Disease Status
+Each of the variables explored above was then compared to the Heart Disease Status to assess their relationships and potential impact.
+
+#### `thalach` vs `num`
+```{r}
+ggplot(combined_df, aes(x = as.factor(num), y = thalach)) +
+  geom_boxplot(aes(fill = as.factor(num))) +
+  labs(title = "Boxplot of Maximum Heart Rate by Heart Disease Status",
+       x = "Heart Disease Status",
+       y = "Maximum Heart Rate",
+       fill = " Heart Disease Status") +
+  facet_wrap(~ region, ncol = 2)
+```
+
+#### `trestbps` vs `num`
+```{r}
+ggplot(combined_df, aes(x = as.factor(num), y = trestbps)) +
+  geom_boxplot(aes(fill = as.factor(num))) +
+  labs(title = "Boxplot of Resting Blood Pressure by Heart Disease Status",
+       x = "Heart Disease Status",
+       y = "Resting Blood Pressure (in mm Hg)",
+       fill = " Heart Disease Status") +
+  facet_wrap(~ region, ncol = 2) +
+  ylim(50, 200)
+```
+
+#### `oldpeak` vs `num`
+```{r}
+ggplot(combined_df, aes(x = as.factor(num), y = oldpeak)) +
+  geom_boxplot(aes(fill = as.factor(num))) +
+  labs(title = "Boxplot of T depression by Heart Disease Status",
+       x = "Heart Disease Status",
+       y = "T depression",
+       fill = " Heart Disease Status") +
+  facet_wrap(~ region, ncol = 2) 
+```
+
+#### `chol` vs `num`
+```{r}
+ggplot(combined_df, aes(x = as.factor(num), y = chol)) +
+  geom_boxplot(aes(fill = as.factor(num))) +
+  labs(title = "Boxplot of Serum Cholestoral by Heart Disease Status",
+       x = "Heart Disease Status",
+       y = "Serum Cholestoral (mg/dl)",
+       fill = " Heart Disease Status") +
+  facet_wrap(~ region, ncol = 2) 
+```
+
+## Discrete Variables
+### Descriptive Statistics
+sex, cp, fbs, restecg, exang
+
+
 
