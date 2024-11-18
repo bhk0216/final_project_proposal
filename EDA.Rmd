@@ -80,3 +80,19 @@ Exploratory Data Analysis (EDA):
     * Age vs. ST Depression (oldpeak): This can reveal if age affects exercise-induced ST depression differently for those with and without heart disease.
 * Histograms or Density Plots for Distribution Insights
     * Variables:Age, Cholesterol (chol), num
+```{r}
+ggplot(combined_df, aes(x = age)) +
+  geom_histogram() +
+  facet_wrap(~ region) +
+  theme_minimal() +
+  labs(title = "Age Distribution by Region",
+       x = "Age",
+       y = "Count")
+
+ggplot(combined_df, aes(x = factor(sex, levels = c(0,1), labels = c("Female", "Male")))) +
+  geom_bar() +
+  facet_wrap(~ region)+
+  labs(title = "Gender Distribution", x = "Sex", y = "Count")+
+  theme_minimal()
+```
+

@@ -67,7 +67,7 @@ for(r in regions) {
   region_data = combined_df |> filter(region == r)
   
   corr_matrix = cor(region_data[, cols_to_include], use = "complete.obs")
-  
+
   corr_plots[[r]] = corrplot::corrplot(corr_matrix, 
                                        method = "color", 
                                        addCoef.col = "black", 
@@ -76,12 +76,12 @@ for(r in regions) {
 }
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->
 
     ## Warning in cor(region_data[, cols_to_include], use = "complete.obs"): the
     ## standard deviation is zero
 
-![](EDA_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->
 
 ## Discrete Variables
 
@@ -113,3 +113,27 @@ sex, cp, fbs, restecg, exang
     without heart disease.
 - Histograms or Density Plots for Distribution Insights
   - Variables:Age, Cholesterol (chol), num
+
+``` r
+ggplot(combined_df, aes(x = age)) +
+  geom_histogram() +
+  facet_wrap(~ region) +
+  theme_minimal() +
+  labs(title = "Age Distribution by Region",
+       x = "Age",
+       y = "Count")
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](EDA_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+ggplot(combined_df, aes(x = factor(sex, levels = c(0,1), labels = c("Female", "Male")))) +
+  geom_bar() +
+  facet_wrap(~ region)+
+  labs(title = "Gender Distribution", x = "Sex", y = "Count")+
+  theme_minimal()
+```
+
+![](EDA_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
