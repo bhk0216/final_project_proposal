@@ -1,9 +1,40 @@
 ---
 title: "Modelling"
-author: "Stella Koo"
+author: "Thomas, Yixin Zheng, Yonghao"
 date: "2024-11-16"
 output: github_document
 ---
 
 ## Thomas, Cecily, Yonghao
+```{r setup}
+library(tidyverse)
+```
 
+```{r import data author: Yixin Zheng, Stella Koo, include = FALSE}
+save_path <- "./data"
+
+column_names <- c("age", "sex", "cp", "trestbps", "chol", "fbs", 
+                  "restecg", "thalach", "exang", "oldpeak", "slope", 
+                  "ca", "thal", "num")
+
+process_data <- function(file_path, save_name) {
+
+    data <- read.table(file_path, sep = ",", header = FALSE)
+    
+    colnames(data) <- column_names
+    
+    write.csv(data, file.path(save_path, save_name), row.names = FALSE)
+}
+
+process_data("./heart+disease/processed.cleveland.data", "cleveland.csv")
+process_data("./heart+disease/processed.hungarian.data", "hungarian.csv")
+process_data("./heart+disease/processed.va.data", "long_beach_va.csv")
+process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
+```
+
+```{r data cleaning author: Yixin Zheng}
+cleveland = read_csv("./data/cleveland.csv")
+hungary = read_csv("./data/hungarian.csv")
+long_beach = read_csv("./data/long_beach_va.csv")
+switzerland = read_csv("./data/switzerland.csv")
+```
