@@ -13,6 +13,9 @@ Stella Koo
 
 - Cholesterol variable all zero for Switzerland dataset
 
+- Analysis by sex could be misleading since some locations might have
+  not selected many female participants?
+
 - Need to decide which graphs to include/remove
 
 ## Data Cleaning & Preparing for Analysis
@@ -21,6 +24,7 @@ Stella Koo
 library(tidyverse)
 library(pheatmap)
 library(corrplot)
+library(knitr)
 
 cleveland = read_csv("./data/cleveland.csv", na = "?")
 hungary = read_csv("./data/hungarian.csv", na = "?")
@@ -128,31 +132,20 @@ summary_df(dfs)
     ## |thal          |        52|          0.58|         5.79|       1.73|
     ## |num           |         0|          1.00|         1.80|       1.01|
 
-## Age and Sex Distribution
+## Distribution of participants
 
 ``` r
-ggplot(combined_df, aes(x = age)) +
-  geom_histogram() +
+ggplot(combined_df, aes(x = age, y = num, color = factor(sex, levels = c(0,1), labels = c("Female", "Male")))) +
+  geom_point(alpha = 0.7) +
   facet_wrap(~ region) +
   theme_minimal() +
-  labs(title = "Age Distribution by Region",
+  labs(title = "Distribution of participants",
        x = "Age",
-       y = "Count")
+       y = "Num",
+       color = "Sex")
 ```
-
-    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](EDA_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
-
-``` r
-ggplot(combined_df, aes(x = factor(sex, levels = c(0,1), labels = c("Female", "Male")))) +
-  geom_bar() +
-  facet_wrap(~ region)+
-  labs(title = "Gender Distribution", x = "Sex", y = "Count")+
-  theme_minimal()
-```
-
-![](EDA_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
 
 ## Continuous Variables
 
@@ -181,12 +174,12 @@ for(r in regions) {
 }
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->
 
     ## Warning in cor(region_data[, cols_to_include], use = "complete.obs"): the
     ## standard deviation is zero
 
-![](EDA_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->
 
 ### Bivariate Analysis of Strongly Correlated Variables
 
@@ -293,6 +286,20 @@ ggplot(combined_df, aes(x = thalach, y = oldpeak)) +
 Each of the variables explored above was then compared to the Heart
 Disease Status to assess their relationships and potential impact.
 
+#### `age` vs `num`
+
+``` r
+ggplot(combined_df, aes(x = as.factor(num), y = age)) + 
+  geom_violin(aes(fill = as.factor(num)), alpha = 0.6) + 
+  labs(title = "Violin Plot of Age by Heart Disease Status", 
+       x = "Heart Disease Status (0 = No, 1 = Yes)", 
+       y = "Age", 
+       fill = "Heart Disease Status") + 
+  facet_wrap(~ region, ncol = 2)
+```
+
+![](EDA_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
 #### `thalach` vs `num`
 
 ``` r
@@ -308,7 +315,7 @@ ggplot(combined_df, aes(x = as.factor(num), y = thalach)) +
     ## Warning: Removed 55 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
 
-![](EDA_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 #### `trestbps` vs `num`
 
@@ -326,7 +333,7 @@ ggplot(combined_df, aes(x = as.factor(num), y = trestbps)) +
     ## Warning: Removed 60 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
 
-![](EDA_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 #### `oldpeak` vs `num`
 
@@ -343,7 +350,7 @@ ggplot(combined_df, aes(x = as.factor(num), y = oldpeak)) +
     ## Warning: Removed 62 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
 
-![](EDA_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 #### `chol` vs `num`
 
@@ -360,10 +367,121 @@ ggplot(combined_df, aes(x = as.factor(num), y = chol)) +
     ## Warning: Removed 30 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
 
-![](EDA_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ## Discrete Variables
 
-### Descriptive Statistics
-
 sex, cp, fbs, restecg, exang
+
+## I dont know what it is, just copy from chatGPT, to study the correlation for discrete variables.
+
+``` r
+library("vcd")
+```
+
+    ## Loading required package: grid
+
+``` r
+cramers_v <- function(x, y) {
+  tbl <- table(x, y)
+  chisq <- chisq.test(tbl)
+  return(sqrt(chisq$statistic / (sum(tbl) * (min(dim(tbl)) - 1))))
+}
+
+# Compute Cramér's V for num with cp, fbs, restecg, and exang
+variables <- c("cp", "fbs", "restecg", "exang")
+results <- sapply(variables, function(var) cramers_v(combined_df$num, combined_df[[var]]))
+```
+
+    ## Warning in chisq.test(tbl): Chi-squared approximation may be incorrect
+    ## Warning in chisq.test(tbl): Chi-squared approximation may be incorrect
+
+``` r
+# Convert results into a data frame
+association_df <- data.frame(Variable = variables, CramersV = results)
+
+# Plot heatmap
+ggplot(association_df, aes(x = "num", y = Variable, fill = CramersV)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "blue") +
+  labs(title = "Association Between num and Other Variables",
+       x = "Outcome (num)",
+       y = "Predictor Variables",
+       fill = "Cramér's V") +
+  theme_minimal()
+```
+
+![](EDA_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+``` r
+ggplot(combined_df, aes(x = as.factor(num), fill = factor(sex, levels = c(0, 1), labels = c("Female", "Male")))) +
+  geom_bar(position = "fill") +
+  labs(title = "Proportion of Males and Females by Heart Disease Status",
+       x = "Heart Disease Status",
+       y = "Proportion",
+       fill = "Sex") +
+  facet_wrap(~ region, ncol = 2)
+```
+
+![](EDA_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+
+\###cp vs num
+
+``` r
+ggplot(combined_df, aes(x = factor(cp), fill = factor(num))) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~ region) +
+  scale_x_discrete(labels = c("1"="typical angina","2"="atypical angina","3"="non-anginal pain","4"= "asymptomatic"))+
+  labs(title = "Chest Pain Type Distribution by Heart Disease Status and Region",
+       x = "Chest Pain Type (1-4)",
+       y = "Count",
+       fill = "Heart Disease Status") +
+  theme_minimal()
+```
+
+![](EDA_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+
+\###fbs vs num
+
+``` r
+ggplot(combined_df |> filter(!is.na(fbs)), aes(x = factor(fbs), fill = factor(num))) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~ region) +
+  labs(title = "Fasting Blood Sugar Distribution by Heart Disease Status and Region",
+       x = "Fasting Blood Sugar (0=≤120 mg/dl, 1=>120 mg/dl)",
+       y = "Count",
+       fill = "Heart Disease Status") +
+  theme_minimal()
+```
+
+![](EDA_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+
+\###restecg vs num
+
+``` r
+ggplot(combined_df |> filter(!is.na(restecg)), aes(x = factor(restecg), fill = factor(num))) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~ region) +
+  labs(title = "Resting ECG Results by Heart Disease Status and Region",
+       x = "Resting ECG Results (0-2)",
+       y = "Count",
+       fill = "Heart Disease Status") +
+  theme_minimal()
+```
+
+![](EDA_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+\###exang vs num
+
+``` r
+ggplot(combined_df |> filter(!is.na(exang)), aes(x = factor(exang), fill = factor(num))) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~ region) +
+  labs(title = "Exercise Induced Angina by Heart Disease Status and Region",
+       x = "Exercise Induced Angina (0=No, 1=Yes)",
+       y = "Count",
+       fill = "Heart Disease Status") +
+  theme_minimal()
+```
+
+![](EDA_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->

@@ -252,6 +252,7 @@ ggplot(combined_df, aes(x = as.factor(num), fill = factor(sex, levels = c(0, 1),
 ggplot(combined_df, aes(x = factor(cp), fill = factor(num))) +
   geom_bar(position = "dodge") +
   facet_wrap(~ region) +
+  scale_x_discrete(labels = c("1"="typical angina","2"="atypical angina","3"="non-anginal pain","4"= "asymptomatic"))+
   labs(title = "Chest Pain Type Distribution by Heart Disease Status and Region",
        x = "Chest Pain Type (1-4)",
        y = "Count",
