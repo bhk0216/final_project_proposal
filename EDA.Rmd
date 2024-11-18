@@ -13,6 +13,8 @@ output: github_document
 * Cholesterol variable all zero for Switzerland dataset
 * Analysis by sex could be misleading since some locations might have not selected many female participants?
 
+
+
 * Need to decide which graphs to include/remove
 
 ## Data Cleaning & Preparing for Analysis
@@ -20,6 +22,7 @@ output: github_document
 library(tidyverse)
 library(pheatmap)
 library(corrplot)
+library(knitr)
 
 cleveland = read_csv("./data/cleveland.csv", na = "?")
 hungary = read_csv("./data/hungarian.csv", na = "?")
@@ -102,6 +105,7 @@ ggplot(combined_df, aes(x = age, y = thalach)) +
        y = "Maximum Heart Rate",
        color = "Heart Disease Status") +
   facet_wrap(~ region, ncol = 2)
+
 ```
 
 #### `trestbps` vs `age`
@@ -115,6 +119,7 @@ ggplot(combined_df, aes(x = age, y = trestbps)) +
        color = "Heart Disease Status") +
   facet_wrap(~ region, ncol = 2) +
   ylim(50, 200)
+
 ```
 
 #### `thalach` vs `trestbps`
@@ -128,6 +133,7 @@ ggplot(combined_df, aes(x = thalach, y = trestbps)) +
        color = "Heart Disease Status") +
   facet_wrap(~ region, ncol = 2) +
   ylim(50, 200)
+
 ```
 
 #### `thalach` vs `oldpeak`
@@ -201,6 +207,8 @@ ggplot(combined_df, aes(x = as.factor(num), y = chol)) +
        fill = " Heart Disease Status") +
   facet_wrap(~ region, ncol = 2) 
 ```
+
+
 
 ## Discrete Variables
 sex, cp, fbs, restecg, exang
