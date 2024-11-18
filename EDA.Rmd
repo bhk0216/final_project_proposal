@@ -53,7 +53,7 @@ for(r in regions) {
   region_data = combined_df |> filter(region == r)
   
   corr_matrix = cor(region_data[, cols_to_include], use = "complete.obs")
-  
+
   corr_plots[[r]] = corrplot::corrplot(corr_matrix, 
                                        method = "color", 
                                        addCoef.col = "black", 
