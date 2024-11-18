@@ -8,6 +8,7 @@ output: github_document
 ## Thomas, Cecily, Yonghao
 ```{r setup}
 library(tidyverse)
+library(janitor)
 ```
 
 ```{r import data author: Yixin Zheng, Stella Koo, include = FALSE}
@@ -33,8 +34,15 @@ process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
 ```
 
 ```{r data cleaning author: Yixin Zheng}
-cleveland = read_csv("./data/cleveland.csv")
-hungary = read_csv("./data/hungarian.csv")
-long_beach = read_csv("./data/long_beach_va.csv")
-switzerland = read_csv("./data/switzerland.csv")
+cleveland <- read_csv("./data/cleveland.csv", na = "?") |> 
+  clean_names() # |> drop_na() Removes rows with any missing values (optional, adjust as needed)
+
+hungary = read_csv("./data/hungarian.csv", na = "?") |> 
+  clean_names() # |> drop_na() Removes rows with any missing values (optional, adjust as needed)
+
+long_beach = read_csv("./data/long_beach_va.csv", na = "?") |> 
+  clean_names() # |> drop_na() Removes rows with any missing values (optional, adjust as needed)
+
+switzerland = read_csv("./data/switzerland.csv", na = "?") |> 
+  clean_names() # |> drop_na() Removes rows with any missing values (optional, adjust as needed) 
 ```
