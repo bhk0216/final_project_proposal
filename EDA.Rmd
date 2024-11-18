@@ -11,6 +11,7 @@ output: github_document
 * Cannot create a proper reader friendly table 
 * Have trouble resizing correlation heatmap
 * Cholesterol variable all zero for Switzerland dataset
+* Analysis by sex could be misleading since some locations might have not selected many female participants?
 
 * Need to decide which graphs to include/remove
 
@@ -145,6 +146,17 @@ ggplot(combined_df, aes(x = thalach, y = oldpeak)) +
 ### Relationship Between Key Variables and Heart Disease Status
 Each of the variables explored above was then compared to the Heart Disease Status to assess their relationships and potential impact.
 
+#### `age` vs `num`
+```{r}
+ggplot(combined_df, aes(x = as.factor(num), y = age)) + 
+  geom_violin(aes(fill = as.factor(num)), alpha = 0.6) + 
+  labs(title = "Violin Plot of Age by Heart Disease Status", 
+       x = "Heart Disease Status (0 = No, 1 = Yes)", 
+       y = "Age", 
+       fill = "Heart Disease Status") + 
+  facet_wrap(~ region, ncol = 2)
+```
+
 #### `thalach` vs `num`
 ```{r}
 ggplot(combined_df, aes(x = as.factor(num), y = thalach)) +
@@ -191,8 +203,17 @@ ggplot(combined_df, aes(x = as.factor(num), y = chol)) +
 ```
 
 ## Discrete Variables
-### Descriptive Statistics
 sex, cp, fbs, restecg, exang
 
+
+```{r}
+ggplot(combined_df, aes(x = as.factor(num), fill = factor(sex, levels = c(0, 1), labels = c("Female", "Male")))) +
+  geom_bar(position = "fill") +
+  labs(title = "Proportion of Males and Females by Heart Disease Status",
+       x = "Heart Disease Status",
+       y = "Proportion",
+       fill = "Sex") +
+  facet_wrap(~ region, ncol = 2)
+```
 
 
