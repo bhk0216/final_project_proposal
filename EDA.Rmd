@@ -209,12 +209,33 @@ ggplot(combined_df, aes(x = as.factor(num), y = chol)) +
 ## Discrete Variables
 sex, cp, fbs, restecg, exang
 
-cp vs num
+
+## I dont know what it is, just copy from chatGPT, to study the correlation for discrete variables.
 ```{r}
+library("vcd")
+cramers_v <- function(x, y) {
+  tbl <- table(x, y)
+  chisq <- chisq.test(tbl)
+  return(sqrt(chisq$statistic / (sum(tbl) * (min(dim(tbl)) - 1))))
+}
 
+# Compute Cramér's V for num with cp, fbs, restecg, and exang
+variables <- c("cp", "fbs", "restecg", "exang")
+results <- sapply(variables, function(var) cramers_v(combined_df$num, combined_df[[var]]))
+
+# Convert results into a data frame
+association_df <- data.frame(Variable = variables, CramersV = results)
+
+# Plot heatmap
+ggplot(association_df, aes(x = "num", y = Variable, fill = CramersV)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "blue") +
+  labs(title = "Association Between num and Other Variables",
+       x = "Outcome (num)",
+       y = "Predictor Variables",
+       fill = "Cramér's V") +
+  theme_minimal()
 ```
-
-
 
 ```{r}
 ggplot(combined_df, aes(x = as.factor(num), fill = factor(sex, levels = c(0, 1), labels = c("Female", "Male")))) +
@@ -225,5 +246,57 @@ ggplot(combined_df, aes(x = as.factor(num), fill = factor(sex, levels = c(0, 1),
        fill = "Sex") +
   facet_wrap(~ region, ncol = 2)
 ```
+
+###cp vs num
+```{r}
+ggplot(combined_df, aes(x = factor(cp), fill = factor(num))) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~ region) +
+  labs(title = "Chest Pain Type Distribution by Heart Disease Status and Region",
+       x = "Chest Pain Type (1-4)",
+       y = "Count",
+       fill = "Heart Disease Status") +
+  theme_minimal()
+```
+
+###fbs vs num
+```{r}
+ggplot(combined_df |> filter(!is.na(fbs)), aes(x = factor(fbs), fill = factor(num))) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~ region) +
+  labs(title = "Fasting Blood Sugar Distribution by Heart Disease Status and Region",
+       x = "Fasting Blood Sugar (0=≤120 mg/dl, 1=>120 mg/dl)",
+       y = "Count",
+       fill = "Heart Disease Status") +
+  theme_minimal()
+```
+
+###restecg vs num
+```{r}
+ggplot(combined_df |> filter(!is.na(restecg)), aes(x = factor(restecg), fill = factor(num))) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~ region) +
+  labs(title = "Resting ECG Results by Heart Disease Status and Region",
+       x = "Resting ECG Results (0-2)",
+       y = "Count",
+       fill = "Heart Disease Status") +
+  theme_minimal()
+```
+
+
+###exang vs num
+
+```{r}
+ggplot(combined_df |> filter(!is.na(exang)), aes(x = factor(exang), fill = factor(num))) +
+  geom_bar(position = "dodge") +
+  facet_wrap(~ region) +
+  labs(title = "Exercise Induced Angina by Heart Disease Status and Region",
+       x = "Exercise Induced Angina (0=No, 1=Yes)",
+       y = "Count",
+       fill = "Heart Disease Status") +
+  theme_minimal()
+```
+
+
 
 
