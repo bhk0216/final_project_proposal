@@ -7,11 +7,56 @@ output: github_document
 
 ## Ian, Stella
 
-Summary/Descriptive statistics (mean, median, mode, etc)
-Histograms/boxplots (univariate)
-Correlation heatmap
-Depending on correlation, explore bivariate or multivariate
-Reader friendly table
+```{r message = FALSE}
+library(tidyverse)
+library(pheatmap)
+library(corrplot)
+
+cleveland = read_csv("./data/cleveland.csv", na = "?")
+hungary = read_csv("./data/hungarian.csv", na = "?")
+long_beach = read_csv("./data/long_beach_va.csv", na = "?")
+switzerland = read_csv("./data/switzerland.csv", na = "?")
+```
+
+```{r}
+# Combined all datasets
+
+dfs = list(cleveland, hungary, long_beach, switzerland)
+locations = c("Cleveland", "Hungary", "Long Beach", "Switzerland")
+
+combined_df = purrr::map2(dfs, locations, ~ mutate(.x, region = .y)) |>
+  bind_rows()
+```
+
+```{r}
+# Number of missing values: should consider NOT analyzing slope, ca, thal
+colSums(is.na(combined_df))
+```
+
+## Continuous Variables
+### Descriptive Statistics
+```{r}
+# Summary of continuous variables 
+continuous_var = combined_df |>
+  group_by(region) |>
+  summarise(across(c(age, trestbps, chol, thalach, oldpeak), list(mean = mean, sd = sd, median = median), na.rm = TRUE)) |>
+  knitr::kable(digits = 2)
+
+continuous_var
+```
+
+### Correlation Heatmap
+```{r}
+corr_matrix = cor(combined_df[, c("age", "trestbps", "chol", "thalach", "oldpeak")], use = "complete.obs")
+corrplot::corrplot(corr_matrix, method = "color", addCoef.col = "black", tl.col = "black")
+```
+
+## Discrete Variables
+### Descriptive Statistics
+```{r}
+
+```
+
 
 * The name and/or source of your data, a description of all relevant variables, and the observational unit (i.e., row). 
 Exploratory Data Analysis (EDA):
