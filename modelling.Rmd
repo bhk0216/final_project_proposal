@@ -46,16 +46,18 @@ long_beach = read_csv("./data/long_beach_va.csv", na = "?") |>
 switzerland = read_csv("./data/switzerland.csv", na = "?") |> 
   clean_names() # |> drop_na() Removes rows with any missing values (optional, adjust as needed) 
 ```
-hypothesis:
+hypothesis (author: Yixin Zheng)
+* need to run some test choose explanatory variables?
+
 1. Comparing Diagnostic Factors for Heart Disease Across Regions
 
+* there are many null values in the `chol` column in switzerland dataset. So maybe we need to use other diagnostic factors such as `trestbps` if we want to compare the regions
 Example Hypothesis (SLR):
 - **Null Hypothesis (H_0):** There is no linear relationship between cholesterol levels (`chol`) and the presence of heart disease (`num`).
 - **Alternative Hypothesis (H_a):** There is a positive linear relationship between cholesterol levels (`chol`) and the presence of heart disease (`num`). ($\beta_1>0$)
   Where:
   - `num` is the target variable indicating heart disease presence.
   - `chol` is the predictor variable representing cholesterol levels.
-* there are many null values in the `chol` column in switzerland dataset. So maybe we need to use other diagnostic factors such as `trestbps` if we want to compare the regions
 
 $$ num = \beta_0 + \beta_1 \cdot \text{chol} + \epsilon $$
 
@@ -66,5 +68,40 @@ Example Hypothesis (MLR):
 $$ num = \beta_0 + \beta_1 \cdot \text{chol} + \beta_2 \cdot \text{trestbps} + \beta_3 \cdot \text{exang} + \epsilon $$
 
 2. Examining Predictive Power of Clinical Indicators for Heart Disease in Diverse Populations
+
+Example Hypothesis (SLR):
+- **Null Hypothesis (H_0):** There is no linear relationship between maximum heart rate achieved (`thalach`) and the presence of heart disease (`num`).
+- **Alternative Hypothesis (H_a):** There is a negative linear relationship between maximum heart rate achieved (`thalach`) and the presence of heart disease (`num`). ($\beta_1<0$)
+
+$$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \epsilon $$
+Example Hypothesis (MLR):
+- **Null Hypothesis (H_0):** Maximum heart rate (`thalach`), fasting blood sugar (`fbs`), and the slope of the ST segment (`slope`) are not significant predictors of heart disease presence (`num`).
+- **Alternative Hypothesis (H_a):** At least one of these variables (`thalach`, `fbs`, `slope`) is a significant predictor of heart disease presence (`num`).
+
+$$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{fbs} + \beta_3 \cdot \text{slope} + \epsilon $$
+
 3. Influence of Age and Lifestyle Factors on Heart Disease
+
+Example Hypothesis (SLR):
+- **Null Hypothesis (H_0):** There is no linear relationship between age (`age`) and the presence of heart disease (`num`).
+- **Alternative Hypothesis (H_a):** There is a positive linear relationship between age (`age`) and the presence of heart disease (`num`). ($\beta_1>0$)
+
+$$ num = \beta_0 + \beta_1 \cdot \text{age} + \epsilon $$
+Example Hypothesis (MLR):
+- **Null Hypothesis (H_0):** Age (`age`), chest pain type (`cp`), and exercise-induced angina (`exang`) are not significant predictors of heart disease presence (`num`).
+- **Alternative Hypothesis (H_a):** At least one of these variables (`age`, `cp`, `exang`) is a significant predictor of heart disease presence (`num`).
+
+$$ num = \beta_0 + \beta_1 \cdot \text{age} + \beta_2 \cdot \text{cp} + \beta_3 \cdot \text{exang} + \epsilon $$
+
 4. Regional Patterns in Heart Disease Diagnostic Attributes
+
+Example Hypothesis (SLR):
+- **Null Hypothesis (H_0):** There is no linear relationship between diagnostic attributes (e.g., cholesterol, age) and heart disease (`num`) in each region.
+- **Alternative Hypothesis (H_a):**The relationship between diagnostic attributes (e.g., cholesterol, age) and heart disease (`num`) differs significantly across regions.
+- This hypothesis can be tested by performing SLR for each region and comparing the coefficients (beta_1 values) to see if they vary.
+
+Example Hypothesis (MLR):
+- **Null Hypothesis (H_0):** Regional differences do not significantly influence the predictive power of diagnostic factors for heart disease.
+- **Alternative Hypothesis (H_a):** Regional differences significantly influence the predictive power of diagnostic factors for heart disease.
+
+$$ num = \beta_0 + \beta_1 \cdot \text{chol} + \beta_2 \cdot \text{age} + \beta_3 \cdot \text{region} + \beta_4 \cdot (\text{chol} \times \text{region}) + \beta_5 \cdot (\text{age} \times \text{region}) + \epsilon $$
