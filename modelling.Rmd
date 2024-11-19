@@ -72,6 +72,13 @@ switzerland = read_csv("./data/switzerland.csv", na = "?") |>
 # |> drop_na() Removes rows with any missing values (optional, adjust as needed) 
 
 ```
+
+```{r}
+cor(cleveland$chol, cleveland$num, use = "complete.obs")
+
+```
+
+
 hypothesis (author: Yixin Zheng)
 * need to run some test choose explanatory variables?
 
