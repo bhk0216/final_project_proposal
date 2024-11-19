@@ -75,7 +75,6 @@ switzerland = read_csv("./data/switzerland.csv", na = "?") |>
 
 ```{r}
 cor(cleveland$chol, cleveland$num, use = "complete.obs")
-
 ```
 
 
@@ -204,7 +203,101 @@ fbs (Fasting blood sugar) and age do not have significant association with heart
 
 
 
+(author = Yonghao YU)
 
+## Try Random Forest Classifier!
 
+### First, do data preprocessing! 
+```{r, author = Yonghao YU}
+cleveland$region = "Cleveland"
+hungary$region = "Hungarian"
+long_beach$region = "Long_Beach_VA"
+switzerland$region = "Switzerland"
+combined_data = bind_rows(cleveland, hungary, long_beach, switzerland)
 
+colnames(combined_data) = c("age", "sex", "cp", "trestbps", "chol", "fbs",
+                             "restecg", "thalach", "exang", "oldpeak", "slope",
+                             "ca", "thal", "num", "region")
+combined_data = combined_data |>
+  mutate(across(c(age, sex, cp, trestbps, chol, fbs, restecg, thalach,
+                  exang, oldpeak, slope, ca, thal, num), as.numeric)) |>
+  mutate(region = case_when(
+    region == "Cleveland" ~ 1,
+    region == "Hungarian" ~ 2,
+    region == "Long_Beach_VA" ~ 3,
+    region == "Switzerland" ~ 4,
+  ))
+print(combined_data)
+```
 
+### Second, construct the model and generate the results! 
+```{r, author = Yonghao YU}
+library(caret)
+library(randomForest)
+
+# drop out the variable "ca" and "thal" which are have so many missing values inside
+variables = c("chol", "cp", "age", "thalach", "oldpeak", "num", "restecg", "fbs", "region", "slope", "trestbps", "exang")
+data = combined_data[, variables]
+data$num = as.factor(data$num)
+
+# check and deal with missing data
+if (any(is.na(data))) {
+  print("Missing value detected")
+  data = na.omit(data)
+  print("Missing data have been deleted")
+}
+# split the dataset into training and testing datasets
+set.seed(42)
+trainIndex = createDataPartition(data$num, p = 0.8, list = FALSE)
+trainData = data[trainIndex, ]
+testData = data[-trainIndex, ]
+
+# Construct the random forest model and evaluate the model results
+rf_model = randomForest(num ~ ., data = trainData, importance = TRUE)
+rf_pred = predict(rf_model, testData)
+rf_conf_matrix = confusionMatrix(rf_pred, testData$num)
+print("The model result is：")
+print(rf_conf_matrix)
+
+# Check out the importance of the predictors and sort them descendingly based on MeanDecreaseGini
+var_imp = importance(rf_model)
+sorted_var_imp = var_imp[order(var_imp[, "MeanDecreaseAccuracy"], decreasing = TRUE), ]
+print("Sort based on MeanDecreaseGini：")
+print(sorted_var_imp)
+```
+
+From the model we can observe the following things: 
+1. The model correctly classified 77.14% of the instances.
+2. The true accuracy is expected to fall 95% of the time in (0.6793, 0.8477)
+3. The information rate is 0.6095 which is less than the accuracy rate (p-value also indicate this), indicating the model we built actually capture some significant features.
+4. The Kappa is 0.5281 which is in the range [40,60], which indicate our classifier achieves moderate level of classification
+5. High sensitivity (0.7561) indicates good identification of positives.
+6. High specificity (0.7812) indicates good identification of negatives.
+7. Balanced accuracy (76.87%) suggests the model balances its performance across both classes well.
+
+Then we ranked the predictors descendingly based on the MeanDecreaseAccuracy which measures the decrease in overall model accuracy when the variable is permuted. Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out restecg, trestbps, and fbs predictors that have relatively small impact on our prediction. And then we can focus on the first eight predictors that have more impact on our prediction results!
+
+### Last, simulate the prediction which predicts the num with the new data based on the model we built!
+```{r, author =  Yonghao YU}
+# construct a new dataframe which includes new data
+new_data = data.frame(
+  age = c(63,39),
+  sex = c(1, 1),
+  cp = c(1, 2),
+  trestbps = c(145, 120),
+  chol = c(233, 200),
+  fbs = c(1, 0),
+  restecg = c(2, 0),
+  thalach = c(150, 160),
+  exang = c(0, 1),
+  oldpeak = c(2.3, 1),
+  slope = c(3, 2),
+  region = c(1, 2)
+)
+# predict the results based on the model we have trained
+predicted_num = predict(rf_model, new_data)
+print("The prediction result is：")
+print(data.frame(new_data, Predicted_num = predicted_num))
+```
+
+From the results, we can see that the model can generate some results based on the predictor values we put in!
