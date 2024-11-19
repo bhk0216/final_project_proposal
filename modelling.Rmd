@@ -161,7 +161,9 @@ combined_data <- combined_data %>%
   mutate(across(c(age, sex, cp, trestbps, chol, fbs, restecg, thalach,
                   exang, oldpeak, slope, ca, thal, num), as.numeric))
 ```
-
+Dropped variables with excessive missing values (ca and thal).
+Removed rows with missing values in critical variables.
+Converted num to binary (0 = no heart disease, 1 = heart disease) and set as a factor.
 ```{R}
 cleaned_data <- combined_data %>% select(-ca, -thal)
 critical_columns <- c("num", "age", "sex", "cp", "trestbps", "chol",
@@ -200,6 +202,7 @@ oldpeak (0.586433):Higher ST depression values significantly increase the odds o
 Odds ratio: exp(0.586)=1.80.
 fbs (Fasting blood sugar) and age do not have significant association with heart disease in this dataset.
 
+AIC: 469.38 (used for model comparison).
 
 
 
