@@ -139,3 +139,72 @@ Example Hypothesis (MLR):
 - **Alternative Hypothesis (H_a):** Regional differences significantly influence the predictive power of diagnostic factors for heart disease.
 
 $$ num = \beta_0 + \beta_1 \cdot \text{chol} + \beta_2 \cdot \text{age} + \beta_3 \cdot \text{region} + \beta_4 \cdot (\text{chol} \times \text{region}) + \beta_5 \cdot (\text{age} \times \text{region}) + \epsilon $$
+
+
+author: Thomas Tang
+```{r }
+cleveland <- read.csv("./data/cleveland.csv", header = FALSE)
+hungarian <- read.csv("./data/hungarian.csv", header = FALSE)
+long_beach <- read.csv("./data/long_beach_va.csv", header = FALSE)
+switzerland <- read.csv("./data/switzerland.csv", header = FALSE)
+
+# Add region column and combine datasets
+cleveland$region <- "Cleveland"
+hungarian$region <- "Hungarian"
+long_beach$region <- "Long_Beach_VA"
+switzerland$region <- "Switzerland"
+combined_data <- bind_rows(cleveland, hungarian, long_beach, switzerland)
+
+colnames(combined_data) <- c("age", "sex", "cp", "trestbps", "chol", "fbs",
+                             "restecg", "thalach", "exang", "oldpeak", "slope",
+                             "ca", "thal", "num", "region")
+combined_data <- combined_data %>%
+  mutate(across(c(age, sex, cp, trestbps, chol, fbs, restecg, thalach,
+                  exang, oldpeak, slope, ca, thal, num), as.numeric))
+```
+
+```{R}
+cleaned_data <- combined_data %>% select(-ca, -thal)
+critical_columns <- c("num", "age", "sex", "cp", "trestbps", "chol",
+                      "fbs", "restecg", "thalach", "exang", "oldpeak", "slope")
+cleaned_data <- cleaned_data %>% drop_na(all_of(critical_columns))
+summary(cleaned_data)
+```
+```{r author: Thomas Tang}
+cleaned_data$num <- ifelse(cleaned_data$num > 0, 1, 0)
+cleaned_data$num <- as.factor(cleaned_data$num)
+logistic_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
+                      restecg + thalach + exang + oldpeak,
+                      data = cleaned_data, family = binomial)
+summary(logistic_model)
+```
+(author= Thomas Tang)
+Significant Predictors (p-value < 0.05):
+sex (1.409350):
+Males are significantly more likely to have heart disease than females.
+Odds ratio: exp(1.409)=4.09 → Males are 4.09 times more likely to have heart disease compared to females.
+cp (0.687260):
+Higher chest pain levels increase the odds of heart disease.
+Odds ratio: exp(0.687)=1.99.
+trestbps (0.013883):
+Resting blood pressure has a small but significant positive effect.
+Odds ratio: exp(0.0139)=1.014 per unit increase.
+chol (-0.003090):
+Cholesterol has a small negative association.
+Odds ratio: exp(−0.0031)=0.997, slightly decreasing odds.
+thalach (-0.021518):
+Higher maximum heart rate achieved decreases the odds of heart disease.
+Odds ratio: exp(−0.0215)=0.978 → Protective effect.
+exang (0.894064):
+Exercise-induced angina increases the odds of heart disease. exp(0.894)=2.44.
+oldpeak (0.586433):Higher ST depression values significantly increase the odds of heart disease.
+Odds ratio: exp(0.586)=1.80.
+fbs (Fasting blood sugar) and age do not have significant association with heart disease in this dataset.
+
+
+
+
+
+
+
+
