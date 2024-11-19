@@ -5,7 +5,7 @@ Stella Koo
 
 # Issues to discuss
 
-- For Summary of varaibles, should categorical data be included?
+- For Summary of variables, should categorical data be included?
 
 - Cannot create a proper reader friendly table
 
@@ -41,6 +41,17 @@ combined_df = map2(dfs, regions, ~ mutate(.x, region = .y)) |>
 ```
 
 ## Summary of variables
+
+The table below displays descriptive statistics for each variable in the
+heart disease dataset, organized by region. The continuous variables
+include `age`, `trestbps`, `chol`, `thalach`, `oldpeak` while the
+discrete variables consist of `sex`, `cp`, `fbs`, `restecg`, `exang`.
+These variables will be used to assess the diagnosis of heart disease,
+as indicated by the `num` variable.
+
+Variables `ca` and `thal` were excluded from the analysis due to
+incomplete data, with missing values exceeding 85% in more than two
+regions, rendering these variables non-comparable.
 
 ``` r
 summary_df = function(dataset) {
@@ -134,6 +145,21 @@ summary_df(dfs)
 
 ## Distribution of participants
 
+The plot illustrates the distribution of participants by age and sex
+across different regions, with respect to the diagnosis of heart
+disease. It is evident that the distribution varies significantly by
+region, likely due to differences in participant availability for the
+study across these regions.
+
+Overall, there are noticeably more male participants, and the age
+distribution is relatively sparse for both groups—those without heart
+disease and those with heart disease. However, distinct patterns emerge
+when considering the regional breakdown. To gain a deeper understanding
+of the factors influencing heart disease prevalence, a more granular
+analysis is necessary to identify which variables are contributing to
+the observed trends, and how these factors may differ or remain
+consistent across regions.
+
 ``` r
 ggplot(combined_df, aes(x = age, y = num, color = factor(sex, levels = c(0,1), labels = c("Female", "Male")))) +
   geom_point(alpha = 0.7) +
@@ -141,7 +167,7 @@ ggplot(combined_df, aes(x = age, y = num, color = factor(sex, levels = c(0,1), l
   theme_minimal() +
   labs(title = "Distribution of participants",
        x = "Age",
-       y = "Num",
+       y = "Heart Disease Status",
        color = "Sex")
 ```
 
@@ -150,6 +176,28 @@ ggplot(combined_df, aes(x = age, y = num, color = factor(sex, levels = c(0,1), l
 ## Continuous Variables
 
 ### Correlation heatmap for each region
+
+A correlation heatmap was generated for each region to examine the
+relationships between the variables and assess whether these
+correlations vary across regions.
+
+At a glance, the correlations differ across regions, with some showing
+stronger relationships than others. The following variables were
+selected based on the highest correlation values observed in each
+region:
+
+- `age` and \`thalach: A stronger negative correlation was found in
+  Hungary (-0.45) and Cleveland (-0.39) compared to Switzerland (-0.29)
+  and Long Beach (-0.16).
+- `age` and `trestbps`: Long Beach exhibited a stronger positive
+  correlation (0.38) than Cleveland (0.28), Hungary (0.26), and
+  Switzerland (0.24).
+- `thalach` and `trestbps`: A stronger negative relationship was
+  observed in Switzerland (-0.23) and Hungary (-0.22) compared to
+  Cleveland (-0.05) and Long Beach (0.00).
+- `thalach` and `oldpeak`: A stronger negative correlation was seen in
+  Cleveland (-0.34) and Hungary (-0.32), while Long Beach (0.19) and
+  Switzerland (0.17) displayed weak positive correlations.
 
 ``` r
 cols_to_include = c("age", "trestbps", "chol", "thalach", "oldpeak")
@@ -174,20 +222,19 @@ for(r in regions) {
 }
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
 
     ## Warning in cor(region_data[, cols_to_include], use = "complete.obs"): the
     ## standard deviation is zero
 
-![](EDA_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->
+![](EDA_files/figure-gfm/unnamed-chunk-5-3.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-5-4.png)<!-- -->
 
 ### Bivariate Analysis of Strongly Correlated Variables
 
-Based on the correlation heatmap, we decided to focus on comparing
-variables that exhibit stronger correlations with each other in each
-region.
+To analyze the variables previously identified through the correlation
+heatmap in greater detail, scatterplots were generated for each region.
 
-#### `thalach` vs `age`
+#### `age` vs `thalach`
 
 ``` r
 ggplot(combined_df, aes(x = age, y = thalach)) +
@@ -210,7 +257,7 @@ ggplot(combined_df, aes(x = age, y = thalach)) +
 
 ![](EDA_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
-#### `trestbps` vs `age`
+#### `age` vs `trestbps`
 
 ``` r
 ggplot(combined_df, aes(x = age, y = trestbps)) +
@@ -370,8 +417,6 @@ ggplot(combined_df, aes(x = as.factor(num), y = chol)) +
 ![](EDA_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ## Discrete Variables
-
-sex, cp, fbs, restecg, exang
 
 ## I dont know what it is, just copy from chatGPT, to study the correlation for discrete variables.
 

@@ -105,7 +105,7 @@ for(r in regions) {
 ### Bivariate Analysis of Strongly Correlated Variables
 To analyze the variables previously identified through the correlation heatmap in greater detail, scatterplots were generated for each region.
 
-#### `thalach` vs `age`
+#### `age` vs `thalach` 
 ```{r}
 ggplot(combined_df, aes(x = age, y = thalach)) +
   geom_point(aes(color = as.factor(num)), size = 2) + 
@@ -118,7 +118,7 @@ ggplot(combined_df, aes(x = age, y = thalach)) +
 
 ```
 
-#### `trestbps` vs `age`
+#### `age` vs `trestbps` 
 ```{r}
 ggplot(combined_df, aes(x = age, y = trestbps)) +
   geom_point(aes(color = as.factor(num)), size = 2) + 
