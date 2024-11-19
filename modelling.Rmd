@@ -11,7 +11,7 @@ library(tidyverse)
 library(janitor)
 ```
 
-```{r import data author: Yixin Zheng, Stella Koo, include = FALSE}
+```{r import data author: Yixin Zheng, Stella Koo, include = FALSE, eval=FALSE}
 save_path <- "./data"
 
 column_names <- c("age", "sex", "cp", "trestbps", "chol", "fbs", 
@@ -203,12 +203,13 @@ fbs (Fasting blood sugar) and age do not have significant association with heart
 
 
 
-(author = Yonghao YU)
+(author: Yonghao YU)
 
 ## Try Random Forest Classifier!
 
 ### First, do data preprocessing! 
-```{r, author = Yonghao YU}
+
+```{r, author: Yonghao YU}
 cleveland$region = "Cleveland"
 hungary$region = "Hungarian"
 long_beach$region = "Long_Beach_VA"
@@ -231,7 +232,8 @@ print(combined_data)
 ```
 
 ### Second, construct the model and generate the results! 
-```{r, author = Yonghao YU}
+
+```{r, author: Yonghao YU}
 library(caret)
 library(randomForest)
 
@@ -278,7 +280,8 @@ From the model we can observe the following things:
 Then we ranked the predictors descendingly based on the MeanDecreaseAccuracy which measures the decrease in overall model accuracy when the variable is permuted. Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out restecg, trestbps, and fbs predictors that have relatively small impact on our prediction. And then we can focus on the first eight predictors that have more impact on our prediction results!
 
 ### Last, simulate the prediction which predicts the num with the new data based on the model we built!
-```{r, author =  Yonghao YU}
+
+```{r, author: Yonghao YU}
 # construct a new dataframe which includes new data
 new_data = data.frame(
   age = c(63,39),
