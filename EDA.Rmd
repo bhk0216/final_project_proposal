@@ -7,13 +7,11 @@ output: github_document
 
 # Issues to discuss
 
-* For Summary of varaibles, should categorical data be included?
+* For Summary of variables, should categorical data be included?
 * Cannot create a proper reader friendly table 
 * Have trouble resizing correlation heatmap
 * Cholesterol variable all zero for Switzerland dataset
 * Analysis by sex could be misleading since some locations might have not selected many female participants? 
-
-
 
 * Need to decide which graphs to include/remove
 
@@ -208,7 +206,6 @@ ggplot(combined_df, aes(x = as.factor(num), y = chol)) +
 
 ## Discrete Variables
 sex, cp, fbs, restecg, exang
-
 
 ## I dont know what it is, just copy from chatGPT, to study the correlation for discrete variables.
 ```{r}
