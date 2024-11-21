@@ -116,6 +116,337 @@ cor(cleveland$chol, cleveland$num, use = "complete.obs")
 
     ## [1] 0.08516361
 
+# Variable Selection (author: Yonghao YU)
+
+author: Yonghao YU
+
+### Data Preprocessing
+
+``` r
+cleveland$region = "Cleveland"
+hungary$region = "Hungarian"
+long_beach$region = "Long_Beach_VA"
+switzerland$region = "Switzerland"
+combined_data_one = bind_rows(cleveland, hungary, long_beach, switzerland)
+
+colnames(combined_data_one) = c("age", "sex", "cp", "trestbps", "chol", "fbs",
+                             "restecg", "thalach", "exang", "oldpeak", "slope",
+                             "ca", "thal", "num", "region")
+combined_data_two = combined_data_one |>
+  mutate(region = case_when(
+    region == "Cleveland" ~ 1,
+    region == "Hungarian" ~ 2,
+    region == "Long_Beach_VA" ~ 3,
+    region == "Switzerland" ~ 4,
+  )) |>
+  select(-thal,-ca) |>
+  drop_na()
+case_data = combined_data_two |>
+  filter(num == 1)
+control_data = combined_data_two |>
+  filter(num == 0)
+print(case_data)
+```
+
+    ## # A tibble: 324 × 13
+    ##      age   sex    cp trestbps  chol   fbs restecg thalach exang oldpeak slope
+    ##    <dbl> <dbl> <dbl>    <dbl> <dbl> <dbl>   <dbl>   <dbl> <dbl>   <dbl> <dbl>
+    ##  1    67     1     4      160   286     0       2     108     1     1.5     2
+    ##  2    67     1     4      120   229     0       2     129     1     2.6     2
+    ##  3    62     0     4      140   268     0       2     160     0     3.6     3
+    ##  4    63     1     4      130   254     0       2     147     0     1.4     2
+    ##  5    53     1     4      140   203     1       2     155     1     3.1     3
+    ##  6    56     1     3      130   256     1       2     142     1     0.6     2
+    ##  7    48     1     2      110   229     0       0     168     0     1       3
+    ##  8    58     1     2      120   284     0       2     160     0     1.8     2
+    ##  9    58     1     3      132   224     0       2     173     0     3.2     1
+    ## 10    60     1     4      130   206     0       2     132     1     2.4     2
+    ## # ℹ 314 more rows
+    ## # ℹ 2 more variables: num <dbl>, region <dbl>
+
+``` r
+print(control_data)
+```
+
+    ## # A tibble: 207 × 13
+    ##      age   sex    cp trestbps  chol   fbs restecg thalach exang oldpeak slope
+    ##    <dbl> <dbl> <dbl>    <dbl> <dbl> <dbl>   <dbl>   <dbl> <dbl>   <dbl> <dbl>
+    ##  1    63     1     1      145   233     1       2     150     0     2.3     3
+    ##  2    37     1     3      130   250     0       0     187     0     3.5     3
+    ##  3    41     0     2      130   204     0       2     172     0     1.4     1
+    ##  4    56     1     2      120   236     0       0     178     0     0.8     1
+    ##  5    57     0     4      120   354     0       0     163     1     0.6     1
+    ##  6    57     1     4      140   192     0       0     148     0     0.4     2
+    ##  7    56     0     2      140   294     0       2     153     0     1.3     2
+    ##  8    44     1     2      120   263     0       0     173     0     0       1
+    ##  9    52     1     3      172   199     1       0     162     0     0.5     1
+    ## 10    57     1     3      150   168     0       0     174     0     1.6     1
+    ## # ℹ 197 more rows
+    ## # ℹ 2 more variables: num <dbl>, region <dbl>
+
+``` r
+print(combined_data_two)
+```
+
+    ## # A tibble: 531 × 13
+    ##      age   sex    cp trestbps  chol   fbs restecg thalach exang oldpeak slope
+    ##    <dbl> <dbl> <dbl>    <dbl> <dbl> <dbl>   <dbl>   <dbl> <dbl>   <dbl> <dbl>
+    ##  1    63     1     1      145   233     1       2     150     0     2.3     3
+    ##  2    67     1     4      160   286     0       2     108     1     1.5     2
+    ##  3    67     1     4      120   229     0       2     129     1     2.6     2
+    ##  4    37     1     3      130   250     0       0     187     0     3.5     3
+    ##  5    41     0     2      130   204     0       2     172     0     1.4     1
+    ##  6    56     1     2      120   236     0       0     178     0     0.8     1
+    ##  7    62     0     4      140   268     0       2     160     0     3.6     3
+    ##  8    57     0     4      120   354     0       0     163     1     0.6     1
+    ##  9    63     1     4      130   254     0       2     147     0     1.4     2
+    ## 10    53     1     4      140   203     1       2     155     1     3.1     3
+    ## # ℹ 521 more rows
+    ## # ℹ 2 more variables: num <dbl>, region <dbl>
+
+author: Yonghao YU
+
+### For Continues case
+
+For continuous variables, we use mean and standard deviation (std) to
+describe the distribution in overall samples, samples of control(num =
+0), and samples of case(num = 1). Then, we use t-test to examine whether
+the means of these variables are significantly different between case
+group and control group (significance level = 0.05).
+
+``` r
+# 1. Mean and Std for Continuous Variables (Overall)
+list_conti_all = list(
+  age = combined_data_two$age,
+  trestbps = combined_data_two$trestbps,
+  chol = combined_data_two$chol,
+  thalach = combined_data_two$thalach,
+  oldpeak = combined_data_two$oldpeak
+) |> 
+  lapply(na.omit) 
+
+mean_all = sapply(list_conti_all, mean) |> 
+  as.data.frame()|>
+  setNames("Overall Mean")
+
+std_all = sapply(list_conti_all, sd) |> 
+  as.data.frame() |>
+  setNames("Overall Std")
+
+# 2. p-value of t-test for Continuous Variables
+t_test = function(variable) {
+  t_test_result = t.test(combined_data_two[[variable]] ~ combined_data_two$num)
+  return(data.frame(
+    variable = variable,
+    p_value = t_test_result$p.value
+  ))
+}
+
+p_value = 
+  lapply(c("age", "trestbps", "chol", "thalach", "oldpeak"), t_test) |> 
+  bind_rows() |> 
+  as.data.frame()
+
+# 3. Mean and Std for Control Group
+list_conti_control = list(
+  age = control_data$age,
+  trestbps = control_data$trestbps,
+  chol = control_data$chol,
+  thalach = control_data$thalach,
+  oldpeak = control_data$oldpeak
+) |> 
+  lapply(na.omit)
+
+mean_control = sapply(list_conti_control, mean) |> 
+  as.data.frame() |>
+  setNames("Control Mean")
+
+std_control = sapply(list_conti_control, sd) |> 
+  as.data.frame() |>
+  setNames("Control Std")
+
+# 4. Mean and Std for Case Group
+list_conti_case = list(
+  age = case_data$age,
+  trestbps = case_data$trestbps,
+  chol = case_data$chol,
+  thalach = case_data$thalach,
+  oldpeak = case_data$oldpeak
+) |> 
+  lapply(na.omit)
+
+mean_case = sapply(list_conti_case, mean) |> 
+  as.data.frame() |>
+  setNames("Case Mean")
+
+std_case = sapply(list_conti_case, sd) |> 
+  as.data.frame() |>
+  setNames("Case Std")
+
+conti_des_df =
+  as.data.frame(cbind(mean_all, std_all, mean_control, std_control, mean_case, std_case, p_value))
+conti_des_df = conti_des_df[, -grep("variable", colnames(conti_des_df))] |> 
+  knitr::kable(digits = 6)
+conti_des_df
+```
+
+|          | Overall Mean | Overall Std | Control Mean | Control Std |  Case Mean |   Case Std |  p_value |
+|:---------|-------------:|------------:|-------------:|------------:|-----------:|-----------:|---------:|
+| age      |    54.843691 |    8.824069 |    52.908213 |    9.248788 |  56.080247 |   8.323177 | 0.000074 |
+| trestbps |   133.406780 |   18.969496 |   129.734300 |   16.322060 | 135.753086 |  20.158831 | 0.000179 |
+| chol     |   216.854991 |   99.014215 |   237.043478 |   68.313903 | 203.956790 | 112.615863 | 0.000030 |
+| thalach  |   138.463277 |   25.833649 |   152.758454 |   22.958375 | 129.330247 |  23.329890 | 0.000000 |
+| oldpeak  |     1.218456 |    1.105150 |     0.726087 |    0.805741 |   1.533025 |   1.155598 | 0.000000 |
+
+Based on the result, we can find that all five features are
+significantly different between case and control.
+
+author: Yonghao YU
+
+### For Discrete case
+
+For binary and categorical variables, we use count (n) and percentage
+(pct) to describe the distribution in overall samples, samples of
+control(num = 0), and samples of case(num = 1). Then, as the data meet
+the assumption, we use chi-sq test to examine whether the distribution
+of these variables are significantly different between case group and
+control group (significance level = 0.05).
+
+``` r
+list_cat_all = as.data.frame(list(
+  sex = combined_data_two$sex,
+  cp = combined_data_two$cp,
+  fbs = combined_data_two$fbs,
+  restecg = combined_data_two$restecg,
+  exang = combined_data_two$exang,
+  slope = combined_data_two$slope,
+  region = combined_data_two$region
+))
+
+# 1. Overall Counts and Chi-Square Test
+cat_vars = names(list_cat_all)
+
+count_all_function = function(variable) {
+  table_value = table(list_cat_all[[variable]], combined_data_two$num) 
+  chi_sq_test = chisq.test(table_value)
+  
+  count = table(list_cat_all[[variable]])
+  total = sum(count)
+  pct = count / total
+  
+  result_df = tibble(
+    variable = rep(variable, length(count)),
+    category = names(count),
+    n = as.numeric(count),
+    pct = round(pct, 3),
+    p_value = round(chi_sq_test$p.value, 3)
+  )
+  
+  return(result_df)
+}
+
+cat_count_chisq = lapply(cat_vars, count_all_function) |> 
+  bind_rows()
+
+# 2. Control Group Counts and Percentages
+list_cat_ctrl = as.data.frame(list(
+  sex = control_data$sex,
+  cp = control_data$cp,
+  fbs = control_data$fbs,
+  restecg = control_data$restecg,
+  exang = control_data$exang,
+  slope = control_data$slope,
+  region = control_data$region
+))
+
+cat_vars_ctrl = names(list_cat_ctrl)
+
+count_ctrl_function = function(variable) {
+  count = table(list_cat_ctrl[[variable]])
+  total = sum(count)
+  pct = count / total
+  
+  result_df = tibble(
+    variable = rep(variable, length(count)),
+    category = names(count),
+    control_n = as.numeric(count),
+    control_pct = round(pct, 3)
+  )
+  
+  return(result_df)
+}
+
+cat_count_ctrl = lapply(cat_vars_ctrl, count_ctrl_function) |> 
+  bind_rows()
+
+# 3. Case Group Counts and Percentages
+list_cat_case = as.data.frame(list(
+  sex = case_data$sex,
+  cp = case_data$cp,
+  fbs = case_data$fbs,
+  restecg = case_data$restecg,
+  exang = case_data$exang,
+  slope = case_data$slope,
+  region = case_data$region
+))
+
+cat_vars_case = names(list_cat_case)
+
+count_case_function = function(variable) {
+  count = table(list_cat_case[[variable]])
+  total = sum(count)
+  pct = count / total
+  
+  result_df = tibble(
+    variable = rep(variable, length(count)),
+    category = names(count),
+    case_n = as.numeric(count),
+    case_pct = round(pct, 3)
+  )
+  return(result_df)
+}
+
+cat_count_case = lapply(cat_vars_case, count_case_function) |> 
+  bind_rows()
+
+# 4. Combine Results
+final_cat_count = cat_count_chisq |>
+  left_join(cat_count_ctrl, by = c("variable", "category")) |>
+  left_join(cat_count_case, by = c("variable", "category"))|>
+  knitr::kable(digits = 3)
+
+print(final_cat_count)
+```
+
+    ## 
+    ## 
+    ## |variable |category |   n|   pct| p_value| control_n| control_pct| case_n| case_pct|
+    ## |:--------|:--------|---:|-----:|-------:|---------:|-----------:|------:|--------:|
+    ## |sex      |0        | 127| 0.239|   0.000|        87|       0.420|     40|    0.123|
+    ## |sex      |1        | 404| 0.761|   0.000|       120|       0.580|    284|    0.877|
+    ## |cp       |1        |  30| 0.056|   0.000|        18|       0.087|     12|    0.037|
+    ## |cp       |2        |  70| 0.132|   0.000|        51|       0.246|     19|    0.059|
+    ## |cp       |3        | 114| 0.215|   0.000|        80|       0.386|     34|    0.105|
+    ## |cp       |4        | 317| 0.597|   0.000|        58|       0.280|    259|    0.799|
+    ## |fbs      |0        | 446| 0.840|   0.378|       178|       0.860|    268|    0.827|
+    ## |fbs      |1        |  85| 0.160|   0.378|        29|       0.140|     56|    0.173|
+    ## |restecg  |0        | 297| 0.559|   0.000|       123|       0.594|    174|    0.537|
+    ## |restecg  |1        |  73| 0.137|   0.000|        13|       0.063|     60|    0.185|
+    ## |restecg  |2        | 161| 0.303|   0.000|        71|       0.343|     90|    0.278|
+    ## |exang    |0        | 267| 0.503|   0.000|       163|       0.787|    104|    0.321|
+    ## |exang    |1        | 264| 0.497|   0.000|        44|       0.213|    220|    0.679|
+    ## |slope    |1        | 173| 0.326|   0.000|       119|       0.575|     54|    0.167|
+    ## |slope    |2        | 310| 0.584|   0.000|        76|       0.367|    234|    0.722|
+    ## |slope    |3        |  48| 0.090|   0.000|        12|       0.058|     36|    0.111|
+    ## |region   |1        | 303| 0.571|   0.000|       164|       0.792|    139|    0.429|
+    ## |region   |2        |  95| 0.179|   0.000|        27|       0.130|     68|    0.210|
+    ## |region   |3        |  87| 0.164|   0.000|        15|       0.072|     72|    0.222|
+    ## |region   |4        |  46| 0.087|   0.000|         1|       0.005|     45|    0.139|
+
+Based on the result, we can find that except fbs, the rest of all other
+binary and categorical features are significantly different between case
+and control.
+
 hypothesis (author: Yixin Zheng) \* need to run some test choose
 explanatory variables?
 
@@ -232,6 +563,10 @@ combined_data <- combined_data %>%
     ## ! 强制改变过程中产生了NA
     ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 13 remaining warnings.
 
+Dropped variables with excessive missing values (ca and thal). Removed
+rows with missing values in critical variables. Converted num to binary
+(0 = no heart disease, 1 = heart disease) and set as a factor.
+
 ``` r
 cleaned_data <- combined_data %>% select(-ca, -thal)
 critical_columns <- c("num", "age", "sex", "cp", "trestbps", "chol",
@@ -323,3 +658,203 @@ heart disease. exp(0.894)=2.44. oldpeak (0.586433):Higher ST depression
 values significantly increase the odds of heart disease. Odds ratio:
 exp(0.586)=1.80. fbs (Fasting blood sugar) and age do not have
 significant association with heart disease in this dataset.
+
+AIC: 469.38 (used for model comparison).
+
+(author: Yonghao YU)
+
+## Try Random Forest Classifier!
+
+### A brief intro to Random Forest Algorithm
+
+Random Forest is an ensemble learning algorithm used for classification
+and regression tasks. It builds multiple decision trees using bootstrap
+sampling (random subsets of data) and selects features randomly at each
+split to increase diversity. Each tree predicts independently, and the
+final output is determined by majority voting (classification) or
+averaging (regression). Random Forest is robust to overfitting, handles
+high-dimensional data well, and provides feature importance scores.
+
+### First, construct the model and generate the results!
+
+author: Yonghao YU
+
+``` r
+library(caret)
+```
+
+    ## Warning: 程序包'caret'是用R版本4.4.2 来建造的
+
+    ## 载入需要的程序包：lattice
+
+    ## 
+    ## 载入程序包：'caret'
+
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     lift
+
+``` r
+library(randomForest)
+```
+
+    ## Warning: 程序包'randomForest'是用R版本4.4.2 来建造的
+
+    ## randomForest 4.7-1.2
+
+    ## Type rfNews() to see new features/changes/bug fixes.
+
+    ## 
+    ## 载入程序包：'randomForest'
+
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     combine
+
+    ## The following object is masked from 'package:ggplot2':
+    ## 
+    ##     margin
+
+``` r
+# drop out the variable "ca" and "thal" which are have so many missing values inside
+variables = c("chol", "cp", "age", "thalach", "oldpeak", "num", "restecg", "fbs", "region", "slope", "trestbps", "exang")
+data = combined_data_two[, variables]
+data$num = as.factor(data$num)
+
+# check and deal with missing data
+if (any(is.na(data))) {
+  print("Missing value detected")
+  data = na.omit(data)
+  print("Missing data have been deleted")
+}
+# split the dataset into training and testing datasets
+set.seed(42)
+trainIndex = createDataPartition(data$num, p = 0.8, list = FALSE)
+trainData = data[trainIndex, ]
+testData = data[-trainIndex, ]
+
+# Construct the random forest model and evaluate the model results
+rf_model = randomForest(num ~ ., data = trainData, importance = TRUE)
+rf_pred = predict(rf_model, testData)
+rf_conf_matrix = confusionMatrix(rf_pred, testData$num)
+print("The model result is")
+```
+
+    ## [1] "The model result is"
+
+``` r
+print(rf_conf_matrix)
+```
+
+    ## Confusion Matrix and Statistics
+    ## 
+    ##           Reference
+    ## Prediction  0  1
+    ##          0 31 14
+    ##          1 10 50
+    ##                                           
+    ##                Accuracy : 0.7714          
+    ##                  95% CI : (0.6793, 0.8477)
+    ##     No Information Rate : 0.6095          
+    ##     P-Value [Acc > NIR] : 0.000325        
+    ##                                           
+    ##                   Kappa : 0.5281          
+    ##                                           
+    ##  Mcnemar's Test P-Value : 0.540291        
+    ##                                           
+    ##             Sensitivity : 0.7561          
+    ##             Specificity : 0.7812          
+    ##          Pos Pred Value : 0.6889          
+    ##          Neg Pred Value : 0.8333          
+    ##              Prevalence : 0.3905          
+    ##          Detection Rate : 0.2952          
+    ##    Detection Prevalence : 0.4286          
+    ##       Balanced Accuracy : 0.7687          
+    ##                                           
+    ##        'Positive' Class : 0               
+    ## 
+
+From the model we can observe the following things: 1. The model
+correctly classified 77.14% of the instances. 2. The true accuracy is
+expected to fall 95% of the time in (0.6793, 0.8477) 3. The information
+rate is 0.6095 which is less than the accuracy rate (p-value also
+indicate this), indicating the model we built actually capture some
+significant features. 4. The Kappa is 0.5281 which is in the range
+\[40,60\], which indicate our classifier achieves moderate level of
+classification 5. High sensitivity (0.7561) indicates good
+identification of positives. 6. High specificity (0.7812) indicates good
+identification of negatives. 7. Balanced accuracy (76.87%) suggests the
+model balances its performance across both classes well.
+
+author: Yonghao YU \# Then we show the feature importance trends(The
+trend is descending according to the MeanDecreaseAccuracy)
+
+``` r
+var_imp = importance(rf_model)
+var_imp_df = as.data.frame(var_imp)
+var_imp_df$Variable = rownames(var_imp_df)
+rownames(var_imp_df) = NULL
+var_imp_df = var_imp_df[order(var_imp_df$MeanDecreaseAccuracy, decreasing = TRUE), ]
+ggplot(var_imp_df, aes(x = reorder(Variable, -MeanDecreaseAccuracy))) +
+  geom_line(aes(y = MeanDecreaseAccuracy, group = 1, color = "MeanDecreaseAccuracy")) +
+  geom_point(aes(y = MeanDecreaseAccuracy, color = "MeanDecreaseAccuracy")) +
+  geom_line(aes(y = MeanDecreaseGini, group = 1, color = "MeanDecreaseGini")) +
+  geom_point(aes(y = MeanDecreaseGini, color = "MeanDecreaseGini")) +
+  labs(title = "Feature Importance Trends",
+       x = "Features",
+       y = "Importance",
+       color = "Metric") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 1))
+```
+
+![](modelling_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+Then we ranked the predictors descendingly based on the
+MeanDecreaseAccuracy which measures the decrease in overall model
+accuracy when the variable is permuted. And we show them in a line plot!
+Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out
+restecg, trestbps, and fbs predictors that have relatively small impact
+on our prediction. And then we can focus on the first eight predictors
+that have more impact on our prediction results!
+
+### Last, simulate the prediction which predicts the num with the new data based on the model we built!
+
+author: Yonghao YU
+
+``` r
+# construct a new dataframe which includes new data
+new_data = data.frame(
+  age = c(63,39),
+  sex = c(1, 1),
+  cp = c(1, 2),
+  trestbps = c(145, 120),
+  chol = c(233, 200),
+  fbs = c(1, 0),
+  restecg = c(2, 0),
+  thalach = c(150, 160),
+  exang = c(0, 1),
+  oldpeak = c(2.3, 1),
+  slope = c(3, 2),
+  region = c(1, 2)
+)
+# predict the results based on the model we have trained
+predicted_num = predict(rf_model, new_data)
+print("The prediction result is：")
+```
+
+    ## [1] "The prediction result is："
+
+``` r
+print(data.frame(new_data, Predicted_num = predicted_num))
+```
+
+    ##   age sex cp trestbps chol fbs restecg thalach exang oldpeak slope region
+    ## 1  63   1  1      145  233   1       2     150     0     2.3     3      1
+    ## 2  39   1  2      120  200   0       0     160     1     1.0     2      2
+    ##   Predicted_num
+    ## 1             0
+    ## 2             0
+
+From the results, we can see that the model can generate some results
+based on the predictor values we put in!
