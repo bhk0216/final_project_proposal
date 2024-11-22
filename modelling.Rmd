@@ -438,6 +438,49 @@ fbs (Fasting blood sugar) and age do not have significant association with heart
 
 AIC: 469.38 (used for model comparison).
 
+```{r}
+male_data <- cleaned_data %>% filter(sex == 1)
+female_data <- cleaned_data %>% filter(sex == 0)
+
+male_model <- glm(num ~ age + cp + trestbps + chol + fbs + restecg +
+                  thalach + exang + oldpeak, data = male_data, family = binomial)
+female_model <- glm(num ~ age + cp + trestbps + chol + fbs + restecg +
+                    thalach + exang + oldpeak, data = female_data, family = binomial)
+male_results <- summary(male_model)$coefficients
+female_results <- summary(female_model)$coefficients
+
+results_table <- data.frame(
+  Variable = rownames(male_results),
+  Male_Estimate = male_results[, "Estimate"],
+  Male_Std_Error = male_results[, "Std. Error"],
+  Male_P_Value = male_results[, "Pr(>|z|)"],
+  Female_Estimate = female_results[, "Estimate"],
+  Female_Std_Error = female_results[, "Std. Error"],
+  Female_P_Value = female_results[, "Pr(>|z|)"]
+)
+print(results_table)
+```
+
+Significant Predictors for Males:
+Chest Pain (cp): Strong positive effect (β=0.62, p<0.001).
+Resting Blood Pressure (trestbps): Positive and weakly significant (β=0.007, p=0.039).
+Max Heart Rate (thalach): Negative and significant (β=−0.026, p=0.001), indicating a protective effect.
+Exercise-Induced Angina (exang): Positive and significant (β=0.71, p=0.025).
+ST Depression (oldpeak): Strong positive effect (β=0.57, p<0.001).
+
+Significant Predictors for Females:
+Chest Pain (cp): Stronger positive effect than males (β=0.93, p=0.006).
+Resting Blood Pressure (trestbps): Positive and significant (β=0.033, p=0.023).
+Exercise-Induced Angina (exang): Positive and significant (β=1.14, p=0.037), stronger effect than in males.
+ST Depression (oldpeak): Strong positive effect (β=0.68, p=0.020).
+
+Key Comparisons Between Genders
+Chest Pain (cp): Stronger predictor for females (β=0.93) than males (β=0.62).
+Exercise-Induced Angina (exang): Higher odds for females (β=1.14) than males (β=0.71).
+ST Depression (oldpeak): Significant and strong for both genders, slightly higher in females (β=0.68).
+
+
+
 
 
 (author: Yonghao YU)

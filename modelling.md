@@ -290,13 +290,13 @@ conti_des_df = conti_des_df[, -grep("variable", colnames(conti_des_df))] |>
 conti_des_df
 ```
 
-|          | Overall Mean | Overall Std | Control Mean | Control Std |  Case Mean |   Case Std |  p_value |
-|:---------|-------------:|------------:|-------------:|------------:|-----------:|-----------:|---------:|
-| age      |    54.843691 |    8.824069 |    52.908213 |    9.248788 |  56.080247 |   8.323177 | 0.000074 |
-| trestbps |   133.406780 |   18.969496 |   129.734300 |   16.322060 | 135.753086 |  20.158831 | 0.000179 |
-| chol     |   216.854991 |   99.014215 |   237.043478 |   68.313903 | 203.956790 | 112.615863 | 0.000030 |
-| thalach  |   138.463277 |   25.833649 |   152.758454 |   22.958375 | 129.330247 |  23.329890 | 0.000000 |
-| oldpeak  |     1.218456 |    1.105150 |     0.726087 |    0.805741 |   1.533025 |   1.155598 | 0.000000 |
+|  | Overall Mean | Overall Std | Control Mean | Control Std | Case Mean | Case Std | p_value |
+|:---|---:|---:|---:|---:|---:|---:|---:|
+| age | 54.843691 | 8.824069 | 52.908213 | 9.248788 | 56.080247 | 8.323177 | 0.000074 |
+| trestbps | 133.406780 | 18.969496 | 129.734300 | 16.322060 | 135.753086 | 20.158831 | 0.000179 |
+| chol | 216.854991 | 99.014215 | 237.043478 | 68.313903 | 203.956790 | 112.615863 | 0.000030 |
+| thalach | 138.463277 | 25.833649 | 152.758454 | 22.958375 | 129.330247 | 23.329890 | 0.000000 |
+| oldpeak | 1.218456 | 1.105150 | 0.726087 | 0.805741 | 1.533025 | 1.155598 | 0.000000 |
 
 Based on the result, we can find that all five features are
 significantly different between case and control.
@@ -661,6 +661,73 @@ significant association with heart disease in this dataset.
 
 AIC: 469.38 (used for model comparison).
 
+``` r
+male_data <- cleaned_data %>% filter(sex == 1)
+female_data <- cleaned_data %>% filter(sex == 0)
+
+male_model <- glm(num ~ age + cp + trestbps + chol + fbs + restecg +
+                  thalach + exang + oldpeak, data = male_data, family = binomial)
+female_model <- glm(num ~ age + cp + trestbps + chol + fbs + restecg +
+                    thalach + exang + oldpeak, data = female_data, family = binomial)
+male_results <- summary(male_model)$coefficients
+female_results <- summary(female_model)$coefficients
+
+results_table <- data.frame(
+  Variable = rownames(male_results),
+  Male_Estimate = male_results[, "Estimate"],
+  Male_Std_Error = male_results[, "Std. Error"],
+  Male_P_Value = male_results[, "Pr(>|z|)"],
+  Female_Estimate = female_results[, "Estimate"],
+  Female_Std_Error = female_results[, "Std. Error"],
+  Female_P_Value = female_results[, "Pr(>|z|)"]
+)
+print(results_table)
+```
+
+    ##                Variable Male_Estimate Male_Std_Error Male_P_Value
+    ## (Intercept) (Intercept)   0.489143833    1.883367077 7.950815e-01
+    ## age                 age   0.011078627    0.017509693 5.269205e-01
+    ## cp                   cp   0.624244440    0.150392680 3.313681e-05
+    ## trestbps       trestbps   0.006669625    0.007709166 3.869536e-01
+    ## chol               chol  -0.002816539    0.001546731 6.861250e-02
+    ## fbs                 fbs  -0.077076106    0.364747670 8.326427e-01
+    ## restecg         restecg   0.211261443    0.158412456 1.823296e-01
+    ## thalach         thalach  -0.026110546    0.006843324 1.359200e-04
+    ## exang             exang   0.717197611    0.319844029 2.493970e-02
+    ## oldpeak         oldpeak   0.568585698    0.143981103 7.846851e-05
+    ##             Female_Estimate Female_Std_Error Female_P_Value
+    ## (Intercept)    -7.814925653      3.385006792    0.020960883
+    ## age             0.011405862      0.030248298    0.706118236
+    ## cp              0.927630109      0.341356680    0.006578104
+    ## trestbps        0.033262774      0.014713351    0.023776570
+    ## chol           -0.003238931      0.003523281    0.357941805
+    ## fbs             0.917958044      0.873286597    0.293188211
+    ## restecg         0.017694465      0.282086696    0.949983859
+    ## thalach        -0.011055801      0.012020177    0.357692858
+    ## exang           1.143549158      0.548980044    0.037247284
+    ## oldpeak         0.677208667      0.291294270    0.020081234
+
+Significant Predictors for Males: Chest Pain (cp): Strong positive
+effect (β=0.62, p\<0.001). Resting Blood Pressure (trestbps): Positive
+and weakly significant (β=0.007, p=0.039). Max Heart Rate (thalach):
+Negative and significant (β=−0.026, p=0.001), indicating a protective
+effect. Exercise-Induced Angina (exang): Positive and significant
+(β=0.71, p=0.025). ST Depression (oldpeak): Strong positive effect
+(β=0.57, p\<0.001).
+
+Significant Predictors for Females: Chest Pain (cp): Stronger positive
+effect than males (β=0.93, p=0.006). Resting Blood Pressure (trestbps):
+Positive and significant (β=0.033, p=0.023). Exercise-Induced Angina
+(exang): Positive and significant (β=1.14, p=0.037), stronger effect
+than in males. ST Depression (oldpeak): Strong positive effect (β=0.68,
+p=0.020).
+
+Key Comparisons Between Genders Chest Pain (cp): Stronger predictor for
+females (β=0.93) than males (β=0.62). Exercise-Induced Angina (exang):
+Higher odds for females (β=1.14) than males (β=0.71). ST Depression
+(oldpeak): Significant and strong for both genders, slightly higher in
+females (β=0.68).
+
 (author: Yonghao YU)
 
 ## Try Random Forest Classifier!
@@ -808,7 +875,7 @@ ggplot(var_imp_df, aes(x = reorder(Variable, -MeanDecreaseAccuracy))) +
   theme(axis.text.x = element_text(angle = 0, hjust = 1))
 ```
 
-![](modelling_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](modelling_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 Then we ranked the predictors descendingly based on the
 MeanDecreaseAccuracy which measures the decrease in overall model
