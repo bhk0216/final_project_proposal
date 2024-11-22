@@ -290,13 +290,13 @@ conti_des_df = conti_des_df[, -grep("variable", colnames(conti_des_df))] |>
 conti_des_df
 ```
 
-|  | Overall Mean | Overall Std | Control Mean | Control Std | Case Mean | Case Std | p_value |
-|:---|---:|---:|---:|---:|---:|---:|---:|
-| age | 54.843691 | 8.824069 | 52.908213 | 9.248788 | 56.080247 | 8.323177 | 0.000074 |
-| trestbps | 133.406780 | 18.969496 | 129.734300 | 16.322060 | 135.753086 | 20.158831 | 0.000179 |
-| chol | 216.854991 | 99.014215 | 237.043478 | 68.313903 | 203.956790 | 112.615863 | 0.000030 |
-| thalach | 138.463277 | 25.833649 | 152.758454 | 22.958375 | 129.330247 | 23.329890 | 0.000000 |
-| oldpeak | 1.218456 | 1.105150 | 0.726087 | 0.805741 | 1.533025 | 1.155598 | 0.000000 |
+|          | Overall Mean | Overall Std | Control Mean | Control Std |  Case Mean |   Case Std |  p_value |
+|:---------|-------------:|------------:|-------------:|------------:|-----------:|-----------:|---------:|
+| age      |    54.843691 |    8.824069 |    52.908213 |    9.248788 |  56.080247 |   8.323177 | 0.000074 |
+| trestbps |   133.406780 |   18.969496 |   129.734300 |   16.322060 | 135.753086 |  20.158831 | 0.000179 |
+| chol     |   216.854991 |   99.014215 |   237.043478 |   68.313903 | 203.956790 | 112.615863 | 0.000030 |
+| thalach  |   138.463277 |   25.833649 |   152.758454 |   22.958375 | 129.330247 |  23.329890 | 0.000000 |
+| oldpeak  |     1.218456 |    1.105150 |     0.726087 |    0.805741 |   1.533025 |   1.155598 | 0.000000 |
 
 Based on the result, we can find that all five features are
 significantly different between case and control.
@@ -962,7 +962,76 @@ identification of positives. 6. High specificity (0.7812) indicates good
 identification of negatives. 7. Balanced accuracy (76.87%) suggests the
 model balances its performance across both classes well.
 
-author: Yonghao YU \# Then we show the feature importance trends(The
+author: Yonghao YU \### Then investigate the AUC value and ROC curve to
+assess the model’s ability
+
+``` r
+library(pROC)
+```
+
+    ## Warning: 程序包'pROC'是用R版本4.4.2 来建造的
+
+    ## Type 'citation("pROC")' for a citation.
+
+    ## 
+    ## 载入程序包：'pROC'
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     cov, smooth, var
+
+``` r
+# Generate AUC value
+rf_prob = predict(rf_model, testData, type = "prob")
+roc_curve = roc(testData$num, rf_prob[, 2], levels = rev(levels(testData$num)))
+```
+
+    ## Setting direction: controls > cases
+
+``` r
+auc_value = auc(roc_curve)
+roc_data = data.frame(
+  FPR = 1 - roc_curve$specificities,
+  TPR = roc_curve$sensitivities
+)
+
+# Plot the ROC curve
+ggplot(data = roc_data, aes(x = FPR, y = TPR)) +
+  geom_line(color = "blue", size = 1) +
+  geom_abline(linetype = "dashed", color = "gray") +
+  labs(
+    title = "ROC Curve for Random Forest",
+    x = "False Positive Rate (1 - Specificity)",
+    y = "True Positive Rate (Sensitivity)",
+    subtitle = paste("AUC =", round(auc_value, 2))
+  ) +
+  theme_minimal()
+```
+
+    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ## ℹ Please use `linewidth` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+![](modelling_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+The AUC value of 0.83 indicates that the Random Forest model performs
+well in distinguishing between positive and negative classes.
+Specifically, there is an 83% chance that the model will rank a randomly
+chosen positive instance higher than a negative one. This reflects our
+model reaches good discrimination.
+
+The ROC curve shows the trade-off between the True Positive Rate
+(Sensitivity) and the False Positive Rate (1 - Specificity) at various
+thresholds. The curve is well above the diagonal which represent random
+guessing, confirming the model performs better than random guessing. The
+initial steep rise indicates that the model achieves high sensitivity
+with a relatively low false positive rate, which is desirable. However,
+as the false positive rate increases, the curve flattens, highlighting
+diminishing returns in improving sensitivity further.
+
+author: Yonghao YU \### Then we show the feature importance trends(The
 trend is descending according to the MeanDecreaseAccuracy)
 
 ``` r
@@ -984,7 +1053,7 @@ ggplot(var_imp_df, aes(x = reorder(Variable, -MeanDecreaseAccuracy))) +
   theme(axis.text.x = element_text(angle = 0, hjust = 1))
 ```
 
-![](modelling_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](modelling_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 Then we ranked the predictors descendingly based on the
 MeanDecreaseAccuracy which measures the decrease in overall model

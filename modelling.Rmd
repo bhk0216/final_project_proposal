@@ -604,10 +604,42 @@ From the model we can observe the following things:
 6. High specificity (0.7812) indicates good identification of negatives.
 7. Balanced accuracy (76.87%) suggests the model balances its performance across both classes well.
 
-author: Yonghao YU
-# Then we show the feature importance trends(The trend is descending according to the MeanDecreaseAccuracy)
-```{r,fig.width=10, fig.height=8}
 
+author: Yonghao YU
+### Then investigate the AUC value and ROC curve to assess the model's ability
+
+```{r}
+library(pROC)
+# Generate AUC value
+rf_prob = predict(rf_model, testData, type = "prob")
+roc_curve = roc(testData$num, rf_prob[, 2], levels = rev(levels(testData$num)))
+auc_value = auc(roc_curve)
+roc_data = data.frame(
+  FPR = 1 - roc_curve$specificities,
+  TPR = roc_curve$sensitivities
+)
+
+# Plot the ROC curve
+ggplot(data = roc_data, aes(x = FPR, y = TPR)) +
+  geom_line(color = "blue", size = 1) +
+  geom_abline(linetype = "dashed", color = "gray") +
+  labs(
+    title = "ROC Curve for Random Forest",
+    x = "False Positive Rate (1 - Specificity)",
+    y = "True Positive Rate (Sensitivity)",
+    subtitle = paste("AUC =", round(auc_value, 2))
+  ) +
+  theme_minimal()
+```
+
+The AUC value of 0.83 indicates that the Random Forest model performs well in distinguishing between positive and negative classes. Specifically, there is an 83% chance that the model will rank a randomly chosen positive instance higher than a negative one. This reflects our model reaches good discrimination.
+
+The ROC curve shows the trade-off between the True Positive Rate (Sensitivity) and the False Positive Rate (1 - Specificity) at various thresholds. The curve is well above the diagonal which represent random guessing, confirming the model performs better than random guessing. The initial steep rise indicates that the model achieves high sensitivity with a relatively low false positive rate, which is desirable. However, as the false positive rate increases, the curve flattens, highlighting diminishing returns in improving sensitivity further.
+
+
+author: Yonghao YU
+### Then we show the feature importance trends(The trend is descending according to the MeanDecreaseAccuracy)
+```{r,fig.width=10, fig.height=8}
 var_imp = importance(rf_model)
 var_imp_df = as.data.frame(var_imp)
 var_imp_df$Variable = rownames(var_imp_df)
