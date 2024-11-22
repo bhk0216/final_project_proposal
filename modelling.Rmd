@@ -401,85 +401,157 @@ Converted num to binary (0 = no heart disease, 1 = heart disease) and set as a f
 ```{R}
 cleaned_data <- combined_data %>% select(-ca, -thal)
 critical_columns <- c("num", "age", "sex", "cp", "trestbps", "chol",
-                      "fbs", "restecg", "thalach", "exang", "oldpeak", "slope")
+                      "fbs", "restecg", "thalach", "exang", "oldpeak", 
+                      "slope","region")
 cleaned_data <- cleaned_data %>% drop_na(all_of(critical_columns))
-summary(cleaned_data)
-```
-```{r author: Thomas Tang}
 cleaned_data$num <- ifelse(cleaned_data$num > 0, 1, 0)
 cleaned_data$num <- as.factor(cleaned_data$num)
 logistic_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
-                      restecg + thalach + exang + oldpeak,
+                      restecg + thalach + exang + oldpeak + region,
                       data = cleaned_data, family = binomial)
 summary(logistic_model)
 ```
 (author= Thomas Tang)
 Significant Predictors (p-value < 0.05):
 sex (1.409350):
-Males are significantly more likely to have heart disease than females.
-Odds ratio: exp(1.409)=4.09 → Males are 4.09 times more likely to have heart disease compared to females.
-cp (0.687260):
-Higher chest pain levels increase the odds of heart disease.
-Odds ratio: exp(0.687)=1.99.
-trestbps (0.013883):
-Resting blood pressure has a small but significant positive effect.
-Odds ratio: exp(0.0139)=1.014 per unit increase.
-chol (-0.003090):
-Cholesterol has a small negative association.
-Odds ratio: exp(−0.0031)=0.997, slightly decreasing odds.
-thalach (-0.021518):
-Higher maximum heart rate achieved decreases the odds of heart disease.
-Odds ratio: exp(−0.0215)=0.978 → Protective effect.
-exang (0.894064):
-Exercise-induced angina increases the odds of heart disease. exp(0.894)=2.44.
-oldpeak (0.586433):Higher ST depression values significantly increase the odds of heart disease.
-Odds ratio: exp(0.586)=1.80.
-fbs (Fasting blood sugar) and age do not have significant association with heart disease in this dataset.
+    *Being male increases the log-odds of heart disease significantly.
+    *Odds Ratio: exp(1.469)=4.34 → Males are 4.34 times more likely to have heart      disease than females.
+    
+cp (chest pain):
+    *Higher chest pain levels increase the log-odds of heart disease.
+    *Odds Ratio: exp(0.668)=1.95 → A strong predictor for heart disease.
 
-AIC: 469.38 (used for model comparison).
+thalach (max heart rate achieved):
+    *Higher heart rates decrease the log-odds of heart disease.
+    *Odds Ratio: exp(−0.014)=0.986, suggesting a protective effect.
+exang (exercise-induced angina):
+    *Presence of exercise-induced angina increases the odds of heart disease.
+    *Odds Ratio: exp(0.899)=2.46.
+oldpeak (ST depression):
+    *Higher ST depression values significantly increase the odds of heart             disease.
+    *Odds Ratio: exp(0.669)=1.95.
+regionSwitzerland:
+    *Patients from Switzerland have significantly higher odds of heart disease        compared to the reference region (Cleveland).
+    *Odds Ratio: exp(3.843)=46.64, suggesting a strong regional effect.
+
+Non-Significant Predictors (p-value > 0.05):
+age, trestbps (resting blood pressure), chol (cholesterol), fbs (fasting blood sugar), restecg (resting ECG results), regionHungarian, regionLong_Beach_VA.
+
+Regional Effects:
+    *Patients from Switzerland have much higher odds of heart disease compared to      Cleveland, Hungarian and Long Beach VA.
+
+separated by region:
+```{r}
+cleveland_data <- cleaned_data %>% filter(region == "Cleveland")
+hungarian_data <- cleaned_data %>% filter(region == "Hungarian")
+long_beach_data <- cleaned_data %>% filter(region == "Long_Beach_VA")
+switzerland_data <- cleaned_data %>% filter(region == "Switzerland")
+
+cleveland_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
+                       restecg + thalach + exang + oldpeak,
+                       data = cleveland_data, family = binomial)
+hungarian_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
+                       restecg + thalach + exang + oldpeak,
+                       data = hungarian_data, family = binomial)
+long_beach_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
+                        restecg + thalach + exang + oldpeak,
+                        data = long_beach_data, family = binomial)
+switzerland_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
+                         restecg + thalach + exang + oldpeak,
+                         data = switzerland_data, family = binomial)
+extract_results <- function(model, region) {
+  coefficients <- summary(model)$coefficients
+  data.frame(
+    Region = region,
+    Variable = rownames(coefficients),
+    Estimate = coefficients[, "Estimate"],
+    Std_Error = coefficients[, "Std. Error"],
+    P_Value = coefficients[, "Pr(>|z|)"]
+  )
+}
+
+# Extract results for each region
+cleveland_results <- extract_results(cleveland_model, "Cleveland")
+hungarian_results <- extract_results(hungarian_model, "Hungarian")
+long_beach_results <- extract_results(long_beach_model, "Long_Beach_VA")
+switzerland_results <- extract_results(switzerland_model, "Switzerland")
+regional_results <- bind_rows(cleveland_results, hungarian_results,
+                               long_beach_results, switzerland_results)
+
+# View the consolidated results
+regional_results
+```
+
 
 ```{r}
 male_data <- cleaned_data %>% filter(sex == 1)
 female_data <- cleaned_data %>% filter(sex == 0)
 
-male_model <- glm(num ~ age + cp + trestbps + chol + fbs + restecg +
-                  thalach + exang + oldpeak, data = male_data, family = binomial)
-female_model <- glm(num ~ age + cp + trestbps + chol + fbs + restecg +
-                    thalach + exang + oldpeak, data = female_data, family = binomial)
-male_results <- summary(male_model)$coefficients
-female_results <- summary(female_model)$coefficients
+male_model <- glm(num ~ age + cp + trestbps + chol + fbs +
+                  restecg + thalach + exang + oldpeak,
+                  data = male_data, family = binomial)
+female_model <- glm(num ~ age + cp + trestbps + chol + fbs +
+                    restecg + thalach + exang + oldpeak,
+                    data = female_data, family = binomial)
+# Function to extract model results
+extract_results <- function(model, gender) {
+  coefficients <- summary(model)$coefficients
+  data.frame(
+    Gender = gender,
+    Variable = rownames(coefficients),
+    Estimate = coefficients[, "Estimate"],
+    Std_Error = coefficients[, "Std. Error"],
+    P_Value = coefficients[, "Pr(>|z|)"]
+  )
+}
 
-results_table <- data.frame(
-  Variable = rownames(male_results),
-  Male_Estimate = male_results[, "Estimate"],
-  Male_Std_Error = male_results[, "Std. Error"],
-  Male_P_Value = male_results[, "Pr(>|z|)"],
-  Female_Estimate = female_results[, "Estimate"],
-  Female_Std_Error = female_results[, "Std. Error"],
-  Female_P_Value = female_results[, "Pr(>|z|)"]
-)
-print(results_table)
+# Extract results for males and females
+male_results <- extract_results(male_model, "Male")
+female_results <- extract_results(female_model, "Female")
+gender_results <- bind_rows(male_results, female_results)
+
 ```
 
-Significant Predictors for Males:
-Chest Pain (cp): Strong positive effect (β=0.62, p<0.001).
-Resting Blood Pressure (trestbps): Positive and weakly significant (β=0.007, p=0.039).
-Max Heart Rate (thalach): Negative and significant (β=−0.026, p=0.001), indicating a protective effect.
-Exercise-Induced Angina (exang): Positive and significant (β=0.71, p=0.025).
-ST Depression (oldpeak): Strong positive effect (β=0.57, p<0.001).
+Males
+Significant Predictors (p-value < 0.05):
 
-Significant Predictors for Females:
-Chest Pain (cp): Stronger positive effect than males (β=0.93, p=0.006).
-Resting Blood Pressure (trestbps): Positive and significant (β=0.033, p=0.023).
-Exercise-Induced Angina (exang): Positive and significant (β=1.14, p=0.037), stronger effect than in males.
-ST Depression (oldpeak): Strong positive effect (β=0.68, p=0.020).
+Chest Pain (cp) (β=0.624, p<0.001):
+  Higher chest pain levels increase the odds of heart disease.
+  Odds Ratio= exp(0.624)=1.87.
+Max Heart Rate (thalach) (β=−0.026, p<0.001):
+  Higher maximum heart rates reduce the odds of heart disease.
+  Odds Ratio= exp(−0.026)=0.974 (protective effect).
+Exercise-Induced Angina (exang) (β=0.717, p=0.025):
+  Presence of exercise-induced angina significantly increases the odds of heart    disease.
+  Odds Ratio=exp(0.717)=2.05.
+ST Depression (oldpeak) (β=0.569, p<0.001):
+  Higher ST depression significantly increases the odds of heart disease.
+Odds Ratio = exp(0.569)=1.77.
 
-Key Comparisons Between Genders
-Chest Pain (cp): Stronger predictor for females (β=0.93) than males (β=0.62).
-Exercise-Induced Angina (exang): Higher odds for females (β=1.14) than males (β=0.71).
-ST Depression (oldpeak): Significant and strong for both genders, slightly higher in females (β=0.68).
+Non-Significant Predictors:
+age, trestbps, chol, fbs, restecg.
 
+Females
+Significant Predictors (p-value < 0.05):
 
+Chest Pain (cp) (β=0.927, p=0.006):
+  Stronger effect than males.
+  Odds Ratio = exp(0.927)=2.53.
+Exercise-Induced Angina (exang) (β=1.144, p=0.037):
+  Stronger effect than males.
+  Odds Ratio = exp(1.144)=3.14.
+ST Depression (oldpeak) (β=0.677,p=0.020):
+  Similar effect to males.
+  Odds Ratio = exp(0.677)=1.97.
+Non-Significant Predictors:
+age, trestbps, chol, fbs, restecg, thalach.
+
+Conclusions
+Predictors for Both Genders:
+cp, exang, and oldpeak are significant predictors for both males and females.
+
+Gender-Specific Differences:
+Stronger effects of cp and exang in females suggest potential gender-specific diagnostic markers for heart disease.
 
 
 

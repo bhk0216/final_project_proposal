@@ -570,45 +570,13 @@ rows with missing values in critical variables. Converted num to binary
 ``` r
 cleaned_data <- combined_data %>% select(-ca, -thal)
 critical_columns <- c("num", "age", "sex", "cp", "trestbps", "chol",
-                      "fbs", "restecg", "thalach", "exang", "oldpeak", "slope")
+                      "fbs", "restecg", "thalach", "exang", "oldpeak", 
+                      "slope","region")
 cleaned_data <- cleaned_data %>% drop_na(all_of(critical_columns))
-summary(cleaned_data)
-```
-
-    ##       age             sex               cp           trestbps    
-    ##  Min.   :29.00   Min.   :0.0000   Min.   :1.000   Min.   :  0.0  
-    ##  1st Qu.:49.00   1st Qu.:1.0000   1st Qu.:3.000   1st Qu.:120.0  
-    ##  Median :56.00   Median :1.0000   Median :4.000   Median :130.0  
-    ##  Mean   :54.84   Mean   :0.7608   Mean   :3.352   Mean   :133.4  
-    ##  3rd Qu.:61.00   3rd Qu.:1.0000   3rd Qu.:4.000   3rd Qu.:142.0  
-    ##  Max.   :77.00   Max.   :1.0000   Max.   :4.000   Max.   :200.0  
-    ##       chol            fbs            restecg          thalach     
-    ##  Min.   :  0.0   Min.   :0.0000   Min.   :0.0000   Min.   : 60.0  
-    ##  1st Qu.:197.0   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:120.0  
-    ##  Median :233.0   Median :0.0000   Median :0.0000   Median :140.0  
-    ##  Mean   :216.9   Mean   :0.1601   Mean   :0.7439   Mean   :138.5  
-    ##  3rd Qu.:273.0   3rd Qu.:0.0000   3rd Qu.:2.0000   3rd Qu.:159.0  
-    ##  Max.   :603.0   Max.   :1.0000   Max.   :2.0000   Max.   :202.0  
-    ##      exang           oldpeak           slope            num      
-    ##  Min.   :0.0000   Min.   :-1.000   Min.   :1.000   Min.   :0.00  
-    ##  1st Qu.:0.0000   1st Qu.: 0.100   1st Qu.:1.000   1st Qu.:0.00  
-    ##  Median :0.0000   Median : 1.000   Median :2.000   Median :1.00  
-    ##  Mean   :0.4972   Mean   : 1.218   Mean   :1.765   Mean   :1.13  
-    ##  3rd Qu.:1.0000   3rd Qu.: 2.000   3rd Qu.:2.000   3rd Qu.:2.00  
-    ##  Max.   :1.0000   Max.   : 6.200   Max.   :3.000   Max.   :4.00  
-    ##     region         
-    ##  Length:531        
-    ##  Class :character  
-    ##  Mode  :character  
-    ##                    
-    ##                    
-    ## 
-
-``` r
 cleaned_data$num <- ifelse(cleaned_data$num > 0, 1, 0)
 cleaned_data$num <- as.factor(cleaned_data$num)
 logistic_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
-                      restecg + thalach + exang + oldpeak,
+                      restecg + thalach + exang + oldpeak + region,
                       data = cleaned_data, family = binomial)
 summary(logistic_model)
 ```
@@ -616,117 +584,258 @@ summary(logistic_model)
     ## 
     ## Call:
     ## glm(formula = num ~ age + sex + cp + trestbps + chol + fbs + 
-    ##     restecg + thalach + exang + oldpeak, family = binomial, data = cleaned_data)
+    ##     restecg + thalach + exang + oldpeak + region, family = binomial, 
+    ##     data = cleaned_data)
     ## 
     ## Coefficients:
-    ##              Estimate Std. Error z value Pr(>|z|)    
-    ## (Intercept) -2.781382   1.610308  -1.727 0.084125 .  
-    ## age          0.012047   0.014888   0.809 0.418401    
-    ## sex          1.409350   0.281798   5.001 5.70e-07 ***
-    ## cp           0.687260   0.134930   5.093 3.52e-07 ***
-    ## trestbps     0.013883   0.006743   2.059 0.039502 *  
-    ## chol        -0.003090   0.001397  -2.212 0.026959 *  
-    ## fbs          0.008505   0.332098   0.026 0.979569    
-    ## restecg      0.156645   0.134297   1.166 0.243450    
-    ## thalach     -0.021518   0.005694  -3.779 0.000158 ***
-    ## exang        0.890464   0.269251   3.307 0.000942 ***
-    ## oldpeak      0.586433   0.126838   4.623 3.77e-06 ***
+    ##                      Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept)         -4.529743   1.806627  -2.507 0.012166 *  
+    ## age                  0.016202   0.016132   1.004 0.315231    
+    ## sex                  1.469384   0.292048   5.031 4.87e-07 ***
+    ## cp                   0.668141   0.138938   4.809 1.52e-06 ***
+    ## trestbps             0.009865   0.007107   1.388 0.165114    
+    ## chol                 0.001104   0.001820   0.607 0.544104    
+    ## fbs                  0.089712   0.341956   0.262 0.793052    
+    ## restecg              0.166720   0.141642   1.177 0.239175    
+    ## thalach             -0.016074   0.006369  -2.524 0.011615 *  
+    ## exang                0.899701   0.279483   3.219 0.001286 ** 
+    ## oldpeak              0.696194   0.136346   5.106 3.29e-07 ***
+    ## regionHungarian      0.179038   0.387015   0.463 0.643642    
+    ## regionLong_Beach_VA  0.120733   0.435716   0.277 0.781709    
+    ## regionSwitzerland    3.843320   1.162368   3.306 0.000945 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
     ## (Dispersion parameter for binomial family taken to be 1)
     ## 
     ##     Null deviance: 710.13  on 530  degrees of freedom
-    ## Residual deviance: 447.38  on 520  degrees of freedom
-    ## AIC: 469.38
+    ## Residual deviance: 427.45  on 517  degrees of freedom
+    ## AIC: 455.45
     ## 
-    ## Number of Fisher Scoring iterations: 5
+    ## Number of Fisher Scoring iterations: 6
 
 (author= Thomas Tang) Significant Predictors (p-value \< 0.05): sex
-(1.409350): Males are significantly more likely to have heart disease
-than females. Odds ratio: exp(1.409)=4.09 → Males are 4.09 times more
-likely to have heart disease compared to females. cp (0.687260): Higher
-chest pain levels increase the odds of heart disease. Odds ratio:
-exp(0.687)=1.99. trestbps (0.013883): Resting blood pressure has a small
-but significant positive effect. Odds ratio: exp(0.0139)=1.014 per unit
-increase. chol (-0.003090): Cholesterol has a small negative
-association. Odds ratio: exp(−0.0031)=0.997, slightly decreasing odds.
-thalach (-0.021518): Higher maximum heart rate achieved decreases the
-odds of heart disease. Odds ratio: exp(−0.0215)=0.978 → Protective
-effect. exang (0.894064): Exercise-induced angina increases the odds of
-heart disease. exp(0.894)=2.44. oldpeak (0.586433):Higher ST depression
-values significantly increase the odds of heart disease. Odds ratio:
-exp(0.586)=1.80. fbs (Fasting blood sugar) and age do not have
-significant association with heart disease in this dataset.
+(1.409350): *Being male increases the log-odds of heart disease
+significantly. *Odds Ratio: exp(1.469)=4.34 → Males are 4.34 times more
+likely to have heart disease than females.
 
-AIC: 469.38 (used for model comparison).
+cp (chest pain): *Higher chest pain levels increase the log-odds of
+heart disease. *Odds Ratio: exp(0.668)=1.95 → A strong predictor for
+heart disease.
+
+thalach (max heart rate achieved): *Higher heart rates decrease the
+log-odds of heart disease. *Odds Ratio: exp(−0.014)=0.986, suggesting a
+protective effect. exang (exercise-induced angina): *Presence of
+exercise-induced angina increases the odds of heart disease. *Odds
+Ratio: exp(0.899)=2.46. oldpeak (ST depression): *Higher ST depression
+values significantly increase the odds of heart disease. *Odds Ratio:
+exp(0.669)=1.95. regionSwitzerland: *Patients from Switzerland have
+significantly higher odds of heart disease compared to the reference
+region (Cleveland). *Odds Ratio: exp(3.843)=46.64, suggesting a strong
+regional effect.
+
+Non-Significant Predictors (p-value \> 0.05): age, trestbps (resting
+blood pressure), chol (cholesterol), fbs (fasting blood sugar), restecg
+(resting ECG results), regionHungarian, regionLong_Beach_VA.
+
+Regional Effects: \*Patients from Switzerland have much higher odds of
+heart disease compared to Cleveland, Hungarian and Long Beach VA.
+
+separated by region:
+
+``` r
+cleveland_data <- cleaned_data %>% filter(region == "Cleveland")
+hungarian_data <- cleaned_data %>% filter(region == "Hungarian")
+long_beach_data <- cleaned_data %>% filter(region == "Long_Beach_VA")
+switzerland_data <- cleaned_data %>% filter(region == "Switzerland")
+
+cleveland_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
+                       restecg + thalach + exang + oldpeak,
+                       data = cleveland_data, family = binomial)
+hungarian_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
+                       restecg + thalach + exang + oldpeak,
+                       data = hungarian_data, family = binomial)
+long_beach_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
+                        restecg + thalach + exang + oldpeak,
+                        data = long_beach_data, family = binomial)
+switzerland_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
+                         restecg + thalach + exang + oldpeak,
+                         data = switzerland_data, family = binomial)
+```
+
+    ## Warning: glm.fit:算法没有聚合
+
+    ## Warning: glm.fit:拟合概率算出来是数值零或一
+
+``` r
+extract_results <- function(model, region) {
+  coefficients <- summary(model)$coefficients
+  data.frame(
+    Region = region,
+    Variable = rownames(coefficients),
+    Estimate = coefficients[, "Estimate"],
+    Std_Error = coefficients[, "Std. Error"],
+    P_Value = coefficients[, "Pr(>|z|)"]
+  )
+}
+
+# Extract results for each region
+cleveland_results <- extract_results(cleveland_model, "Cleveland")
+hungarian_results <- extract_results(hungarian_model, "Hungarian")
+long_beach_results <- extract_results(long_beach_model, "Long_Beach_VA")
+switzerland_results <- extract_results(switzerland_model, "Switzerland")
+regional_results <- bind_rows(cleveland_results, hungarian_results,
+                               long_beach_results, switzerland_results)
+
+# View the consolidated results
+regional_results
+```
+
+    ##                         Region    Variable      Estimate    Std_Error
+    ## (Intercept)...1      Cleveland (Intercept) -6.409349e+00 2.366230e+00
+    ## age...2              Cleveland         age  2.305274e-02 2.078413e-02
+    ## sex...3              Cleveland         sex  1.914565e+00 3.963041e-01
+    ## cp...4               Cleveland          cp  8.005256e-01 1.784567e-01
+    ## trestbps...5         Cleveland    trestbps  1.933797e-02 9.694877e-03
+    ## chol...6             Cleveland        chol  5.199003e-03 3.249779e-03
+    ## fbs...7              Cleveland         fbs -1.801118e-01 4.422953e-01
+    ## restecg...8          Cleveland     restecg  2.186373e-01 1.622814e-01
+    ## thalach...9          Cleveland     thalach -2.566683e-02 9.002007e-03
+    ## exang...10           Cleveland       exang  1.016419e+00 3.608669e-01
+    ## oldpeak...11         Cleveland     oldpeak  5.908489e-01 1.596412e-01
+    ## (Intercept)...12     Hungarian (Intercept)  9.770581e-01 5.205882e+00
+    ## age...13             Hungarian         age -8.168691e-02 5.314665e-02
+    ## sex...14             Hungarian         sex  1.356069e+00 6.866089e-01
+    ## cp...15              Hungarian          cp  7.316002e-01 3.775361e-01
+    ## trestbps...16        Hungarian    trestbps  3.011956e-02 1.858612e-02
+    ## chol...17            Hungarian        chol  8.921158e-04 5.398937e-03
+    ## fbs...18             Hungarian         fbs  1.801468e+01 1.879517e+03
+    ## restecg...19         Hungarian     restecg -6.322004e-01 7.733075e-01
+    ## thalach...20         Hungarian     thalach -3.876461e-02 1.929788e-02
+    ## exang...21           Hungarian       exang  1.502774e-01 7.325074e-01
+    ## oldpeak...22         Hungarian     oldpeak  9.291678e-01 5.364974e-01
+    ## (Intercept)...23 Long_Beach_VA (Intercept) -1.366177e-01 4.132572e+00
+    ## age...24         Long_Beach_VA         age  1.796714e-02 4.359182e-02
+    ## sex...25         Long_Beach_VA         sex  4.559604e-01 1.494038e+00
+    ## cp...26          Long_Beach_VA          cp -2.887811e-02 4.302410e-01
+    ## trestbps...27    Long_Beach_VA    trestbps -1.079782e-02 1.676406e-02
+    ## chol...28        Long_Beach_VA        chol -7.260783e-04 2.764071e-03
+    ## fbs...29         Long_Beach_VA         fbs  1.762377e-01 7.424995e-01
+    ## restecg...30     Long_Beach_VA     restecg -3.073046e-01 4.673256e-01
+    ## thalach...31     Long_Beach_VA     thalach  1.472768e-03 1.510586e-02
+    ## exang...32       Long_Beach_VA       exang  1.774583e+00 8.143903e-01
+    ## oldpeak...33     Long_Beach_VA     oldpeak  4.119425e-01 3.761805e-01
+    ## (Intercept)...34   Switzerland (Intercept) -4.864726e+02 3.401466e+05
+    ## age...35           Switzerland         age -1.761182e+01 6.992787e+03
+    ## sex...36           Switzerland         sex  1.400754e+02 1.953051e+05
+    ## cp...37            Switzerland          cp  2.696132e+00 1.203799e+04
+    ## trestbps...38      Switzerland    trestbps  6.806273e+00 2.736445e+03
+    ## fbs...39           Switzerland         fbs -8.133709e+01 1.467447e+05
+    ## restecg...40       Switzerland     restecg  9.072661e+01 1.413873e+05
+    ## thalach...41       Switzerland     thalach  5.029885e+00 1.969977e+03
+    ## exang...42         Switzerland       exang  2.544557e+02 1.604791e+05
+    ## oldpeak...43       Switzerland     oldpeak -1.201417e+02 8.414472e+04
+    ##                       P_Value
+    ## (Intercept)...1  6.755232e-03
+    ## age...2          2.673649e-01
+    ## sex...3          1.358144e-06
+    ## cp...4           7.263202e-06
+    ## trestbps...5     4.608011e-02
+    ## chol...6         1.096425e-01
+    ## fbs...7          6.838460e-01
+    ## restecg...8      1.778924e-01
+    ## thalach...9      4.354982e-03
+    ## exang...10       4.853456e-03
+    ## oldpeak...11     2.146612e-04
+    ## (Intercept)...12 8.511248e-01
+    ## age...13         1.242909e-01
+    ## sex...14         4.826551e-02
+    ## cp...15          5.264416e-02
+    ## trestbps...16    1.051161e-01
+    ## chol...17        8.687557e-01
+    ## fbs...18         9.923526e-01
+    ## restecg...19     4.136269e-01
+    ## thalach...20     4.456365e-02
+    ## exang...21       8.374512e-01
+    ## oldpeak...22     8.328873e-02
+    ## (Intercept)...23 9.736277e-01
+    ## age...24         6.802165e-01
+    ## sex...25         7.602240e-01
+    ## cp...26          9.464856e-01
+    ## trestbps...27    5.195072e-01
+    ## chol...28        7.927939e-01
+    ## fbs...29         8.123796e-01
+    ## restecg...30     5.108072e-01
+    ## thalach...31     9.223321e-01
+    ## exang...32       2.932927e-02
+    ## oldpeak...33     2.734877e-01
+    ## (Intercept)...34 9.988589e-01
+    ## age...35         9.979905e-01
+    ## sex...36         9.994277e-01
+    ## cp...37          9.998213e-01
+    ## trestbps...38    9.980154e-01
+    ## fbs...39         9.995578e-01
+    ## restecg...40     9.994880e-01
+    ## thalach...41     9.979628e-01
+    ## exang...42       9.987349e-01
+    ## oldpeak...43     9.988608e-01
 
 ``` r
 male_data <- cleaned_data %>% filter(sex == 1)
 female_data <- cleaned_data %>% filter(sex == 0)
 
-male_model <- glm(num ~ age + cp + trestbps + chol + fbs + restecg +
-                  thalach + exang + oldpeak, data = male_data, family = binomial)
-female_model <- glm(num ~ age + cp + trestbps + chol + fbs + restecg +
-                    thalach + exang + oldpeak, data = female_data, family = binomial)
-male_results <- summary(male_model)$coefficients
-female_results <- summary(female_model)$coefficients
+male_model <- glm(num ~ age + cp + trestbps + chol + fbs +
+                  restecg + thalach + exang + oldpeak,
+                  data = male_data, family = binomial)
+female_model <- glm(num ~ age + cp + trestbps + chol + fbs +
+                    restecg + thalach + exang + oldpeak,
+                    data = female_data, family = binomial)
+# Function to extract model results
+extract_results <- function(model, gender) {
+  coefficients <- summary(model)$coefficients
+  data.frame(
+    Gender = gender,
+    Variable = rownames(coefficients),
+    Estimate = coefficients[, "Estimate"],
+    Std_Error = coefficients[, "Std. Error"],
+    P_Value = coefficients[, "Pr(>|z|)"]
+  )
+}
 
-results_table <- data.frame(
-  Variable = rownames(male_results),
-  Male_Estimate = male_results[, "Estimate"],
-  Male_Std_Error = male_results[, "Std. Error"],
-  Male_P_Value = male_results[, "Pr(>|z|)"],
-  Female_Estimate = female_results[, "Estimate"],
-  Female_Std_Error = female_results[, "Std. Error"],
-  Female_P_Value = female_results[, "Pr(>|z|)"]
-)
-print(results_table)
+# Extract results for males and females
+male_results <- extract_results(male_model, "Male")
+female_results <- extract_results(female_model, "Female")
+gender_results <- bind_rows(male_results, female_results)
 ```
 
-    ##                Variable Male_Estimate Male_Std_Error Male_P_Value
-    ## (Intercept) (Intercept)   0.489143833    1.883367077 7.950815e-01
-    ## age                 age   0.011078627    0.017509693 5.269205e-01
-    ## cp                   cp   0.624244440    0.150392680 3.313681e-05
-    ## trestbps       trestbps   0.006669625    0.007709166 3.869536e-01
-    ## chol               chol  -0.002816539    0.001546731 6.861250e-02
-    ## fbs                 fbs  -0.077076106    0.364747670 8.326427e-01
-    ## restecg         restecg   0.211261443    0.158412456 1.823296e-01
-    ## thalach         thalach  -0.026110546    0.006843324 1.359200e-04
-    ## exang             exang   0.717197611    0.319844029 2.493970e-02
-    ## oldpeak         oldpeak   0.568585698    0.143981103 7.846851e-05
-    ##             Female_Estimate Female_Std_Error Female_P_Value
-    ## (Intercept)    -7.814925653      3.385006792    0.020960883
-    ## age             0.011405862      0.030248298    0.706118236
-    ## cp              0.927630109      0.341356680    0.006578104
-    ## trestbps        0.033262774      0.014713351    0.023776570
-    ## chol           -0.003238931      0.003523281    0.357941805
-    ## fbs             0.917958044      0.873286597    0.293188211
-    ## restecg         0.017694465      0.282086696    0.949983859
-    ## thalach        -0.011055801      0.012020177    0.357692858
-    ## exang           1.143549158      0.548980044    0.037247284
-    ## oldpeak         0.677208667      0.291294270    0.020081234
+Males Significant Predictors (p-value \< 0.05):
 
-Significant Predictors for Males: Chest Pain (cp): Strong positive
-effect (β=0.62, p\<0.001). Resting Blood Pressure (trestbps): Positive
-and weakly significant (β=0.007, p=0.039). Max Heart Rate (thalach):
-Negative and significant (β=−0.026, p=0.001), indicating a protective
-effect. Exercise-Induced Angina (exang): Positive and significant
-(β=0.71, p=0.025). ST Depression (oldpeak): Strong positive effect
-(β=0.57, p\<0.001).
+Chest Pain (cp) (β=0.624, p\<0.001): Higher chest pain levels increase
+the odds of heart disease. Odds Ratio= exp(0.624)=1.87. Max Heart Rate
+(thalach) (β=−0.026, p\<0.001): Higher maximum heart rates reduce the
+odds of heart disease. Odds Ratio= exp(−0.026)=0.974 (protective
+effect). Exercise-Induced Angina (exang) (β=0.717, p=0.025): Presence of
+exercise-induced angina significantly increases the odds of heart
+disease. Odds Ratio=exp(0.717)=2.05. ST Depression (oldpeak) (β=0.569,
+p\<0.001): Higher ST depression significantly increases the odds of
+heart disease. Odds Ratio = exp(0.569)=1.77.
 
-Significant Predictors for Females: Chest Pain (cp): Stronger positive
-effect than males (β=0.93, p=0.006). Resting Blood Pressure (trestbps):
-Positive and significant (β=0.033, p=0.023). Exercise-Induced Angina
-(exang): Positive and significant (β=1.14, p=0.037), stronger effect
-than in males. ST Depression (oldpeak): Strong positive effect (β=0.68,
-p=0.020).
+Non-Significant Predictors: age, trestbps, chol, fbs, restecg.
 
-Key Comparisons Between Genders Chest Pain (cp): Stronger predictor for
-females (β=0.93) than males (β=0.62). Exercise-Induced Angina (exang):
-Higher odds for females (β=1.14) than males (β=0.71). ST Depression
-(oldpeak): Significant and strong for both genders, slightly higher in
-females (β=0.68).
+Females Significant Predictors (p-value \< 0.05):
+
+Chest Pain (cp) (β=0.927, p=0.006): Stronger effect than males. Odds
+Ratio = exp(0.927)=2.53. Exercise-Induced Angina (exang) (β=1.144,
+p=0.037): Stronger effect than males. Odds Ratio = exp(1.144)=3.14. ST
+Depression (oldpeak) (β=0.677,p=0.020): Similar effect to males. Odds
+Ratio = exp(0.677)=1.97. Non-Significant Predictors: age, trestbps,
+chol, fbs, restecg, thalach.
+
+Conclusions Predictors for Both Genders: cp, exang, and oldpeak are
+significant predictors for both males and females.
+
+Gender-Specific Differences: Stronger effects of cp and exang in females
+suggest potential gender-specific diagnostic markers for heart disease.
 
 (author: Yonghao YU)
 
@@ -875,7 +984,7 @@ ggplot(var_imp_df, aes(x = reorder(Variable, -MeanDecreaseAccuracy))) +
   theme(axis.text.x = element_text(angle = 0, hjust = 1))
 ```
 
-![](modelling_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](modelling_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 Then we ranked the predictors descendingly based on the
 MeanDecreaseAccuracy which measures the decrease in overall model
