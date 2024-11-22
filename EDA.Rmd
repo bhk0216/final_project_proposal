@@ -73,7 +73,7 @@ A correlation heatmap was generated for each region to examine the relationships
 
 At a glance, the correlations differ across regions, with some showing stronger relationships than others. The following variables were selected based on the highest correlation values observed in each region:
 
-* `age` and `thalach: A stronger negative correlation was found in Hungary (-0.45) and Cleveland (-0.39) compared to Switzerland (-0.29) and Long Beach (-0.16).
+* `age` and `thalach`: A stronger negative correlation was found in Hungary (-0.45) and Cleveland (-0.39) compared to Switzerland (-0.29) and Long Beach (-0.16).
 * `age` and `trestbps`: Long Beach exhibited a stronger positive correlation (0.38) than Cleveland (0.28), Hungary (0.26), and Switzerland (0.24).
 * `thalach` and `trestbps`: A stronger negative relationship was observed in Switzerland (-0.23) and Hungary (-0.22) compared to Cleveland (-0.05) and Long Beach (0.00).
 * `thalach` and `oldpeak`: A stronger negative correlation was seen in Cleveland (-0.34) and Hungary (-0.32), while Long Beach (0.19) and Switzerland (0.17) displayed weak positive correlations. 
