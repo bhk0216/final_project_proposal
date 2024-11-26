@@ -1,5 +1,5 @@
 ---
-title: "Final Project Proposal"
+title: "Proposal"
 author: "Stella Koo, Yixin Zheng, Thomas Tang, Yonghao YU, Yanhao Shen"
 date: "2024-10-31"
 output:

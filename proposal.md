@@ -1,4 +1,4 @@
-Final Project Proposal
+Proposal
 ================
 Stella Koo, Yixin Zheng, Thomas Tang, Yonghao YU, Yanhao Shen
 2024-10-31
