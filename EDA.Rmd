@@ -27,7 +27,7 @@ combined_df = map2(dfs, regions, ~ mutate(.x, region = .y)) |>
 ```
 
 ## Summary of variables 
-The tables below displays descriptive statistics for each variable in the heart disease dataset, organized by region. The continuous variables include `age`, `trestbps`, `chol`, `thalach`, `oldpeak` while the discrete variables consist of `sex`, `cp`, `fbs`, `restecg`, `exang`. These variables will be used to assess the diagnosis of heart disease, as indicated by the `num` variable.
+The tables below displays descriptive statistics for each variable in the heart disease dataset, organized by region. The continuous variables include `age`, `trestbps`, `thalach`, `oldpeak` while the discrete variables consist of `sex`, `cp`, `fbs`, `restecg`, `exang`. These variables will be used to assess the diagnosis of heart disease, as indicated by the `num` variable.
 
 Variables `ca` and `thal` were excluded from the analysis due to incomplete data, with missing values exceeding 85% in more than two regions, rendering these variables non-comparable. Additionally, the `chol` variable was removed from the analysis as all observations in Switzerland had a value of 0
 
