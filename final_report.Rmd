@@ -1,0 +1,17 @@
+---
+title: "report"
+author: "Stella Koo"
+date: "2024-11-26"
+output: github_document
+---
+
+# Members
+Stella Koo (bk2959)
+
+# Motivation
+
+# Initial Questions
+
+# Data
+
+# Exploratory Analysis

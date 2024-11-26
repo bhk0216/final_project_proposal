@@ -11,37 +11,29 @@ YU (yy3564), Yanhao Shen (ys3875)
 ## Project Title
 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions
-(with Varying on Development Levels or Climate Groups?)
 
-- Challenge:
+Main Questions:
 
-Climate Data: To analyze by climate, we would need climate
-classification data or average environmental conditions (temperature,
-humidity) that can be associated with each region. While this is
-technically possible, finding or linking appropriate climate data for
-each location in the heart disease dataset may require additional data
-collection and preprocessing.
+1.  Comparing Diagnostic Factors for Heart Disease Across Regions:
+    explore whether certain diagnostic factors (e.g., cholesterol
+    levels, exercise-induced angina) are more predictive of heart
+    disease in one region compared to others.
 
-Development Level Data: Development level, often assessed using
-indicators like GDP per capita would similarly require obtaining
-additional socioeconomic data specific to each region. Matching these
-indicators to the heart disease dataset’s geographic locations would add
-complexity and require control for multiple factors.
+2.  Examining Predictive Power of Clinical Indicators for Heart Disease
+    in Diverse Populations: predictive accuracy of clinical indicators
+    (like cholesterol, blood pressure) for heart disease across various
+    demographics.
 
-Alternative Title/Questions and Analysis Ideas: 1. Comparing Diagnostic
-Factors for Heart Disease Across Regions: explore whether certain
-diagnostic factors (e.g., cholesterol levels, exercise-induced angina)
-are more predictive of heart disease in one region compared to others.
-2. The Influence of Age and Lifestyle Factors on Heart Disease Across
-International Datasets: narrows down the analysis to age and
-lifestyle-related variables (e.g., chest pain type, cholesterol,
-exercise-induced angina). 3. Regional Patterns in Heart Disease
-Diagnostic Attributes: focusing on comparing the prevalence and
-distribution of key diagnostic attributes (like age, cholesterol, etc.)
-across the four datasets. 4. Examining Predictive Power of Clinical
-Indicators for Heart Disease in Diverse Populations: predictive accuracy
-of clinical indicators (like cholesterol, blood pressure) for heart
-disease across various demographics.
+Alternative Title/Questions and Analysis Ideas:
+
+1.  The Influence of Age and Lifestyle Factors on Heart Disease Across
+    International Datasets: narrows down the analysis to age and
+    lifestyle-related variables (e.g., chest pain type, cholesterol,
+    exercise-induced angina).
+
+2.  Regional Patterns in Heart Disease Diagnostic Attributes: focusing
+    on comparing the prevalence and distribution of key diagnostic
+    attributes (like age, cholesterol, etc.) across the four datasets.
 
 ## Motivation (Ian)
 
