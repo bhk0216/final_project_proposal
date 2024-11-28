@@ -81,7 +81,14 @@ In Hungary, the heart disease status (`num`) is limited to values 0 or 1, with n
 
 ```{r}
 combined_df = combined_df |>
-  mutate(num = factor(ifelse(num == 0, 0, 1), levels = c(0, 1)))
+  mutate(num = factor(ifelse(num == 0, 0, 1), levels = c(0, 1)),
+  sex = factor(sex, levels = c(0, 1)),
+  slope = factor(slope),
+  thal = factor(thal),
+  cp = factor(cp),
+  fbs = factor(fbs),
+  restecg = factor(restecg),
+  exang = factor(exang))
 ```
 
 ## Continuous Variables
@@ -185,27 +192,43 @@ plot_oldpeak +
 
 
 
-## Discrete Variables
+## Catagorical Variables
+the datasets have 7 catagorical Variables: \
+sex: 1=male; 0=female\
+cp (chest pain type): 1=typical angina; 2=atypical angina; 3=non-anginal pain; 4=asymptomatic \
+fbs (fasting blood sugar > 120 mg/dl): 1=true; 0=false \
+restecg (resting electrocardiographic results): 0=normal; 1=having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV) \
+exang (exercise induced angina): 1=yes; 0=no \
+slope (the slope of the peak exercise ST segment): 1=upsloping; 2=flat; 3=downsloping \
+thal: 3=normal; 6=fixed defect; 7=reversable defect \
+To examine the variables' association with num, I will be using Cramér's V, which is a method based on the Chi-Squared statistic from a contingency table of the two variables. It quantifies the strength of the association, providing a value between 0, indicating no association between the variables and 1, indicating a perfect association. Using this menthod, I hope we can identify key predictors that have strong association with num, and thus focus on variables with higher Cramér's V values in the modeling efforts. This is also a good way in visualization into the relationships within the data.\
 
-## I dont know what it is, just copy from chatGPT, to study the correlation for discrete variables.
+now, let's look in to the plot, we can see that thal and cp have the highest Cramér's V (>=0.5 and <1), suggesting that they are the most informative categorical predictors of heart disease in the dataset. Then, exang, slope, and sex also perform moderately good (>= 0.3 and <0.5), saying that they contribute meaningful information and should be included in predictive models. However, at the very beginning, we have note that there is a large gap in the number of male and female participants, so to aviod any bias, I would like to discard sex. Finally, as respect for fbs and restecg, they have limited association and may contribute less to predictive accuracy becasue their Cramér's V are both close to 0, so I will also discard these two variables.
 ```{r}
-variables <- c("cp", "fbs", "restecg", "exang")
+# Define variables
+variables <- c("sex", "cp", "fbs", "restecg", "exang", "slope", "thal")
 
+# Compute Cramér's V
 results <- sapply(variables, function(var) {
-  x <- as.factor(combined_df$num)
-  y <- as.factor(combined_df[[var]])
+  x <- combined_df$num
+  y <- combined_df[[var]]
   cramersV(x, y)
 })
 
+# Create data frame
 association_df <- data.frame(Variable = variables, CramersV = results)
 
-# Bar plot
-ggplot(association_df, aes(x = reorder(Variable, -CramersV), y = CramersV, fill = CramersV)) +
+# Plot the results
+ggplot(association_df, aes(x = reorder(Variable, CramersV), y = CramersV, fill = CramersV)) +
   geom_bar(stat = "identity") +
+  coord_flip() +
   scale_fill_gradient(low = "lightblue", high = "darkblue") +
-  labs(title = "Association Between Outcome and Predictor Variables",
-       x = "Predictor Variables",
-       y = "Cramér's V") +
+  labs(
+    title = "Association Between Heart Disease Status and Predictor Variables",
+    x = "Predictor Variables",
+    y = "Cramér's V",
+    fill = "Cramér's V"
+  ) +
   theme_minimal()
 ```
 
