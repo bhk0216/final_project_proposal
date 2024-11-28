@@ -1,6 +1,6 @@
 Exploratory Data Analysis
 ================
-Stella Koo
+Stella Koo, Yanhao Shen
 2024-11-16
 
 # Issues to discuss
@@ -11,6 +11,8 @@ Stella Koo
 
 ``` r
 library(tidyverse)
+library(lsr)
+library(vcd)
 
 cleveland = read_csv("./data/cleveland.csv", na = "?")
 hungary = read_csv("./data/hungarian.csv", na = "?")
@@ -368,33 +370,23 @@ plot_oldpeak +
 ## I dont know what it is, just copy from chatGPT, to study the correlation for discrete variables.
 
 ``` r
-library("vcd")
-```
-
-    ## Loading required package: grid
-
-``` r
-cramers_v <- function(x, y) {
-  tbl <- table(x, y)
-  chisq <- chisq.test(tbl)
-  return(sqrt(chisq$statistic / (sum(tbl) * (min(dim(tbl)) - 1))))
-}
-
-# Compute Cramér's V for num with cp, fbs, restecg, and exang
 variables <- c("cp", "fbs", "restecg", "exang")
-results <- sapply(variables, function(var) cramers_v(combined_df$num, combined_df[[var]]))
 
-# Convert results into a data frame
+results <- sapply(variables, function(var) {
+  x <- as.factor(combined_df$num)
+  y <- as.factor(combined_df[[var]])
+  cramersV(x, y)
+})
+
 association_df <- data.frame(Variable = variables, CramersV = results)
 
-# Plot heatmap
-ggplot(association_df, aes(x = "num", y = Variable, fill = CramersV)) +
-  geom_tile(color = "white") +
-  scale_fill_gradient(low = "white", high = "blue") +
-  labs(title = "Association Between num and Other Variables",
-       x = "Outcome (num)",
-       y = "Predictor Variables",
-       fill = "Cramér's V") +
+# Bar plot
+ggplot(association_df, aes(x = reorder(Variable, -CramersV), y = CramersV, fill = CramersV)) +
+  geom_bar(stat = "identity") +
+  scale_fill_gradient(low = "lightblue", high = "darkblue") +
+  labs(title = "Association Between Outcome and Predictor Variables",
+       x = "Predictor Variables",
+       y = "Cramér's V") +
   theme_minimal()
 ```
 
