@@ -113,6 +113,22 @@ examine the distribution of continuous variables across the two
 categories of heart disease status (0 and 1), providing insight into
 potential differences between the groups across the regions.
 
+Key findings emerged from the exploratory data analysis:
+
+- T depression and maximum heart rate exhibit consistent trends across
+  regions, with clear separation between heart disease statuses, making
+  them strong predictors.
+- Resting blood pressure shows significant overlap between groups in all
+  regions, reducing its standalone predictive power.
+- Age is a strong predictor in some regions (Cleveland, Hungary) but
+  weaker in others (Long Beach, Switzerland).
+
+Building on these insights, regression analysis was conducted to further
+investigate the relationships between the diagnostic attributes and
+heart disease status.
+
+## Discrete Variables
+
 # Additional Analysis
 
 # Discussion
