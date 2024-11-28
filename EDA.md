@@ -1,4 +1,4 @@
-EDA
+Exploratory Data Analysis
 ================
 Stella Koo
 2024-11-16
@@ -30,10 +30,10 @@ combined_df = map2(dfs, regions, ~ mutate(.x, region = .y)) |>
 
 The tables below displays descriptive statistics for each variable in
 the heart disease dataset, organized by region. The continuous variables
-include `age`, `trestbps`, `chol`, `thalach`, `oldpeak` while the
-discrete variables consist of `sex`, `cp`, `fbs`, `restecg`, `exang`.
-These variables will be used to assess the diagnosis of heart disease,
-as indicated by the `num` variable.
+include `age`, `trestbps`, `thalach`, `oldpeak` while the discrete
+variables consist of `sex`, `cp`, `fbs`, `restecg`, `exang`. These
+variables will be used to assess the diagnosis of heart disease, as
+indicated by the `num` variable.
 
 Variables `ca` and `thal` were excluded from the analysis due to
 incomplete data, with missing values exceeding 85% in more than two
@@ -247,6 +247,17 @@ variables.
 
 ##### Age (`age`)
 
+Age is generally higher in heart disease cases across all regions, but
+the degree of overlap varies. Cleveland and Hungary show more distinct
+separation, with heart disease cases skewed toward older individuals.
+Long Beach and Switzerland exhibit greater overlap, suggesting weaker
+age-based differentiation. Outliers in younger individuals with heart
+disease are present in Switzerland and Long Beach.
+
+Age is a strong predictor, especially in Cleveland and Hungary, where
+separation is more pronounced. Regions with greater overlap (Long Beach,
+Switzerland) suggest the need for interaction terms.
+
 ``` r
 box_plot = function(data, variable) {
   plot = ggplot(data, aes(x = factor(num), y = .data[[variable]], fill = factor(num))) +
@@ -269,6 +280,18 @@ plot_age +
 
 ##### Resting Blood Pressure (in mm Hg, `trestbps`)
 
+Resting blood pressure shows minimal separation between heart disease
+and non-heart disease groups in most regions. Medians and interquartile
+ranges are similar across heart disease statuses in Cleveland, Hungary,
+and Long Beach. Switzerland shows slightly better separation, though the
+overlap remains significant. Outliers are observed in Cleveland and Long
+Beach, particularly for non-heart disease cases.
+
+Resting blood pressure may have limited predictive value, as the overlap
+between the groups is significant across all regions. However, it could
+still contribute as a secondary predictor or in interaction with other
+variables.
+
 ``` r
 plot_trestbps = box_plot(combined_df, "trestbps")
 
@@ -285,6 +308,17 @@ plot_trestbps +
 
 ##### Maximum Heart Rate (`thalach`)
 
+Across all regions, individuals with heart disease generally have lower
+maximum heart rates, though the degree of separation varies. Cleveland
+and Hungary show larger differences between the two groups. Long Beach
+and Switzerland show more overlap, particularly in the upper ranges of
+heart rates. Cleveland also has more outliers among non-heart disease
+cases.
+
+Maximum heart rate is a strong predictor of heart disease across most
+regions, given its consistent trend of lower values in heart disease
+cases.
+
 ``` r
 plot_thalach = box_plot(combined_df, "thalach")
 
@@ -300,6 +334,20 @@ plot_thalach +
 ![](EDA_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ##### T Depression (`oldpeak`)
+
+T depression appears higher in individuals with heart disease (status
+= 1) across all locations compared to those without (status = 0).
+Cleveland and Hungary show higher median T depression and larger
+interquartile ranges for heart disease cases compared to non-cases. Long
+Beach and Switzerland show smaller differences between heart disease and
+non-heart disease groups, with generally lower T depression levels.
+Outliers in Cleveland and Hungary are more pronounced, suggesting
+regional-specific variability.
+
+T depression is likely a good predictor, particularly for Cleveland and
+Hungary, as it shows a clear separation between heart disease and
+non-heart disease cases. However, its predictive power may vary across
+regions, necessitating region-specific adjustments.
 
 ``` r
 plot_oldpeak = box_plot(combined_df, "oldpeak")
