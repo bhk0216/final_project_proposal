@@ -851,7 +851,7 @@ final output is determined by majority voting (classification) or
 averaging (regression). Random Forest is robust to overfitting, handles
 high-dimensional data well, and provides feature importance scores.
 
-### First, construct the model and generate the results!
+### First, construct the model with all predictors and then show the feature importance trends (the trend is descending according to the MeanDecreaseAccuracy)!
 
 author: Yonghao YU
 
@@ -893,8 +893,8 @@ library(randomForest)
 
 ``` r
 # drop out the variable "ca" and "thal" which are have so many missing values inside
-variables = c("chol", "cp", "age", "thalach", "oldpeak", "num", "restecg", "fbs", "region", "slope", "trestbps", "exang")
-data = combined_data_two[, variables]
+variables = c("cp", "age", "thalach", "oldpeak", "num", "restecg", "fbs","trestbps","region", "slope", "exang")
+data = combined_data_two[, variables]        
 data$num = as.factor(data$num)
 
 # check and deal with missing data
@@ -909,58 +909,227 @@ trainIndex = createDataPartition(data$num, p = 0.8, list = FALSE)
 trainData = data[trainIndex, ]
 testData = data[-trainIndex, ]
 
-# Construct the random forest model and evaluate the model results
+# Construct the random forest model
 rf_model = randomForest(num ~ ., data = trainData, importance = TRUE)
 rf_pred = predict(rf_model, testData)
 rf_conf_matrix = confusionMatrix(rf_pred, testData$num)
-print("The model result is")
+
+# Then we show the feature importance trends(The trend is descending according to the MeanDecreaseAccuracy)
+var_imp = importance(rf_model)
+var_imp_df = as.data.frame(var_imp)
+var_imp_df$Variable = rownames(var_imp_df)
+rownames(var_imp_df) = NULL
+var_imp_df = var_imp_df[order(var_imp_df$MeanDecreaseAccuracy, decreasing = TRUE), ]
+ggplot(var_imp_df, aes(x = reorder(Variable, -MeanDecreaseAccuracy))) +
+  geom_line(aes(y = MeanDecreaseAccuracy, group = 1, color = "MeanDecreaseAccuracy")) +
+  geom_point(aes(y = MeanDecreaseAccuracy, color = "MeanDecreaseAccuracy")) +
+  geom_line(aes(y = MeanDecreaseGini, group = 1, color = "MeanDecreaseGini")) +
+  geom_point(aes(y = MeanDecreaseGini, color = "MeanDecreaseGini")) +
+  labs(title = "Feature Importance Trends",
+       x = "Features",
+       y = "Importance",
+       color = "Metric") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 0, hjust = 1))
 ```
 
-    ## [1] "The model result is"
+![](modelling_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+Then we ranked the predictors descendingly based on the
+MeanDecreaseAccuracy which measures the decrease in overall model
+accuracy when the variable is permuted. And we show them in a line plot!
+Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out
+restecg and fbs predictors that have relatively small impact on our
+prediction. And then we can focus on the first seven predictors that
+have more impact on our prediction results!
+
+### Then, drop unsignificant features and build the model again, show the confusion matrix
 
 ``` r
-print(rf_conf_matrix)
+variables2 = c("cp", "thalach", "oldpeak", "num","trestbps","region","slope", "exang","age")
+data2 = combined_data_two[, variables2]
+data2$num = as.factor(data2$num)
+
+set.seed(50)
+
+trainIndex2 = createDataPartition(data2$num, p = 0.8, list = FALSE)
+trainData2 = data2[trainIndex2, ]
+testData2 = data2[-trainIndex2, ]
+
+# Construct the random forest model and evaluate the model results
+rf_model2 = randomForest(num ~ ., data = trainData2, importance = TRUE)
+rf_pred2 = predict(rf_model2, testData2)
+rf_conf_matrix2 = confusionMatrix(rf_pred2, testData2$num)
+
+cm = rf_conf_matrix2$table
+cm_df = as.data.frame(cm)
+colnames(cm_df) = c("Predicted", "Actual", "Frequency")
+cm_df$Proportion = cm_df$Frequency / sum(cm_df$Frequency)
+
+ggplot(data = cm_df, aes(x = Predicted, y = Actual, fill = Proportion)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "steelblue", name = "Proportion") +
+  geom_text(aes(label = Frequency), color = "black", size = 5) +  # Add frequency labels
+  labs(
+    title = "Confusion Matrix",
+    x = "Predicted Class",
+    y = "Actual Class"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14),
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 10)
+  )
 ```
 
-    ## Confusion Matrix and Statistics
-    ## 
-    ##           Reference
-    ## Prediction  0  1
-    ##          0 31 14
-    ##          1 10 50
-    ##                                           
-    ##                Accuracy : 0.7714          
-    ##                  95% CI : (0.6793, 0.8477)
-    ##     No Information Rate : 0.6095          
-    ##     P-Value [Acc > NIR] : 0.000325        
-    ##                                           
-    ##                   Kappa : 0.5281          
-    ##                                           
-    ##  Mcnemar's Test P-Value : 0.540291        
-    ##                                           
-    ##             Sensitivity : 0.7561          
-    ##             Specificity : 0.7812          
-    ##          Pos Pred Value : 0.6889          
-    ##          Neg Pred Value : 0.8333          
-    ##              Prevalence : 0.3905          
-    ##          Detection Rate : 0.2952          
-    ##    Detection Prevalence : 0.4286          
-    ##       Balanced Accuracy : 0.7687          
-    ##                                           
-    ##        'Positive' Class : 0               
-    ## 
+![](modelling_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+### Extracting detailed statistics from the confusion matrix
+
+``` r
+stats = rf_conf_matrix2$overall
+class_stats = rf_conf_matrix2$byClass
+
+# Displaying overall statistics
+cat("Overall Statistics:\n")
+```
+
+    ## Overall Statistics:
+
+``` r
+cat(sprintf("Accuracy: %.4f\n", stats["Accuracy"]))
+```
+
+    ## Accuracy: 0.8095
+
+``` r
+cat(sprintf("95%% CI: (%.4f, %.4f)\n", stats["AccuracyLower"], stats["AccuracyUpper"]))
+```
+
+    ## 95% CI: (0.7213, 0.8796)
+
+``` r
+cat(sprintf("No Information Rate: %.4f\n", stats["AccuracyNull"]))
+```
+
+    ## No Information Rate: 0.6095
+
+``` r
+cat(sprintf("P-Value [Acc > NIR]: %.6f\n", stats["AccuracyPValue"]))
+```
+
+    ## P-Value [Acc > NIR]: 0.000009
+
+``` r
+cat(sprintf("Kappa: %.4f\n", stats["Kappa"]))
+```
+
+    ## Kappa: 0.6067
+
+``` r
+cat(sprintf("Mcnemar's Test P-Value: %.4f\n\n", stats["McnemarPValue"]))
+```
+
+    ## Mcnemar's Test P-Value: 0.5023
+
+``` r
+# Displaying class-specific statistics
+cat("Class-Specific Statistics:\n")
+```
+
+    ## Class-Specific Statistics:
+
+``` r
+cat(sprintf("Sensitivity: %.4f\n", class_stats["Sensitivity"]))
+```
+
+    ## Sensitivity: 0.8049
+
+``` r
+cat(sprintf("Specificity: %.4f\n", class_stats["Specificity"]))
+```
+
+    ## Specificity: 0.8125
+
+``` r
+cat(sprintf("Pos Pred Value: %.4f\n", class_stats["Pos Pred Value"]))
+```
+
+    ## Pos Pred Value: 0.7333
+
+``` r
+cat(sprintf("Neg Pred Value: %.4f\n", class_stats["Neg Pred Value"]))
+```
+
+    ## Neg Pred Value: 0.8667
+
+``` r
+cat(sprintf("Prevalence: %.4f\n", class_stats["Prevalence"]))
+```
+
+    ## Prevalence: 0.3905
+
+``` r
+cat(sprintf("Detection Rate: %.4f\n", class_stats["Detection Rate"]))
+```
+
+    ## Detection Rate: 0.3143
+
+``` r
+cat(sprintf("Detection Prevalence: %.4f\n", class_stats["Detection Prevalence"]))
+```
+
+    ## Detection Prevalence: 0.4286
+
+``` r
+cat(sprintf("Balanced Accuracy: %.4f\n", class_stats["Balanced Accuracy"]))
+```
+
+    ## Balanced Accuracy: 0.8087
 
 From the model we can observe the following things: 1. The model
-correctly classified 77.14% of the instances. 2. The true accuracy is
-expected to fall 95% of the time in (0.6793, 0.8477) 3. The information
-rate is 0.6095 which is less than the accuracy rate (p-value also
-indicate this), indicating the model we built actually capture some
-significant features. 4. The Kappa is 0.5281 which is in the range
-\[40,60\], which indicate our classifier achieves moderate level of
-classification 5. High sensitivity (0.7561) indicates good
-identification of positives. 6. High specificity (0.7812) indicates good
-identification of negatives. 7. Balanced accuracy (76.87%) suggests the
+correctly classified 80.95% of the instances. 2. The true accuracy is
+expected to fall 95% of the time in (0.7213, 0.8796) 3. The no
+information rate is 0.6095 which is less than the accuracy rate (p-value
+also indicate this), indicating the model we built actually capture some
+significant features. 4. The Kappa is 0.6067 which is in the range
+\[0.6,0.8\], which indicate our classifier achieves relatively high
+level of classification 5. High sensitivity (0.8049) indicates good
+identification of positives. 6. High specificity (0.8125) indicates good
+identification of negatives. 7. Balanced accuracy (0.8087) suggests the
 model balances its performance across both classes well.
+
+### Compute R-squared and RMSE for the classification model
+
+``` r
+rf_pred_numeric = as.numeric(rf_pred2)
+test_actual_numeric = as.numeric(testData2$num)
+
+mean_actual = mean(test_actual_numeric)
+
+SST = sum((test_actual_numeric - mean_actual)^2)
+
+SSE = sum((test_actual_numeric - rf_pred_numeric)^2)
+
+R_squared = 1 - (SSE / SST)
+
+# Calculate RMSE
+rmse = sqrt(mean((rf_pred_numeric - test_actual_numeric)^2))
+
+# Print the results
+cat("RMSE of the model is:", rmse, "\n")
+```
+
+    ## RMSE of the model is: 0.4364358
+
+``` r
+cat("R-squared: ", R_squared, "\n")
+```
+
+    ## R-squared:  0.1996951
 
 author: Yonghao YU \### Then investigate the AUC value and ROC curve to
 assess the model’s ability
@@ -982,8 +1151,8 @@ library(pROC)
 
 ``` r
 # Generate AUC value
-rf_prob = predict(rf_model, testData, type = "prob")
-roc_curve = roc(testData$num, rf_prob[, 2], levels = rev(levels(testData$num)))
+rf_prob = predict(rf_model2, testData2, type = "prob")
+roc_curve = roc(testData2$num, rf_prob[, 2], levels = rev(levels(testData2$num)))
 ```
 
     ## Setting direction: controls > cases
@@ -1000,7 +1169,7 @@ ggplot(data = roc_data, aes(x = FPR, y = TPR)) +
   geom_line(color = "blue", size = 1) +
   geom_abline(linetype = "dashed", color = "gray") +
   labs(
-    title = "ROC Curve for Random Forest",
+    title = "ROC Curve for Random Forest Model",
     x = "False Positive Rate (1 - Specificity)",
     y = "True Positive Rate (Sensitivity)",
     subtitle = paste("AUC =", round(auc_value, 2))
@@ -1014,11 +1183,11 @@ ggplot(data = roc_data, aes(x = FPR, y = TPR)) +
     ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
     ## generated.
 
-![](modelling_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](modelling_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
-The AUC value of 0.83 indicates that the Random Forest model performs
+The AUC value of 0.85 indicates that the Random Forest model performs
 well in distinguishing between positive and negative classes.
-Specifically, there is an 83% chance that the model will rank a randomly
+Specifically, there is an 85% chance that the model will rank a randomly
 chosen positive instance higher than a negative one. This reflects our
 model reaches good discrimination.
 
@@ -1031,60 +1200,26 @@ with a relatively low false positive rate, which is desirable. However,
 as the false positive rate increases, the curve flattens, highlighting
 diminishing returns in improving sensitivity further.
 
-author: Yonghao YU \### Then we show the feature importance trends(The
-trend is descending according to the MeanDecreaseAccuracy)
-
-``` r
-var_imp = importance(rf_model)
-var_imp_df = as.data.frame(var_imp)
-var_imp_df$Variable = rownames(var_imp_df)
-rownames(var_imp_df) = NULL
-var_imp_df = var_imp_df[order(var_imp_df$MeanDecreaseAccuracy, decreasing = TRUE), ]
-ggplot(var_imp_df, aes(x = reorder(Variable, -MeanDecreaseAccuracy))) +
-  geom_line(aes(y = MeanDecreaseAccuracy, group = 1, color = "MeanDecreaseAccuracy")) +
-  geom_point(aes(y = MeanDecreaseAccuracy, color = "MeanDecreaseAccuracy")) +
-  geom_line(aes(y = MeanDecreaseGini, group = 1, color = "MeanDecreaseGini")) +
-  geom_point(aes(y = MeanDecreaseGini, color = "MeanDecreaseGini")) +
-  labs(title = "Feature Importance Trends",
-       x = "Features",
-       y = "Importance",
-       color = "Metric") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 0, hjust = 1))
-```
-
-![](modelling_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
-
-Then we ranked the predictors descendingly based on the
-MeanDecreaseAccuracy which measures the decrease in overall model
-accuracy when the variable is permuted. And we show them in a line plot!
-Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out
-restecg, trestbps, and fbs predictors that have relatively small impact
-on our prediction. And then we can focus on the first eight predictors
-that have more impact on our prediction results!
-
-### Last, simulate the prediction which predicts the num with the new data based on the model we built!
+author: Yonghao YU \### Last, simulate the prediction which predicts the
+num with the new data based on the model we built!
 
 author: Yonghao YU
 
 ``` r
 # construct a new dataframe which includes new data
 new_data = data.frame(
-  age = c(63,39),
-  sex = c(1, 1),
-  cp = c(1, 2),
-  trestbps = c(145, 120),
-  chol = c(233, 200),
-  fbs = c(1, 0),
-  restecg = c(2, 0),
-  thalach = c(150, 160),
-  exang = c(0, 1),
-  oldpeak = c(2.3, 1),
-  slope = c(3, 2),
-  region = c(1, 2)
+  age = c(63,39,62,34),
+  sex = c(1, 1, 1, 0),
+  cp = c(1, 2, 4, 1),
+  trestbps = c(145, 120, 110, 125),
+  thalach = c(150, 160, 120, 140),
+  exang = c(0, 1, 1, 0),
+  oldpeak = c(2.3, 1, 0.5, 2),
+  slope = c(3, 2, 2, 1),
+  region = c(1, 2, 3, 4)
 )
 # predict the results based on the model we have trained
-predicted_num = predict(rf_model, new_data)
+predicted_num = predict(rf_model2, new_data)
 print("The prediction result is：")
 ```
 
@@ -1094,12 +1229,11 @@ print("The prediction result is：")
 print(data.frame(new_data, Predicted_num = predicted_num))
 ```
 
-    ##   age sex cp trestbps chol fbs restecg thalach exang oldpeak slope region
-    ## 1  63   1  1      145  233   1       2     150     0     2.3     3      1
-    ## 2  39   1  2      120  200   0       0     160     1     1.0     2      2
-    ##   Predicted_num
-    ## 1             0
-    ## 2             0
+    ##   age sex cp trestbps thalach exang oldpeak slope region Predicted_num
+    ## 1  63   1  1      145     150     0     2.3     3      1             0
+    ## 2  39   1  2      120     160     1     1.0     2      2             0
+    ## 3  62   1  4      110     120     1     0.5     2      3             1
+    ## 4  34   0  1      125     140     0     2.0     1      4             0
 
 From the results, we can see that the model can generate some results
 based on the predictor values we put in!

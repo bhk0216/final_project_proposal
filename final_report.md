@@ -5,7 +5,7 @@ Stella Koo
 
 # Members
 
-Stella Koo (bk2959)
+Stella Koo (bk2959), Yonghao YU (yy3564)
 
 # Motivation
 
@@ -129,6 +129,26 @@ heart disease status.
 
 ## Discrete Variables
 
-# Additional Analysis
+# Modelling Analysis
+
+## Variable Selection
+
+### For continuous case
+
+For continuous variables, we use mean and standard deviation (std) to
+describe the distribution in overall samples, samples of control(num =
+0), and samples of case(num = 1). Then, we use t-test to examine whether
+the means of these variables are significantly different between case
+group and control group (significance level = 0.05). \### For discrete
+case For binary and categorical variables, we use count (n) and
+percentage (pct) to describe the distribution in overall samples,
+samples of control(num = 0), and samples of case(num = 1). Then, as the
+data meet the assumption, we use chi-sq test to examine whether the
+distribution of these variables are significantly different between case
+group and control group (significance level = 0.05).
+
+Based on the result of both continuous and discrete cases, we can find
+that except fbs, the rest of all other binary and categorical features
+are significantly different between case and control.
 
 # Discussion
