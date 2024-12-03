@@ -11,6 +11,9 @@ navbar:
       href: EDA.html  
     - text: "Modelling"
       href: Modelling.html  
+    - text: "Dashboard"
+      href: dashboard.html  
+      
 output:
   html_document:
     theme: cosmo
