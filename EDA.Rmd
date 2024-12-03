@@ -104,7 +104,7 @@ At a glance, the correlations differ across regions, with some showing stronger 
 
 Despite these notable correlations, none exceed 0.7, suggesting that each variable has a unique impact on the outcome (heart disease status). Therefore, multicollinearity is not a concern when modeling a regression.
 
-```{r fig.width = 6, fig.height = 4}
+```{r}
 cols_to_include = c("age", "trestbps", "thalach", "oldpeak")
 
 corr_plots = list()
