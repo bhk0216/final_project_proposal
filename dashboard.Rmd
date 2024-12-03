@@ -1,0 +1,90 @@
+---
+title: "Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, message = FALSE,include=FALSE}
+library(shiny)
+library(tidyverse)
+
+library(viridis)
+library(plotly)
+library(flexdashboard)
+```
+
+```{r data import, message = FALSE, include=FALSE}
+cleveland = read_csv("./data/cleveland.csv", na = "?")
+hungary = read_csv("./data/hungarian.csv", na = "?")
+long_beach = read_csv("./data/long_beach_va.csv", na = "?")
+switzerland = read_csv("./data/switzerland.csv", na = "?")
+
+dfs = list(cleveland, hungary, long_beach, switzerland)
+regions = c("Cleveland", "Hungary", "Long Beach", "Switzerland")
+
+combined_df = map2(dfs, regions, ~ mutate(.x, region = .y)) |>
+  bind_rows()
+```
+
+{.sidebar}
+-----------------------------------------------------------------------
+
+```{r echo = FALSE}
+regions = combined_df |> distinct(region) |> pull()
+
+selectInput(
+  "region_choice", 
+  label = h3("Select Region"),
+  choices = regions, selected = "Cleveland")
+```
+
+```{r echo = FALSE}
+max_age = combined_df |> distinct(age) |> max()
+min_age = combined_df |> distinct(age) |> min()
+  
+# sliderInput widget: produces a slider input widget
+sliderInput(
+  "age_range", 
+  label = h3("Choose Age Range"), 
+  min = min_age, max = max_age, value = c(40, 60))
+```
+
+{data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r echo = FALSE}
+
+```
+
+{data-width=350}
+-----------------------------------------------------------------------
+
+### Count of Individuals by Sex
+
+```{r echo = FALSE}
+renderPlotly({
+  combined_df |> 
+    filter(
+      region == input$region_choice,
+      age >= input$age_range[1],
+      age <= input$age_range[2]
+    ) |> 
+    count(sex) |> 
+    mutate(sex = factor(sex, levels = c(0, 1), labels = c("Female", "Male"))) |>  
+    plot_ly(x = ~sex, y = ~n, color = ~sex, type = "bar", 
+            hoverinfo = "text", 
+            text = ~paste("Sex: ", sex, "<br>Count: ", n))
+})
+```
+
+### Chart C
+
+```{r echo = FALSE}
+
+```
+
