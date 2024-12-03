@@ -9,7 +9,7 @@ output: github_document
 * Have trouble resizing correlation heatmap
 
 ## Data Cleaning & Preparing for Analysis
-```{r message = FALSE}
+```{r message = FALSE, warning = FALSE}
 library(tidyverse)
 library(lsr)
 library(vcd)
@@ -20,7 +20,7 @@ long_beach = read_csv("./data/long_beach_va.csv", na = "?")
 switzerland = read_csv("./data/switzerland.csv", na = "?")
 ```
 
-```{r}
+```{r message = FALSE, warning = FALSE}
 dfs = list(cleveland, hungary, long_beach, switzerland)
 regions = c("Cleveland", "Hungary", "Long Beach", "Switzerland")
 
@@ -34,7 +34,7 @@ The tables below displays descriptive statistics for each variable in the heart 
 Variables `ca` and `thal` were excluded from the analysis due to incomplete data, with missing values exceeding 85% in more than two regions, rendering these variables non-comparable. Additionally, the `chol` variable was removed from the analysis as all observations in Switzerland had a value of 0
 
 ### Cleveland
-```{r}
+```{r message = FALSE, warning = FALSE}
 summary = function(dataset) {
   dataset_summary = skimr::skim(dataset) |> 
     as.data.frame() |>  
@@ -47,17 +47,17 @@ summary(cleveland)
 ```
 
 ### Hungary
-```{r}
+```{r message = FALSE, warning = FALSE}
 summary(hungary)
 ```
 
 ### Long Beach
-```{r}
+```{r message = FALSE, warning = FALSE}
 summary(long_beach)
 ```
 
 ### Switzerland
-```{r}
+```{r message = FALSE, warning = FALSE}
 summary(switzerland)
 ```
 
@@ -66,7 +66,7 @@ The plot illustrates the distribution of participants by age and sex across diff
 
 Overall, there are noticeably more male participants, and the age distribution is relatively sparse for both groups—those without heart disease and those with heart disease. However, distinct patterns emerge when considering the regional breakdown. To gain a deeper understanding of the factors influencing heart disease prevalence, a more detailed analysis is necessary to identify which variables are contributing to the observed trends, and how these factors may differ or remain consistent across regions.
 
-```{r}
+```{r message = FALSE, warning = FALSE}
 ggplot(combined_df, aes(x = age, y = num, color = factor(sex, levels = c(0,1), labels = c("Female", "Male")))) +
   geom_point(alpha = 0.7) +
   facet_wrap(~ region) +
@@ -79,7 +79,7 @@ ggplot(combined_df, aes(x = age, y = num, color = factor(sex, levels = c(0,1), l
 
 In Hungary, the heart disease status (`num`) is limited to values 0 or 1, with no data available for statuses 2, 3, and 4, which also indicate the presence of heart disease. To ensure consistency across regions, the `num` variable was reclassified into a binary format, with 0 representing no heart disease and 1 representing heart disease.
 
-```{r}
+```{r message = FALSE, warning = FALSE}
 combined_df = combined_df |>
   mutate(num = factor(ifelse(num == 0, 0, 1), levels = c(0, 1)),
   sex = factor(sex, levels = c(0, 1)),
@@ -133,7 +133,7 @@ Boxplots were generated for each continuous variable in relation to heart diseas
 Age is generally higher in heart disease cases across all regions, but the degree of overlap varies. Cleveland and Hungary show more distinct separation, with heart disease cases skewed toward older individuals. Long Beach and Switzerland exhibit greater overlap, suggesting weaker age-based differentiation. Outliers in younger individuals with heart disease are present in Switzerland and Long Beach. 
 
 Age is a strong predictor, especially in Cleveland and Hungary, where separation is more pronounced. Regions with greater overlap (Long Beach, Switzerland) suggest the need for interaction terms. 
-```{r}
+```{r message = FALSE, warning = FALSE}
 box_plot = function(data, variable) {
   plot = ggplot(data, aes(x = factor(num), y = .data[[variable]], fill = factor(num))) +
       geom_boxplot() +
@@ -155,7 +155,7 @@ plot_age +
 Resting blood pressure shows minimal separation between heart disease and non-heart disease groups in most regions. Medians and interquartile ranges are similar across heart disease statuses in Cleveland, Hungary, and Long Beach. Switzerland shows slightly better separation, though the overlap remains significant. Outliers are observed in Cleveland and Long Beach, particularly for non-heart disease cases.
 
 Resting blood pressure may have limited predictive value, as the overlap between the groups is significant across all regions. However, it could still contribute as a secondary predictor or in interaction with other variables. 
-```{r}
+```{r message = FALSE, warning = FALSE}
 plot_trestbps = box_plot(combined_df, "trestbps")
 
 plot_trestbps + 
@@ -168,7 +168,7 @@ plot_trestbps +
 Across all regions, individuals with heart disease generally have lower maximum heart rates, though the degree of separation varies. Cleveland and Hungary show larger differences between the two groups. Long Beach and Switzerland show more overlap, particularly in the upper ranges of heart rates. Cleveland also has more outliers among non-heart disease cases.
 
 Maximum heart rate is a strong predictor of heart disease across most regions, given its consistent trend of lower values in heart disease cases. 
-```{r}
+```{r message = FALSE, warning = FALSE}
 plot_thalach = box_plot(combined_df, "thalach")
 
 plot_thalach + 
@@ -181,7 +181,7 @@ plot_thalach +
 T depression appears higher in individuals with heart disease (status = 1) across all locations compared to those without (status = 0). Cleveland and Hungary show higher median T depression and larger interquartile ranges for heart disease cases compared to non-cases. Long Beach and Switzerland show smaller differences between heart disease and non-heart disease groups, with generally lower T depression levels. Outliers in Cleveland and Hungary are more pronounced, suggesting regional-specific variability. 
 
 T depression is likely a good predictor, particularly for Cleveland and Hungary, as it shows a clear separation between heart disease and non-heart disease cases. However, its predictive power may vary across regions, necessitating region-specific adjustments. 
-```{r}
+```{r message = FALSE, warning = FALSE}
 plot_oldpeak = box_plot(combined_df, "oldpeak")
 
 plot_oldpeak + 

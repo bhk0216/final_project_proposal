@@ -310,9 +310,6 @@ plot_trestbps +
        y = "resting blood pressure (in mm Hg)")
 ```
 
-    ## Warning: Removed 59 rows containing non-finite outside the scale range
-    ## (`stat_boxplot()`).
-
 ![](EDA_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ##### Maximum Heart Rate (`thalach`)
@@ -336,9 +333,6 @@ plot_thalach +
        x = "heart disease status",
        y = "maximum heart rate")
 ```
-
-    ## Warning: Removed 55 rows containing non-finite outside the scale range
-    ## (`stat_boxplot()`).
 
 ![](EDA_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
@@ -366,9 +360,6 @@ plot_oldpeak +
        x = "heart disease status",
        y = "T depression")
 ```
-
-    ## Warning: Removed 62 rows containing non-finite outside the scale range
-    ## (`stat_boxplot()`).
 
 ![](EDA_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
