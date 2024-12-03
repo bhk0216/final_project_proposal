@@ -94,9 +94,6 @@ combined_df = combined_df |>
 ```
 
 ## Continuous Variables
-### Distribution of each variables
-
-
 ### Correlation heatmap for each region
 A correlation heatmap was generated for each region to examine the relationships between the variables, assess whether these correlations vary across regions, and to anayze any potential multicolinearity.
 
