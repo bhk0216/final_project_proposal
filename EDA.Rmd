@@ -1,8 +1,10 @@
 ---
 title: "Exploratory Data Analysis"
-author: "Stella Koo, Yanhao Shen"
+author: "Stella Koo (bk2959), Yanhao Shen"
 date: "2024-11-16"
-output: github_document
+output:   
+  html_document: default
+  github_document: default
 ---
 
 # Issues to discuss
@@ -92,6 +94,9 @@ combined_df = combined_df |>
 ```
 
 ## Continuous Variables
+### Distribution of each variables
+
+
 ### Correlation heatmap for each region
 A correlation heatmap was generated for each region to examine the relationships between the variables, assess whether these correlations vary across regions, and to anayze any potential multicolinearity.
 

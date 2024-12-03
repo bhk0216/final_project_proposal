@@ -2,7 +2,9 @@
 title: "Modelling"
 author: "Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)"
 date: "2024-11-16"
-output: github_document
+output:   
+  html_document: default
+  github_document: default
 ---
 
 ## Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)

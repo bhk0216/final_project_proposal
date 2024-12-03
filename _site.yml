@@ -1,13 +1,16 @@
-name: "Yay internet!"
+name: "Influence of Diagnostic Attributes on Heart Disease Across Regions"
 output_dir: "."
 navbar:
   title: "Home"
   right:
     - text: "About"
-      href: about.html
-    - icon: fa-envelope fa-lg
-      href: mailto:<you@youremail.com>
-    - icon: fa-github fa-lg
-      href: http://github.com/<YOUR_GH_NAME>/
+      href: proposal.html
+    - text: "Report"
+      href: final_report.html  
+    - text: "EDA"
+      href: EDA.html  
+    - text: "Modelling"
+      href: Modelling.html  
 output:
-  html_document
+  html_document:
+    theme: cosmo

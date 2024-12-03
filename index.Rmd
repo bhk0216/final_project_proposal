@@ -1,7 +1,4 @@
 ---
-title: "Holy cow!"
+title: "Influence of Diagnostic Attributes on Heart Disease Across Regions"
 ---
 
-### I have a webpage!
-
-And I can put all kinds of stuff on it!

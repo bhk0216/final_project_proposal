@@ -1,6 +1,6 @@
 Exploratory Data Analysis
 ================
-Stella Koo, Yanhao Shen
+Stella Koo (bk2959), Yanhao Shen
 2024-11-16
 
 # Issues to discuss

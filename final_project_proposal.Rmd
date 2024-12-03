@@ -4,6 +4,7 @@ author: "Stella Koo, Yixin Zheng, Thomas Tang, Yonghao YU, Yanhao Shen"
 date: "2024-10-31"
 output:
   github_document: default
+  html_document: default
 editor_options: 
   markdown: 
     wrap: sentence
