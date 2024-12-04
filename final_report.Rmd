@@ -88,6 +88,14 @@ Key findings emerged from the exploratory data analysis:
 Building on these insights, regression analysis was conducted to further investigate the relationships between the diagnostic attributes and heart disease status.
 
 ## Discrete Variables
+In our EDA, we have explored the correlation of each variables with num. However, when we incorporate them into our model, we also need to consider their validity. As a result, although variable slope and thal have good correlation with num, we still have to drop them because of their huge amount of missing values. Anyway, to gain a visualization of each variable with num, we have make some plot which give us a really clear way of assessing their effect. 
+
+* For cp, which we observed as the most relevant one in our discrete variables, the asymptomatic chest pain has the most clear effect on getting heart disease. While for the rest chest pain type, we can hardly say if they are the complications of the disease.
+* the variable sex is very uneven in he number of male and female participants. However, we can still compare the portion of getting heart disease for male and female respectively, and as we can see from the graph, all the locations except Switzerland shows clear evidence that the risk for male of getting the disease  is larger than that for female. For Switzerland, the observations are both close to 1 so we can attribute this finding to the data limitation, while the final conclusion remains unchanged.
+* For both fbs and exang, the result is most straightforward. We can readily tell that for both gourps in value 1, which means people who ever experienced fasting blood sugar > 120 mg/dl and Exercise-Induced Angin, are at higher risk of getting heart disease, making them strong predators when seeing if someone would have the disease.
+* As respect to restecg, if we compare normal resting electrocardiographic results to the rest, we can observe the proportions of getting heart disease for the rest group appear either around or above the normal group. Although the effect is weak in predicting, we can still put this variable into our model to make it more unbiased.
+
+These variables will all be included in subsequent predictive modeling to improve the accuracy of heart disease diagnosis. The visualizations corroborate the statistical findings, providing a comprehensive understanding of how these discrete variables relate to heart disease across different regions.
 
 # Modelling Analysis
 
