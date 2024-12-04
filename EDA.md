@@ -3,10 +3,6 @@ Exploratory Data Analysis
 Stella Koo (bk2959), Yanhao Shen
 2024-11-16
 
-# Issues to discuss
-
-- Have trouble resizing correlation heatmap
-
 ## Data Cleaning & Preparing for Analysis
 
 ``` r
@@ -227,6 +223,8 @@ cols_to_include = c("age", "trestbps", "thalach", "oldpeak")
 
 corr_plots = list()
 
+par(mar = c(1, 1, 2.2, 1))
+
 for(r in regions) {
   region_data = combined_df |> filter(region == r)
   
@@ -235,10 +233,10 @@ for(r in regions) {
   corr_plots[[r]] = corrplot::corrplot(corr_matrix, 
                                        method = "color", 
                                        type = "lower",
-                                       main = paste("Correlation Heatmap for", r),
                                        addCoef.col = "black", 
                                        tl.col = "black",
                                        tl.srt = 45)
+  mtext(paste("Correlation Heatmap for", r), side = 3, line = 1, cex = 1.5)
 
 }
 ```
@@ -372,7 +370,8 @@ pain; 4=asymptomatic
 fbs (fasting blood sugar \> 120 mg/dl): 1=true; 0=false  
 restecg (resting electrocardiographic results): 0=normal; 1=having ST-T
 wave abnormality (T wave inversions and/or ST elevation or depression of
-\> 0.05 mV)  
+\> 0.05 mV); 2: showing probable or definite left ventricular
+hypertrophy by Estes’ criteria  
 exang (exercise induced angina): 1=yes; 0=no  
 slope (the slope of the peak exercise ST segment): 1=upsloping; 2=flat;
 3=downsloping  
@@ -382,22 +381,20 @@ V, which is a method based on the Chi-Squared statistic from a
 contingency table of the two variables. It quantifies the strength of
 the association, providing a value between 0, indicating no association
 between the variables and 1, indicating a perfect association. Using
-this menthod, I hope we can identify key predictors that have strong
+this menthod, we hope to identify key predictors that have strong
 association with num, and thus focus on variables with higher Cramér’s V
 values in the modeling efforts. This is also a good way in visualization
-into the relationships within the data.  
+into the relationships within the data.
 
 now, let’s look in to the plot, we can see that thal and cp have the
 highest Cramér’s V (\>=0.5 and \<1), suggesting that they are the most
 informative categorical predictors of heart disease in the dataset.
 Then, exang, slope, and sex also perform moderately good (\>= 0.3 and
 \<0.5), saying that they contribute meaningful information and should be
-included in predictive models. However, at the very beginning, we have
-note that there is a large gap in the number of male and female
-participants, so to aviod any bias, I would like to discard sex.
-Finally, as respect for fbs and restecg, they have limited association
-and may contribute less to predictive accuracy becasue their Cramér’s V
-are both close to 0, so I will also discard these two variables.
+included in predictive models.
+
+While for our EDA, we can check each variables to see if they are
+complications of heart disease.
 
 ``` r
 # Define variables
@@ -429,75 +426,152 @@ ggplot(association_df, aes(x = reorder(Variable, CramersV), y = CramersV, fill =
 
 ![](EDA_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
+This part of graph is a macro-view of the participants, and in general
+terms, man would have less chance of getting heart disease than women.
+
 ``` r
-ggplot(combined_df, aes(x = as.factor(num), fill = factor(sex, levels = c(0, 1), labels = c("Female", "Male")))) +
+ggplot(combined_df, aes(x = sex, fill = num)) +
   geom_bar(position = "fill") +
-  labs(title = "Proportion of Males and Females by Heart Disease Status",
-       x = "Heart Disease Status",
-       y = "Proportion",
-       fill = "Sex") +
-  facet_wrap(~ region, ncol = 2)
+  facet_wrap(~ region) +
+  labs(
+    title = "Proportion of Heart Disease Status by sex",
+    x = "sex",
+    y = "Proportion",
+    fill = "Heart Disease Status"
+  ) +
+  theme_minimal()
 ```
 
 ![](EDA_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
-\###cp vs num
+Chest pain type 4 (asymptomatic) has the strongest association with
+getting heart disease across all locations. Chest pain type 1, 2, and 3
+tend to show fewer cases of heart disease, specifically, for chest pain
+2 (atypical angina), it has lowest proportions of individuals with heart
+disease, indicating it might not be a complication of heart disease.  
+There is consistency across locations, but proportions vary slightly by
+region, suggesting potential regional differences in the dataset or
+population characteristics.
 
 ``` r
-ggplot(combined_df, aes(x = factor(cp), fill = factor(num))) +
-  geom_bar(position = "dodge") +
+ggplot(combined_df, aes(x = cp, fill = num)) +
+  geom_bar(position = "fill") +
   facet_wrap(~ region) +
-  scale_x_discrete(labels = c("1"="typical angina","2"="atypical angina","3"="non-anginal pain","4"= "asymptomatic"))+
-  labs(title = "Chest Pain Type Distribution by Heart Disease Status and Region",
-       x = "Chest Pain Type (1-4)",
-       y = "Count",
-       fill = "Heart Disease Status") +
+  labs(
+    title = "Proportion of Heart Disease Status by Chest Pain Type (cp)",
+    x = "Chest Pain Type (cp)",
+    y = "Proportion",
+    fill = "Heart Disease Status"
+  ) +
   theme_minimal()
 ```
 
 ![](EDA_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
-\###fbs vs num
+To interpret the graph, we need to know what is “slope”. In an exercise
+electrocardiogram(ECG), an “upward slope” on the ST segment generally
+indicates a normal response to exercise as the heart works harder and
+electrical activity slightly shifts upward. while a “downward slope” on
+the ST segment is typically considered abnormal and suggestive of
+myocardial ischemia (reduced blood flow to the heart muscle). As result,
+we can convert 1(upsloping) as low risk of getting heart disease,
+2(flat) and 3(downsloping) as moderate risk and high risk of getting the
+disease respectively.  
+The results presented in the graph are almost identical to our
+interpretation of the variables after conversion. people are less likely
+to get the disease when they have normal peak exercise ST Segment, while
+for those who observe abnormal peak exercise ST Segmet, they may have a
+higher risk of getting heart disease.
 
 ``` r
-ggplot(combined_df |> filter(!is.na(fbs)), aes(x = factor(fbs), fill = factor(num))) +
-  geom_bar(position = "dodge") +
+# Plot for 'slope' (Slope of Peak Exercise ST Segment)
+ggplot(combined_df |> filter(!is.na(slope)), aes(x = slope, fill = num)) +
+  geom_bar(position = "fill") +
   facet_wrap(~ region) +
-  labs(title = "Fasting Blood Sugar Distribution by Heart Disease Status and Region",
-       x = "Fasting Blood Sugar (0=≤120 mg/dl, 1=>120 mg/dl)",
-       y = "Count",
-       fill = "Heart Disease Status") +
+  labs(
+    title = "Proportion of Heart Disease Status by Slope of Peak Exercise ST Segment (slope)",
+    x = "Slope of Peak Exercise ST Segment (slope)",
+    y = "Proportion",
+    fill = "Heart Disease Status"
+  ) +
   theme_minimal()
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
-
-\###restecg vs num
+![](EDA_files/figure-gfm/unnamed-chunk-17-1.png)<!-- --> For this graph,
+we can hardly make any conclusion, because whether the resting
+electrocardiographic results are normal or not, There was no significant
+reduction in the risk of developing the disease.
 
 ``` r
-ggplot(combined_df |> filter(!is.na(restecg)), aes(x = factor(restecg), fill = factor(num))) +
-  geom_bar(position = "dodge") +
+ggplot(combined_df |> filter(!is.na(restecg)), aes(x = restecg, fill = num)) +
+  geom_bar(position = "fill") +
   facet_wrap(~ region) +
-  labs(title = "Resting ECG Results by Heart Disease Status and Region",
-       x = "Resting ECG Results (0-2)",
-       y = "Count",
-       fill = "Heart Disease Status") +
+  labs(
+    title = "Proportion of Heart Disease Status by resting electrocardiographic results (restecg)",
+    x = "resting electrocardiographic results (restecg)",
+    y = "Proportion",
+    fill = "Heart Disease Status"
+  ) +
   theme_minimal()
 ```
 
 ![](EDA_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
-\###exang vs num
+For the graphs list below, we can treat the variables as binary:  
+For those who have defect of thalassemia (6 and 7), they tend to have
+the disease. If people experienced exercise-induced angina (1), they are
+at high risk of getting heart disease. People who have fasting blood
+sugar \> 120 mg/dl, they have more chance to get the disease compared to
+those \< 120 mg/dl.
 
 ``` r
-ggplot(combined_df |> filter(!is.na(exang)), aes(x = factor(exang), fill = factor(num))) +
-  geom_bar(position = "dodge") +
+ggplot(combined_df |> filter(!is.na(thal)), aes(x = thal, fill = num)) +
+  geom_bar(position = "fill") +
   facet_wrap(~ region) +
-  labs(title = "Exercise Induced Angina by Heart Disease Status and Region",
-       x = "Exercise Induced Angina (0=No, 1=Yes)",
-       y = "Count",
-       fill = "Heart Disease Status") +
+  labs(
+    title = "Proportion of Heart Disease Status by Thalassemia (thal)",
+    x = "Thalassemia (thal)",
+    y = "Proportion",
+    fill = "Heart Disease Status"
+  ) +
   theme_minimal()
 ```
 
 ![](EDA_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+``` r
+# Plot for 'exang' (Exercise-Induced Angina)
+ggplot(combined_df |> filter(!is.na(exang)), aes(x = exang, fill = num)) +
+  geom_bar(position = "fill") +
+  facet_wrap(~ region) +
+  labs(
+    title = "Proportion of Heart Disease Status by Exercise-Induced Angina (exang)",
+    x = "Exercise-Induced Angina (exang)",
+    y = "Proportion",
+    fill = "Heart Disease Status"
+  ) +
+  theme_minimal()
+```
+
+![](EDA_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+
+``` r
+ggplot(combined_df |> filter(!is.na(fbs)), aes(x = fbs, fill = num)) +
+  geom_bar(position = "fill") +
+  facet_wrap(~ region) +
+  labs(
+    title = "Proportion of Heart Disease Status by fasting blood sugar > 120 mg/dl (fbs)",
+    x = "fasting blood sugar > 120 mg/dl (fbs)",
+    y = "Proportion",
+    fill = "Heart Disease Status"
+  ) +
+  theme_minimal()
+```
+
+![](EDA_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+
+Though some variables may not suitable for the model, we can still
+conclude that the complications of hart disease may be include
+asymptomatic chest pain, abnormal Peak Exercise ST Segment, defect of
+thalassemia, exercise-induced angina, and fasting blood sugar \> 120
+mg/dl.  
