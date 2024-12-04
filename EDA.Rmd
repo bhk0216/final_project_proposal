@@ -7,9 +7,6 @@ output:
   github_document: default
 ---
 
-# Issues to discuss
-* Have trouble resizing correlation heatmap
-
 ## Data Cleaning & Preparing for Analysis
 ```{r message = FALSE, warning = FALSE}
 library(tidyverse)
