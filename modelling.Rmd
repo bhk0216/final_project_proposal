@@ -686,7 +686,7 @@ From the model we can observe the following things:
 1. The model correctly classified 80.95% of the instances.
 2. The true accuracy is expected to fall 95% of the time in (0.7213, 0.8796)
 3. The no information rate is 0.6095 which is less than the accuracy rate (p-value also indicate this), indicating the model we built actually capture some significant features.
-4. The Kappa is 0.6067 which is in the range [0.6,0.8], which indicate our classifier achieves relatively high level of classification
+4. The Kappa is 0.6067 which is in the range (0.6,0.8), which indicate our classifier achieves relatively high level of classification
 5. High sensitivity (0.8049) indicates good identification of positives.
 6. High specificity (0.8125) indicates good identification of negatives.
 7. Balanced accuracy (0.8087) suggests the model balances its performance across both classes well.
