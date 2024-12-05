@@ -3,8 +3,6 @@ output_dir: "."
 navbar:
   title: "Home"
   right:
-    - text: "About"
-      href: proposal.html
     - text: "Report"
       href: final_report.html  
     - text: "EDA"
