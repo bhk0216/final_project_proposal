@@ -1,7 +1,5 @@
 ---
 title: "Proposal"
-author: "Stella Koo, Yixin Zheng, Thomas Tang, Yonghao YU, Yanhao Shen"
-date: "2024-10-31"
 output:
   github_document: default
 editor_options: 
@@ -22,14 +20,14 @@ Main Questions:
 
 2. Examining Predictive Power of Clinical Indicators for Heart Disease in Diverse Populations: predictive accuracy of clinical indicators (like cholesterol, blood pressure) for heart disease across various demographics.
 
-## Motivation (Ian)
+## Motivation 
 Heart disease continues to be one of the primary causes of death globally, presenting diverse challenges across different regions, each with its unique set of risk factors. While medical advancements have improved diagnostic methods, there remain significant disparities in healthcare access and diagnostic accuracy, particularly in low-resource regions. These disparities can be exacerbated by environmental factors, such as climate and lifestyle, as well as varying levels of healthcare infrastructure and socioeconomic conditions.
 
 This project seeks to explore the predictive power of clinical indicators across multiple regions with diverse developmental and environmental backgrounds. By leveraging datasets from four geographically distinct regions (the U.S., Hungary, and Switzerland) in the [UCI Heart Disease dataset](https://archive.ics.uci.edu/dataset/45/heart+disease), we aim to determine whether certain diagnostic features (such as cholesterol levels, blood pressure, and exercise induced angina) demonstrate stronger associations with heart disease in some regions compared to others. 
 
 In the era where data-driven insights are reshaping healthcare, we hope this project could provide accurate predictive models that are adaptable to diverse settings, which can support early intervention and potentially save lives across a wide array of populations and regions.
 
-## Intended Final Products (Yixin)
+## Intended Final Products 
 
 1.  Website: A user-friendly website to display our findings with interactive features, such as a density map and a R-SHINY tool to predict individual heart disease risk. The website will include things like following:
 
@@ -49,7 +47,7 @@ In the era where data-driven insights are reshaping healthcare, we hope this pro
 4.  Code: A link to our organized GitHub repository will be available on the website, containing all data cleaning, analysis, and visualization code.
     The repository will include a README file for clear instructions on reproducing our analysis.
 
-## Data Sources (Stella)
+## Data Sources 
 
 The Heart Disease datasets were obtained from UC Irvine's Machine Learning Repository that can be accessed [here](https://archive.ics.uci.edu/dataset/45/heart+disease).
 This directory contains four datasets focused on heart disease diagnosis, each representing a distinct geographic location and with attributes recorded as numeric values.
@@ -107,7 +105,7 @@ process_data("./heart+disease/processed.va.data", "long_beach_va.csv")
 process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
 ```
 
-## Planned analyses, Visualizations, Coding Challenges (Thomas, Yonghao)
+## Planned analyses, Visualizations, Coding Challenges
 
 -   Exploratory Data Analysis (EDA):
     -   Graphic Displays: Use histograms, density plots, and box plots to visualize distributions of key variables, such as cholesterol, age, thalach (maximum heart rate), and compare distributions between those with and without heart disease.
@@ -137,7 +135,7 @@ process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
     -   Create age groups, examine exercise-induced angina, and introduce other potential interaction terms (e.g., age and cholesterol) that might enhance model predictive accuracy.
     -   Explore different metrics (e.g., R-squared, adjusted R-squared) to compare models across datasets and regions, highlighting which approach (e.g., separate vs. merged datasets) performs best.
 
-## Planned Timeline (Stella)
+## Planned Timeline
 
 **November 11th to 17th:**
 

@@ -1,12 +1,11 @@
 ---
 title: "Modelling"
-date: "2024-11-16"
 output:   
   html_document: default
   github_document: default
 ---
 
-```{r setup}
+```{r setup, message = FALSE}
 library(tidyverse)
 library(janitor)
 library(car)
@@ -50,7 +49,7 @@ cleaned_data <- data |>
   mutate(num = factor(num, levels = c(0, 1, 2, 3, 4), 
                       labels = c("No Disease", "Mild", "Moderate", "Severe", "Very Severe")))
                       
-```{r data cleaning author: Yixin Zheng}
+```{r message = FALSE}
 cleveland <- read_csv("./data/cleveland.csv", na = "?") |> 
   clean_names() |> 
   mutate(num = if_else(num == 0, 0, 1)) # Binarize the `num` variable: 0 = no heart disease, 1 = heart disease
@@ -78,9 +77,7 @@ switzerland = read_csv("./data/switzerland.csv", na = "?") |>
 cor(cleveland$chol, cleveland$num, use = "complete.obs")
 ```
 
-# Variable Selection (author: Yonghao YU)
-
-author: Yonghao YU
+# Variable Selection
 
 ### Data Preprocessing
 
@@ -112,8 +109,6 @@ print(control_data)
 print(combined_data_two)
 ```
 
-
-author: Yonghao YU
 
 ### For Continues case
 For continuous variables, we use mean and standard deviation (std) to describe the distribution in overall samples, samples of control(num = 0), and samples of case(num = 1). Then, we use t-test to examine whether the means of these variables are significantly different between case group and control group (significance level = 0.05).
@@ -195,9 +190,6 @@ conti_des_df
 ```
 
 Based on the result, we can find that all five features are significantly different between case and control.
-
-
-author: Yonghao YU
 
 ### For Discrete case
 For binary and categorical variables, we use count (n) and percentage (pct) to describe the distribution in overall samples, samples of control(num = 0), and samples of case(num = 1). Then, as the data meet the assumption, we use chi-sq test to examine whether the distribution of these variables are significantly different between case group and control group (significance level = 0.05).
@@ -310,10 +302,7 @@ print(final_cat_count)
 
 Based on the result, we can find that except fbs, the rest of all other binary and categorical features are significantly different between case and control.
 
-
-
 # Linear Regression
-(author: Yixin Zheng)
 
 Here we are prioritizing MLR over SLR, as the nature of heart disease involves multiple interacting factors (e.g., age, chest pain, and exercise-induced angina). Modeling a single variable may oversimplify these relationships and fail to capture their combined effects.
 For example, maximum heart rate (thalach) may interact with age or region, making it more meaningful to include these interactions in a multiple linear regression (MLR) model.
@@ -465,6 +454,7 @@ Similar trends are observed across age groups, with higher slope values generall
 The distribution of heart disease status differs by age group. Individuals aged 40-60 have the highest density near num=1 (presence of heart disease), reflecting their higher overall risk in this dataset.
 
 ##Hypothesis 1 (MLR):
+
 - **Null Hypothesis (H_0):** The relationships between maximum heart rate (`thalach`), the slope of the ST segment (`slope`), and heart disease status (`num`) do not vary by gender
 - **Alternative Hypothesis (H_a):**  At least one of these predictors interacts with gender to significantly influence heart disease status.
 
@@ -555,7 +545,6 @@ $$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \
 Given that num (heart disease status) is binary, future analyses should consider logistic regression for more accurate risk prediction based on diagnostic factors across regions/ demographics.
 
 # Logistic Regression Analyses 
-author: Thomas Tang
 ```{r warning=FALSE}
 cleveland <- read.csv("./data/cleveland.csv", header = FALSE)
 hungarian <- read.csv("./data/hungarian.csv", header = FALSE)
@@ -743,8 +732,6 @@ Stronger effects of cp and exang in females suggest potential gender-specific di
 
 
 
-(author: Yonghao YU)
-
 ## Try Random Forest Classifier!
 
 ### A brief intro to Random Forest Algorithm
@@ -752,8 +739,8 @@ Stronger effects of cp and exang in females suggest potential gender-specific di
 Random Forest is an ensemble learning algorithm used for classification and regression tasks. It builds multiple decision trees using bootstrap sampling (random subsets of data) and selects features randomly at each split to increase diversity.   Each tree predicts independently, and the final output is determined by majority voting (classification) or averaging (regression).   Random Forest is robust to overfitting, handles high-dimensional data well, and provides feature importance scores.
 
 
-### First, construct the model with all predictors and then show the feature importance trends (the trend is descending according to the MeanDecreaseAccuracy)! 
-author: Yonghao YU
+### First, construct the model with all predictors and then show the feature importance trends (the trend is descending according to the MeanDecreaseAccuracy)!
+
 ```{r,fig.width=10, fig.height=8}
 library(caret)
 library(randomForest)
@@ -899,7 +886,6 @@ cat("R-squared: ", R_squared, "\n")
 ```
 
 
-author: Yonghao YU
 ### Then investigate the AUC value and ROC curve to assess the model's ability
 
 ```{r}
@@ -930,11 +916,8 @@ The AUC value of 0.85 indicates that the Random Forest model performs well in di
 
 The ROC curve shows the trade-off between the True Positive Rate (Sensitivity) and the False Positive Rate (1 - Specificity) at various thresholds. The curve is well above the diagonal which represent random guessing, confirming the model performs better than random guessing. The initial steep rise indicates that the model achieves high sensitivity with a relatively low false positive rate, which is desirable. However, as the false positive rate increases, the curve flattens, highlighting diminishing returns in improving sensitivity further.
 
-
-author: Yonghao YU
 ### Last, simulate the prediction which predicts the num with the new data based on the model we built!
 
-author: Yonghao YU
 ```{r}
 # construct a new dataframe which includes new data
 new_data = data.frame(
