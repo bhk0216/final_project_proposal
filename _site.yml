@@ -10,9 +10,11 @@ navbar:
     - text: "EDA"
       href: EDA.html  
     - text: "Modelling"
-      href: Modelling.html  
+      href: modelling.html  
     - text: "Dashboard"
-      href: dashboard.html  
+      href: dashboard.html
+    - icon: fa-github fa-lg
+      href: https://github.com/bhk0216/p8105_final_project
       
 output:
   html_document:
