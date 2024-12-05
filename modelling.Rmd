@@ -446,7 +446,7 @@ Regional Effects:
     *Patients from Switzerland have much higher odds of heart disease compared to      Cleveland, Hungarian and Long Beach VA.
 
 
-###separated by region:
+###Separated by region:
 ```{r warning=FALSE}
 cleveland_data <- cleaned_data %>% filter(region == "Cleveland")
 hungarian_data <- cleaned_data %>% filter(region == "Hungarian")
@@ -488,7 +488,10 @@ regional_results <- bind_rows(cleveland_results, hungarian_results,
 regional_results
 ```
 
+The logistic regression analysis separated by region failed due to insufficient sample sizes within each region. Logistic regression requires an adequate number of observations to produce reliable estimates. When the data was split by region, the limited number of cases led to unstable coefficients, inflated errors, and convergence issues. This highlights that the sample size per region was too small for meaningful analysis.
 
+
+###Separated by gender:
 ```{r}
 male_data <- cleaned_data %>% filter(sex == 1)
 female_data <- cleaned_data %>% filter(sex == 0)
@@ -515,7 +518,7 @@ extract_results <- function(model, gender) {
 male_results <- extract_results(male_model, "Male")
 female_results <- extract_results(female_model, "Female")
 gender_results <- bind_rows(male_results, female_results)
-
+gender_results
 ```
 
 Males

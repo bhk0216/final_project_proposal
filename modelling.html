@@ -9,14 +9,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)" />
 
+<meta name="date" content="2024-11-16" />
 
-<title>modelling</title>
+<title>Modelling</title>
 
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -269,14 +271,14 @@ $(document).ready(function () {
 
 
 
+<h1 class="title toc-ignore">Modelling</h1>
+<h4 class="author">Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao
+YU (yy3564)</h4>
+<h4 class="date">2024-11-16</h4>
 
 </div>
 
 
-<div id="modelling" class="section level1">
-<h1>Modelling</h1>
-<p>Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)
-2024-11-16</p>
 <div id="yixin-zheng-yz4993-thomas-tang-tt3022-yonghao-yu-yy3564"
 class="section level2">
 <h2>Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)</h2>
@@ -358,7 +360,6 @@ switzerland = read_csv(&quot;./data/switzerland.csv&quot;, na = &quot;?&quot;) |
 <pre class="r"><code># |&gt; drop_na() Removes rows with any missing values (optional, adjust as needed) </code></pre>
 <pre class="r"><code>cor(cleveland$chol, cleveland$num, use = &quot;complete.obs&quot;)</code></pre>
 <pre><code>## [1] 0.08516361</code></pre>
-</div>
 </div>
 <div id="variable-selection-author-yonghao-yu" class="section level1">
 <h1>Variable Selection (author: Yonghao YU)</h1>
@@ -517,7 +518,7 @@ conti_des_df =
 conti_des_df = conti_des_df[, -grep(&quot;variable&quot;, colnames(conti_des_df))] |&gt; 
   knitr::kable(digits = 6)
 conti_des_df</code></pre>
-<table>
+<table style="width:100%;">
 <colgroup>
 <col width="10%" />
 <col width="14%" />
@@ -860,16 +861,10 @@ colnames(combined_data) &lt;- c(&quot;age&quot;, &quot;sex&quot;, &quot;cp&quot;
 combined_data &lt;- combined_data %&gt;%
   mutate(across(c(age, sex, cp, trestbps, chol, fbs, restecg, thalach,
                   exang, oldpeak, slope, ca, thal, num), as.numeric))</code></pre>
-<pre><code>## Warning: There were 14 warnings in `mutate()`.
-## The first warning was:
-## ℹ In argument: `across(...)`.
-## Caused by warning:
-## ! 强制改变过程中产生了NA
-## ℹ Run `dplyr::last_dplyr_warnings()` to see the 13 remaining warnings.</code></pre>
-<p>Dropped variables with excessive missing values (ca and thal).
-Removed rows with missing values in critical variables. Converted num to
-binary (0 = no heart disease, 1 = heart disease) and set as a
-factor.</p>
+<p>Dropped variables with excessive missing values (ca and thal).</p>
+<p>Removed rows with missing values in critical variables.</p>
+<p>Converted num to binary (0 = no heart disease, 1 = heart disease) and
+set as a factor.</p>
 <pre class="r"><code>cleaned_data &lt;- combined_data %&gt;% select(-ca, -thal)
 critical_columns &lt;- c(&quot;num&quot;, &quot;age&quot;, &quot;sex&quot;, &quot;cp&quot;, &quot;trestbps&quot;, &quot;chol&quot;,
                       &quot;fbs&quot;, &quot;restecg&quot;, &quot;thalach&quot;, &quot;exang&quot;, &quot;oldpeak&quot;, 
@@ -913,29 +908,30 @@ summary(logistic_model)</code></pre>
 ## AIC: 455.45
 ## 
 ## Number of Fisher Scoring iterations: 6</code></pre>
-<p>(author= Thomas Tang) Significant Predictors (p-value &lt; 0.05): sex
-(1.409350): <em>Being male increases the log-odds of heart disease
-significantly. </em>Odds Ratio: exp(1.469)=4.34 → Males are 4.34 times
-more likely to have heart disease than females.</p>
+<p>Significant Predictors (p-value &lt; 0.05): sex (1.409350): <em>Being
+male increases the log-odds of heart disease significantly. </em>Odds
+Ratio: exp(1.469)=4.34 → Males are 4.34 times more likely to have heart
+disease than females.</p>
 <p>cp (chest pain): <em>Higher chest pain levels increase the log-odds
 of heart disease. </em>Odds Ratio: exp(0.668)=1.95 → A strong predictor
 for heart disease.</p>
 <p>thalach (max heart rate achieved): <em>Higher heart rates decrease
 the log-odds of heart disease. </em>Odds Ratio: exp(−0.014)=0.986,
-suggesting a protective effect. exang (exercise-induced angina):
-<em>Presence of exercise-induced angina increases the odds of heart
-disease. </em>Odds Ratio: exp(0.899)=2.46. oldpeak (ST depression):
-<em>Higher ST depression values significantly increase the odds of heart
-disease. </em>Odds Ratio: exp(0.669)=1.95. regionSwitzerland:
-<em>Patients from Switzerland have significantly higher odds of heart
-disease compared to the reference region (Cleveland). </em>Odds Ratio:
-exp(3.843)=46.64, suggesting a strong regional effect.</p>
+suggesting a protective effect.</p>
+<p>exang (exercise-induced angina): <em>Presence of exercise-induced
+angina increases the odds of heart disease. </em>Odds Ratio:
+exp(0.899)=2.46. oldpeak (ST depression): <em>Higher ST depression
+values significantly increase the odds of heart disease. </em>Odds
+Ratio: exp(0.669)=1.95. regionSwitzerland: <em>Patients from Switzerland
+have significantly higher odds of heart disease compared to the
+reference region (Cleveland). </em>Odds Ratio: exp(3.843)=46.64,
+suggesting a strong regional effect.</p>
 <p>Non-Significant Predictors (p-value &gt; 0.05): age, trestbps
 (resting blood pressure), chol (cholesterol), fbs (fasting blood sugar),
 restecg (resting ECG results), regionHungarian, regionLong_Beach_VA.</p>
 <p>Regional Effects: *Patients from Switzerland have much higher odds of
 heart disease compared to Cleveland, Hungarian and Long Beach VA.</p>
-<p>separated by region:</p>
+<p>###Separated by region:</p>
 <pre class="r"><code>cleveland_data &lt;- cleaned_data %&gt;% filter(region == &quot;Cleveland&quot;)
 hungarian_data &lt;- cleaned_data %&gt;% filter(region == &quot;Hungarian&quot;)
 long_beach_data &lt;- cleaned_data %&gt;% filter(region == &quot;Long_Beach_VA&quot;)
@@ -952,11 +948,8 @@ long_beach_model &lt;- glm(num ~ age + sex + cp + trestbps + chol + fbs +
                         data = long_beach_data, family = binomial)
 switzerland_model &lt;- glm(num ~ age + sex + cp + trestbps + chol + fbs +
                          restecg + thalach + exang + oldpeak,
-                         data = switzerland_data, family = binomial)</code></pre>
-<pre><code>## Warning: glm.fit:算法没有聚合
-
-## Warning: glm.fit:拟合概率算出来是数值零或一</code></pre>
-<pre class="r"><code>extract_results &lt;- function(model, region) {
+                         data = switzerland_data, family = binomial)
+extract_results &lt;- function(model, region) {
   coefficients &lt;- summary(model)$coefficients
   data.frame(
     Region = region,
@@ -1065,6 +1058,14 @@ regional_results</code></pre>
 ## thalach...41     9.979628e-01
 ## exang...42       9.987349e-01
 ## oldpeak...43     9.988608e-01</code></pre>
+<p>The logistic regression analysis separated by region failed due to
+insufficient sample sizes within each region. Logistic regression
+requires an adequate number of observations to produce reliable
+estimates. When the data was split by region, the limited number of
+cases led to unstable coefficients, inflated errors, and convergence
+issues. This highlights that the sample size per region was too small
+for meaningful analysis.</p>
+<p>###Separated by gender:</p>
 <pre class="r"><code>male_data &lt;- cleaned_data %&gt;% filter(sex == 1)
 female_data &lt;- cleaned_data %&gt;% filter(sex == 0)
 
@@ -1089,7 +1090,29 @@ extract_results &lt;- function(model, gender) {
 # Extract results for males and females
 male_results &lt;- extract_results(male_model, &quot;Male&quot;)
 female_results &lt;- extract_results(female_model, &quot;Female&quot;)
-gender_results &lt;- bind_rows(male_results, female_results)</code></pre>
+gender_results &lt;- bind_rows(male_results, female_results)
+gender_results</code></pre>
+<pre><code>##                  Gender    Variable     Estimate   Std_Error      P_Value
+## (Intercept)...1    Male (Intercept)  0.489143833 1.883367077 7.950815e-01
+## age...2            Male         age  0.011078627 0.017509693 5.269205e-01
+## cp...3             Male          cp  0.624244440 0.150392680 3.313681e-05
+## trestbps...4       Male    trestbps  0.006669625 0.007709166 3.869536e-01
+## chol...5           Male        chol -0.002816539 0.001546731 6.861250e-02
+## fbs...6            Male         fbs -0.077076106 0.364747670 8.326427e-01
+## restecg...7        Male     restecg  0.211261443 0.158412456 1.823296e-01
+## thalach...8        Male     thalach -0.026110546 0.006843324 1.359200e-04
+## exang...9          Male       exang  0.717197611 0.319844029 2.493970e-02
+## oldpeak...10       Male     oldpeak  0.568585698 0.143981103 7.846851e-05
+## (Intercept)...11 Female (Intercept) -7.814925653 3.385006792 2.096088e-02
+## age...12         Female         age  0.011405862 0.030248298 7.061182e-01
+## cp...13          Female          cp  0.927630109 0.341356680 6.578104e-03
+## trestbps...14    Female    trestbps  0.033262774 0.014713351 2.377657e-02
+## chol...15        Female        chol -0.003238931 0.003523281 3.579418e-01
+## fbs...16         Female         fbs  0.917958044 0.873286597 2.931882e-01
+## restecg...17     Female     restecg  0.017694465 0.282086696 9.499839e-01
+## thalach...18     Female     thalach -0.011055801 0.012020177 3.576929e-01
+## exang...19       Female       exang  1.143549158 0.548980044 3.724728e-02
+## oldpeak...20     Female     oldpeak  0.677208667 0.291294270 2.008123e-02</code></pre>
 <p>Males Significant Predictors (p-value &lt; 0.05):</p>
 <p>Chest Pain (cp) (β=0.624, p&lt;0.001): Higher chest pain levels
 increase the odds of heart disease. Odds Ratio= exp(0.624)=1.87. Max
@@ -1137,31 +1160,23 @@ feature importance trends (the trend is descending according to the
 MeanDecreaseAccuracy)!</h3>
 <p>author: Yonghao YU</p>
 <pre class="r"><code>library(caret)</code></pre>
-<pre><code>## Warning: 程序包&#39;caret&#39;是用R版本4.4.2 来建造的
-
-## 载入需要的程序包：lattice
-
-## 
-## 载入程序包：&#39;caret&#39;
-
-## The following object is masked from &#39;package:purrr&#39;:
+<pre><code>## Warning: 程序包&#39;caret&#39;是用R版本4.4.2 来建造的</code></pre>
+<pre><code>## 载入需要的程序包：lattice</code></pre>
+<pre><code>## 
+## 载入程序包：&#39;caret&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
 ## 
 ##     lift</code></pre>
 <pre class="r"><code>library(randomForest)</code></pre>
-<pre><code>## Warning: 程序包&#39;randomForest&#39;是用R版本4.4.2 来建造的
-
-## randomForest 4.7-1.2
-
-## Type rfNews() to see new features/changes/bug fixes.
-
+<pre><code>## Warning: 程序包&#39;randomForest&#39;是用R版本4.4.2 来建造的</code></pre>
+<pre><code>## randomForest 4.7-1.2</code></pre>
+<pre><code>## Type rfNews() to see new features/changes/bug fixes.</code></pre>
+<pre><code>## 
+## 载入程序包：&#39;randomForest&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
 ## 
-## 载入程序包：&#39;randomForest&#39;
-
-## The following object is masked from &#39;package:dplyr&#39;:
-## 
-##     combine
-
-## The following object is masked from &#39;package:ggplot2&#39;:
+##     combine</code></pre>
+<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
 ## 
 ##     margin</code></pre>
 <pre class="r"><code># drop out the variable &quot;ca&quot; and &quot;thal&quot; which are have so many missing values inside
@@ -1203,8 +1218,7 @@ ggplot(var_imp_df, aes(x = reorder(Variable, -MeanDecreaseAccuracy))) +
        color = &quot;Metric&quot;) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 0, hjust = 1))</code></pre>
-<p><img
-src="modelling_files/figure-gfm/unnamed-chunk-9-1.png" /><!-- --></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-9-1.png" width="960" /></p>
 <p>Then we ranked the predictors descendingly based on the
 MeanDecreaseAccuracy which measures the decrease in overall model
 accuracy when the variable is permuted. And we show them in a line plot!
@@ -1255,8 +1269,7 @@ ggplot(data = cm_df, aes(x = Predicted, y = Actual, fill = Proportion)) +
     legend.title = element_text(size = 12),
     legend.text = element_text(size = 10)
   )</code></pre>
-<p><img
-src="modelling_files/figure-gfm/unnamed-chunk-10-1.png" /><!-- --></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="extracting-detailed-statistics-from-the-confusion-matrix"
 class="section level3">
@@ -1303,13 +1316,12 @@ correctly classified 80.95% of the instances. 2. The true accuracy is
 expected to fall 95% of the time in (0.7213, 0.8796) 3. The no
 information rate is 0.6095 which is less than the accuracy rate (p-value
 also indicate this), indicating the model we built actually capture some
-significant features. 4. The Kappa is 0.6067 which is in the range <span
-class="math display">\[0.6,0.8\]</span>, which indicate our classifier
-achieves relatively high level of classification 5. High sensitivity
-(0.8049) indicates good identification of positives. 6. High specificity
-(0.8125) indicates good identification of negatives. 7. Balanced
-accuracy (0.8087) suggests the model balances its performance across
-both classes well.</p>
+significant features. 4. The Kappa is 0.6067 which is in the range
+(0.6,0.8), which indicate our classifier achieves relatively high level
+of classification 5. High sensitivity (0.8049) indicates good
+identification of positives. 6. High specificity (0.8125) indicates good
+identification of negatives. 7. Balanced accuracy (0.8087) suggests the
+model balances its performance across both classes well.</p>
 </div>
 <div id="compute-r-squared-and-rmse-for-the-classification-model"
 class="section level3">
@@ -1336,14 +1348,11 @@ cat(&quot;RMSE of the model is:&quot;, rmse, &quot;\n&quot;)</code></pre>
 <p>author: Yonghao YU ### Then investigate the AUC value and ROC curve
 to assess the model’s ability</p>
 <pre class="r"><code>library(pROC)</code></pre>
-<pre><code>## Warning: 程序包&#39;pROC&#39;是用R版本4.4.2 来建造的
-
-## Type &#39;citation(&quot;pROC&quot;)&#39; for a citation.
-
-## 
-## 载入程序包：&#39;pROC&#39;
-
-## The following objects are masked from &#39;package:stats&#39;:
+<pre><code>## Warning: 程序包&#39;pROC&#39;是用R版本4.4.2 来建造的</code></pre>
+<pre><code>## Type &#39;citation(&quot;pROC&quot;)&#39; for a citation.</code></pre>
+<pre><code>## 
+## 载入程序包：&#39;pROC&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
 ## 
 ##     cov, smooth, var</code></pre>
 <pre class="r"><code># Generate AUC value
@@ -1372,8 +1381,7 @@ ggplot(data = roc_data, aes(x = FPR, y = TPR)) +
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 ## generated.</code></pre>
-<p><img
-src="modelling_files/figure-gfm/unnamed-chunk-13-1.png" /><!-- --></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>The AUC value of 0.85 indicates that the Random Forest model performs
 well in distinguishing between positive and negative classes.
 Specifically, there is an 85% chance that the model will rank a randomly

@@ -9,7 +9,7 @@ output:
 ---
 
 # Members
-Stella Koo (bk2959), Yonghao YU (yy3564)
+Stella Koo (bk2959), Yonghao YU (yy3564), Thomas Tang (tt3022)
 
 # Motivation
 
@@ -110,4 +110,5 @@ Based on the result of both continuous and discrete cases, we can find that exce
 
 # Discussion
 
-
+###Limitation
+A key limitation of this analysis was the small sample size, particularly when the data was stratified by region or gender. This resulted in convergence issues and unstable coefficient estimates in the logistic regression models, making it difficult to draw reliable conclusions.
