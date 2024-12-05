@@ -329,8 +329,10 @@ investigation of regional, gender-specific, and age group variations
 enriched the findings, providing a nuanced understanding of heart
 disease diagnostics.
 
-\###Limitation A key limitation of this analysis was the small sample
-size, particularly when the data was stratified by region or gender.
-This resulted in convergence issues and unstable coefficient estimates
-in the logistic regression models, making it difficult to draw reliable
+### Limitation
+
+A key limitation of this analysis was the small sample size,
+particularly when the data was stratified by region or gender. This
+resulted in convergence issues and unstable coefficient estimates in the
+logistic regression models, making it difficult to draw reliable
 conclusions.
