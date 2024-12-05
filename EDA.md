@@ -391,26 +391,35 @@ highest Cramér’s V (\>=0.5 and \<1), suggesting that they are the most
 informative categorical predictors of heart disease in the dataset.
 Then, exang, slope, and sex also perform moderately good (\>= 0.3 and
 \<0.5), saying that they contribute meaningful information and should be
-included in predictive models.
+included in predictive models. lastly, we observe fbs and restecg has
+low Cramér’s V (\>0 and \<0.2), indicating that they contribute limited
+information to the model.
 
 While for our EDA, we can check each variables to see if they are
 complications of heart disease.
 
 ``` r
-# Define variables
 variables <- c("sex", "cp", "fbs", "restecg", "exang", "slope", "thal")
 
-# Compute Cramér's V
-results <- sapply(variables, function(var) {
-  x <- combined_df$num
-  y <- combined_df[[var]]
-  cramersV(x, y)
-})
+results <- numeric(length(variables))
 
-# Create data frame
+for (i in seq_along(variables)) {
+  var <- variables[i]
+  
+  df_temp <- combined_df %>%
+    select(num, all_of(var)) %>%
+    na.omit()
+  
+  x <- droplevels(as.factor(df_temp$num))
+  y <- droplevels(as.factor(df_temp[[var]]))
+
+  table_var <- table(x, y)
+  
+  results[i] <- cramersV(table_var)
+}
+
 association_df <- data.frame(Variable = variables, CramersV = results)
 
-# Plot the results
 ggplot(association_df, aes(x = reorder(Variable, CramersV), y = CramersV, fill = CramersV)) +
   geom_bar(stat = "identity") +
   coord_flip() +

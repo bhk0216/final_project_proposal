@@ -1,4 +1,5 @@
 ---
 title: "Influence of Diagnostic Attributes on Heart Disease Across Regions"
+author: "Stella Koo (bk2959), Yanhao Shen (ys3875), Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)"
 ---
 

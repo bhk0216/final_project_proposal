@@ -1,20 +1,18 @@
 ---
 title: "Modelling"
-author: "Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)"
 date: "2024-11-16"
 output:   
   html_document: default
   github_document: default
 ---
 
-## Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)
 ```{r setup}
 library(tidyverse)
 library(janitor)
 library(car)
 ```
 
-```{r import data author: Yixin Zheng, Stella Koo, include = FALSE, eval=FALSE}
+```{r include = FALSE, eval=FALSE}
 save_path <- "./data"
 
 column_names <- c("age", "sex", "cp", "trestbps", "chol", "fbs", 
@@ -37,7 +35,7 @@ process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
 ```
 
 
-Interpreting num (author: Yixin Zheng):
+Interpreting num:
 The values for `num` represent the degree of narrowing in the coronary arteries:
 0: No disease (< 50% diameter narrowing).
 1-4: Increasing severity of disease (> 50% diameter narrowing, with different severities).

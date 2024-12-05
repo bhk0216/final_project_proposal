@@ -55,7 +55,7 @@ sliderInput(
 {data-width=650}
 -----------------------------------------------------------------------
 
-### Chart A
+### Correlation Heatmap
 
 ```{r echo = FALSE}
 renderPlotly({
@@ -125,29 +125,6 @@ renderPlotly({
 ### Chart C
 
 ```{r echo = FALSE}
-renderPlotly({
-  combined_df |> 
-    filter(
-      region == input$region_choice,
-      age >= input$age_range[1],
-      age <= input$age_range[2]
-    ) |> 
-    group_by(sex) |> 
-    summarise(
-      total = n(),
-      heart_disease = sum(num == 1),
-      proportion = heart_disease / total
-    ) |> 
-    mutate(sex = factor(sex, levels = c(0, 1), labels = c("Female", "Male"))) |> 
-    plot_ly(
-      x = ~sex, y = ~proportion, type = "bar",
-      color = ~sex,
-      hoverinfo = "text",
-      text = ~paste("Sex: ", sex, "<br>Proportion: ", round(proportion, 2))
-    ) |> 
-    layout(title = "Proportion of Heart Disease by Gender",
-           xaxis = list(title = "Gender"),
-           yaxis = list(title = "Proportion"))
-})
+
 ```
 

@@ -5,7 +5,8 @@ Stella Koo
 
 # Members
 
-Stella Koo (bk2959), Yonghao YU (yy3564)
+Stella Koo (bk2959), Yonghao YU (yy3564), Thomas Tang (tt3022), Yixin
+Zheng (yz4993)
 
 # Motivation
 
@@ -129,7 +130,104 @@ heart disease status.
 
 ## Discrete Variables
 
+In our EDA, we have explored the correlation of each variables with num.
+However, when we incorporate them into our model, we also need to
+consider their validity. As a result, although variable slope and thal
+have good correlation with num, we still have to drop them because of
+their huge amount of missing values. Anyway, to gain a visualization of
+each variable with num, we have make some plot which give us a really
+clear way of assessing their effect.
+
+- For cp, which we observed as the most relevant one in our discrete
+  variables, the asymptomatic chest pain has the most clear effect on
+  getting heart disease. While for the rest chest pain type, we can
+  hardly say if they are the complications of the disease.
+- the variable sex is very uneven in he number of male and female
+  participants. However, we can still compare the portion of getting
+  heart disease for male and female respectively, and as we can see from
+  the graph, all the locations except Switzerland shows clear evidence
+  that the risk for male of getting the disease is larger than that for
+  female. For Switzerland, the observations are both close to 1 so we
+  can attribute this finding to the data limitation, while the final
+  conclusion remains unchanged.
+- For both fbs and exang, the result is most straightforward. We can
+  readily tell that for both gourps in value 1, which means people who
+  ever experienced fasting blood sugar \> 120 mg/dl and Exercise-Induced
+  Angin, are at higher risk of getting heart disease, making them strong
+  predators when seeing if someone would have the disease.
+- As respect to restecg, if we compare normal resting
+  electrocardiographic results to the rest, we can observe the
+  proportions of getting heart disease for the rest group appear either
+  around or above the normal group. Although the effect is weak in
+  predicting, we can still put this variable into our model to make it
+  more unbiased.
+
+These variables will all be included in subsequent predictive modeling
+to improve the accuracy of heart disease diagnosis. The visualizations
+corroborate the statistical findings, providing a comprehensive
+understanding of how these discrete variables relate to heart disease
+across different regions.
+
 # Modelling Analysis
+
+## Linear Regression and the `num` variable
+
+Linear regression was conducted to explore the relationships between
+diagnostic attributes and heart disease status, with a focus on
+regional, gender-specific, and age group variations. Multiple linear
+regression (MLR) was prioritized over simple linear regression (SLR) to
+capture the complex interplay of multiple predictors. The final models
+for these three effects are as follows:
+
+1.  Regional effects:
+    $$ num = \beta_0 + \beta_1 \cdot \text{trestbps} + \beta_2 \cdot \text{exang} + \beta_3 \cdot \text{region} + \beta_4 \cdot \text{(trestbps*region)} + \beta_5 \cdot \text{(exang*region)} + \epsilon $$
+
+2.  Gender-specific effects:
+    $$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \beta_3 \cdot \text{sex} + \beta_4 \cdot \text{thalach*sex} + \beta_5  \cdot \text{slope*sex} + \epsilon $$
+
+3.  Age group effects:
+    $$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \beta_3 \cdot \text{age_group} + \beta_4 \cdot \text{thalach*age_group}+ \epsilon $$
+
+The analysis revealed that resting blood pressure (`trestbps`) and
+exercise-induced angina (`exang`) are significant predictors of heart
+disease. Higher resting blood pressure modestly increases the likelihood
+of heart disease (p = 0.01027), while the presence of exercise-induced
+angina shows a strong positive association (p \< 2 × 10^{-16}). Regional
+differences significantly impact baseline risk, with Long Beach (p =
+0.00439) and Switzerland (p = 0.02857) exhibiting higher risks compared
+to Cleveland. Additionally, the interaction between exercise-induced
+angina and region (p = 0.02355) indicates that the effect of angina
+varies across regions, with Switzerland showing a notably lower impact
+($\beta = -0.3967$). However, the interaction between blood pressure and
+region was not significant (p = 0.10689), suggesting minimal regional
+variability in the relationship between blood pressure and heart
+disease.
+
+Despite these findings, linear regression is unsuitable for modeling
+`num` because it is a categorical variable, violating the assumption of
+a continuous and normally distributed outcome. Residuals in such a model
+would deviate significantly from normality, as shown by a QQ-plot, and
+heteroscedasticity would arise due to inconsistent residual variance
+across predictors. These issues undermine the reliability of regression
+coefficients. Logistic regression is more appropriate for modeling
+binary outcomes, as it accommodates the categorical nature of `num` and
+provides more robust and interpretable results.
+
+## Logistic Regression
+
+The logistic regression analysis was conducted in three approaches: a
+combined model including all data, models separated by region, and
+models separated by gender. In the combined model, significant
+predictors of heart disease included chest pain type (cp),
+exercise-induced angina (exang), maximum heart rate achieved (thalach),
+and ST depression (oldpeak). Additionally, patients from Switzerland
+showed significantly higher odds of heart disease compared to the
+reference region (Cleveland), highlighting a regional effect in the
+combined analysis. The region-separated analysis was unsuccessful due to
+small sample sizes within each region, leading to unstable estimates and
+convergence issues. In the gender-separated analysis, chest pain and
+exercise-induced angina showed stronger effects in females compared to
+males, suggesting potential gender-specific diagnostic markers.
 
 ## Variable Selection
 
@@ -139,16 +237,57 @@ For continuous variables, we use mean and standard deviation (std) to
 describe the distribution in overall samples, samples of control(num =
 0), and samples of case(num = 1). Then, we use t-test to examine whether
 the means of these variables are significantly different between case
-group and control group (significance level = 0.05). \### For discrete
-case For binary and categorical variables, we use count (n) and
-percentage (pct) to describe the distribution in overall samples,
-samples of control(num = 0), and samples of case(num = 1). Then, as the
-data meet the assumption, we use chi-sq test to examine whether the
-distribution of these variables are significantly different between case
 group and control group (significance level = 0.05).
+
+### For discrete case
+
+For binary and categorical variables, we use count (n) and percentage
+(pct) to describe the distribution in overall samples, samples of
+control(num = 0), and samples of case(num = 1). Then, as the data meet
+the assumption, we use chi-sq test to examine whether the distribution
+of these variables are significantly different between case group and
+control group (significance level = 0.05).
 
 Based on the result of both continuous and discrete cases, we can find
 that except fbs, the rest of all other binary and categorical features
 are significantly different between case and control.
 
 # Discussion
+
+This analysis explored the relationships between diagnostic attributes
+and heart disease status across multiple regions, genders, and age
+groups, using a combination of exploratory data analysis and predictive
+modeling techniques. While the findings provide meaningful insights,
+they also reveal important limitations that should be addressed in
+future studies. Chest pain type (cp), maximum heart rate (thalach),
+exercise-induced angina (exang), and ST depression (oldpeak) emerged as
+the most significant predictors of heart disease across all models.
+Asymptomatic chest pain was the strongest indicator of heart disease
+among categorical variables, while lower maximum heart rates and higher
+ST depression values were strongly associated with heart disease among
+continuous variables. Patients from Switzerland exhibited a
+significantly higher baseline risk of heart disease compared to those
+from Cleveland, even after adjusting for other predictors. This regional
+effect underscores the potential role of demographic and healthcare
+disparities in diagnostic outcomes. Gender-separated logistic regression
+revealed that chest pain type and exercise-induced angina had stronger
+effects in females, highlighting the importance of gender-specific
+diagnostic markers in heart disease prediction. Male participants
+generally exhibited higher odds of heart disease, consistent with known
+gender disparities in heart disease prevalence. The 40-60 age group
+showed the strongest relationships between key predictors (e.g., maximum
+heart rate, slope of the ST segment) and heart disease status, possibly
+reflecting the higher prevalence of heart disease in middle-aged
+individuals. The study employed robust exploratory data analysis to
+understand variable distributions and relationships, guiding the
+modeling phase effectively. By utilizing both linear and logistic
+regression, the analysis captured complex relationships between
+predictors and heart disease status. The investigation of regional,
+gender-specific, and age group variations enriched the findings,
+providing a nuanced understanding of heart disease diagnostics.
+
+\###Limitation A key limitation of this analysis was the small sample
+size, particularly when the data was stratified by region or gender.
+This resulted in convergence issues and unstable coefficient estimates
+in the logistic regression models, making it difficult to draw reliable
+conclusions.
