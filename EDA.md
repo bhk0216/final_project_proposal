@@ -1,6 +1,5 @@
 Exploratory Data Analysis
 ================
-Stella Koo (bk2959), Yanhao Shen
 2024-11-16
 
 ## Data Cleaning & Preparing for Analysis
