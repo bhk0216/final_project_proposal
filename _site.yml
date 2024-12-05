@@ -1,5 +1,5 @@
-name: "site.yml"
-output_dir: "."
+name: "Influence of Diagnostic Attributes on Heart Disease Across Regions"
+output_dir: "_site/"
 navbar:
   title: "Home"
   right:
