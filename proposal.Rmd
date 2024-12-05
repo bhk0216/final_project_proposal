@@ -22,12 +22,6 @@ Main Questions:
 
 2. Examining Predictive Power of Clinical Indicators for Heart Disease in Diverse Populations: predictive accuracy of clinical indicators (like cholesterol, blood pressure) for heart disease across various demographics.
 
-Alternative Title/Questions and Analysis Ideas: 
-
-1. The Influence of Age and Lifestyle Factors on Heart Disease Across International Datasets: narrows down the analysis to age and lifestyle-related variables (e.g., chest pain type, cholesterol, exercise-induced angina).
-
-2. Regional Patterns in Heart Disease Diagnostic Attributes: focusing on comparing the prevalence and distribution of key diagnostic attributes (like age, cholesterol, etc.) across the four datasets.
-
 ## Motivation (Ian)
 Heart disease continues to be one of the primary causes of death globally, presenting diverse challenges across different regions, each with its unique set of risk factors. While medical advancements have improved diagnostic methods, there remain significant disparities in healthcare access and diagnostic accuracy, particularly in low-resource regions. These disparities can be exacerbated by environmental factors, such as climate and lifestyle, as well as varying levels of healthcare infrastructure and socioeconomic conditions.
 

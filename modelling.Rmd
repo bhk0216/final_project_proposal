@@ -11,6 +11,7 @@ output:
 ```{r setup}
 library(tidyverse)
 library(janitor)
+library(car)
 ```
 
 ```{r import data author: Yixin Zheng, Stella Koo, include = FALSE, eval=FALSE}
@@ -313,67 +314,262 @@ Based on the result, we can find that except fbs, the rest of all other binary a
 
 
 
+# Linear Regression
+(author: Yixin Zheng)
 
-hypothesis (author: Yixin Zheng)
-* need to run some test choose explanatory variables?
+Here we are prioritizing MLR over SLR, as the nature of heart disease involves multiple interacting factors (e.g., age, chest pain, and exercise-induced angina). Modeling a single variable may oversimplify these relationships and fail to capture their combined effects.
+For example, maximum heart rate (thalach) may interact with age or region, making it more meaningful to include these interactions in a multiple linear regression (MLR) model.
 
 1. Comparing Diagnostic Factors for Heart Disease Across Regions
- explore whether certain diagnostic factors (e.g., cholesterol levels, exercise-induced angina) are more predictive of heart disease in one region compared to others.
+Explore whether certain diagnostic factors (e.g., blood pressure and exercise-induced angina) are more predictive of heart disease in one region compared to others.
  
-* there are many null values in the `chol` column in switzerland dataset. So maybe we need to use other diagnostic factors such as `trestbps` if we want to compare the regions
-Example Hypothesis (SLR):
-- **Null Hypothesis (H_0):** There is no linear relationship between cholesterol levels (`chol`) and the presence of heart disease (`num`).
-- **Alternative Hypothesis (H_a):** There is a positive linear relationship between cholesterol levels (`chol`) and the presence of heart disease (`num`). ($\beta_1>0$)
-  Where:
-  - `num` is the target variable indicating heart disease presence.
-  - `chol` is the predictor variable representing cholesterol levels.
+Due to the high number of missing values in the `chol` column (particularly in Switzerland), alternative predictors should be used for analysis.
+Include an interaction term between the diagnostic factor and region to capture regional differences.
 
-$$ num = \beta_0 + \beta_1 \cdot \text{chol} + \epsilon $$
+## checking datasets
+```{r}
+ggplot(region_data, aes(x = trestbps, y = num)) +
+  geom_point(aes(color = region_factor), alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, aes(group = region_factor)) +
+  labs(title = "Blood Pressure vs Heart Disease Status", 
+       x = "Blood Pressure (trestbps)", 
+       y = "Heart Disease (num)") +
+  theme_minimal()
+```
+The relationship between blood pressure (trestbps) and heart disease status (num) appears to vary across regions, with some regions showing steeper trends. This supports the inclusion of an interaction term (trestbps:region) in the model to account for regional differences in the effect of blood pressure on heart disease.
+```{r}
+ggplot(region_data, aes(x = exang, y = num)) +
+  geom_point(aes(color = region_factor), alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, aes(group = region_factor)) +
+  labs(title = "Exercise-Induced Angina vs Heart Disease Status", 
+       x = "Exercise-Induced Angina (exang)", 
+       y = "Heart Disease (num)") +
+  theme_minimal()
+```
+The relationship between exang (exercise-induced angina) and num seems consistent within regions but with noticeable differences in slopes between regions. The interaction term (exang:region) is justified, as the impact of angina on heart disease likely depends on regional factors.
+```{r}
+ggplot(region_data, aes(x = factor(num))) +
+  geom_bar(aes(fill = region_factor), position = "dodge") +
+  labs(title = "Distribution of Heart Disease Status by Region", 
+       x = "Heart Disease Status (num)", 
+       y = "Count") +
+  theme_minimal()
+```
+The prevalence of heart disease (num) varies substantially across regions. Regions 1 and 4 show a higher proportion of individuals with heart disease. This reinforces the importance of considering regional effects in the model, as the baseline likelihood of heart disease is not uniform across regions.
+```{r}
+ggplot(region_data, aes(x = region_factor, y = trestbps)) +
+  geom_boxplot(aes(fill = region_factor)) +
+  labs(title = "Blood Pressure Distribution by Region", 
+       x = "Region", 
+       y = "Blood Pressure (trestbps)") +
+  theme_minimal()
 
-Example Hypothesis (MLR):
-- **Null Hypothesis (H_0):** Cholesterol levels (`chol`), blood pressure (`trestbps`), and exercise-induced angina (`exang`) are not significant predictors of heart disease presence (`num`).
-- **Alternative Hypothesis (H_a):** At least one of these variables (`chol`, `trestbps`, `exang`) is a significant predictor of heart disease presence (`num`).
+ggplot(region_data, aes(x = region_factor, y = exang)) +
+  geom_boxplot(aes(fill = region_factor)) +
+  labs(title = "Exercise-Induced Angina by Region", 
+       x = "Region", 
+       y = "Exercise-Induced Angina (exang)") +
+  theme_minimal()
+```
+Blood pressure (trestbps) varies by region, with differences in median and spread. Regions 3 and 4 exhibit higher variability. Variability in blood pressure distributions across regions highlights the potential for region-specific predictors to behave differently.
+The distribution of exang (0 vs. 1) appears consistent across regions, but Region 3 has noticeably fewer individuals overall. The low sample size for some regions (e.g., Region 3) may affect model reliability and should be accounted for in the analysis (e.g., by weighting or stratification).
 
-$$ num = \beta_0 + \beta_1 \cdot \text{chol} + \beta_2 \cdot \text{trestbps} + \beta_3 \cdot \text{exang} + \epsilon $$
+
+## Hypothesis (MLR):
+Null Hypothesis ($H_0$: Blood pressure (`trestbps`) and exercise-induced angina (`exang`) do not significantly predict heart disease(`num`), and the relationship does not vary across regions.
+
+Alternative Hypothesis ($H_a$): At least one of these predictors significantly impacts heart disease, and the relationship differs by region.
+
+$$ num = \beta_0 + \beta_1 \cdot \text{trestbps} + \beta_2 \cdot \text{exang} + \beta_3 \cdot \text{region} + \beta_4 \cdot \text{(trestbps*region)} + \beta_5 \cdot \text{(exang*region)} + \epsilon $$
+
+```{r}
+# Add numeric encoding for regions
+region_data <- combined_data_two %>%
+  mutate(region_factor = as.factor(region))
+
+# fit the model with interaction terms
+region_model <- lm(num ~ trestbps * region_factor + exang * region_factor, data = region_data)
+
+# summarize the model
+summary(region_model)
+
+# Test significance of interaction terms
+anova(region_model)
+```
+From the code result, we see that 
+- `trestbps` is positive ($\beta_1 = 0.0035$) and significant with p = 0.01027, indicating higher resting blood pressure modestly increases the likelihood of heart disease.
+- `exang` is positive ($\beta_2 = 0.4504$) and highly significant with p < 2*10^-16, suggesting that individuals with exercise-induced angina are more likely to have heart disease.
+- `region_factor` shows significant differences in the baseline likelihood of heart disease across regions: Baseline risk is higher in `Region 3 - Long Beach` ($\beta = 0.9268$, p = 0.00439) and `Region 4 - Switzerland` ($\beta = 1.010$, p = 0.02857) compared to Cleveland. Significant interaction for `exang * region` (p = 0.02355), Lower impact of exercise-induced angina in Switzerland ($\beta = -0.3967$, p = 0.00449). Interaction for `trestbps * region` is marginal (p=0.10689), with some variability in Region 3 (Long Beach, p=0.05446).
 
 2. Examining Predictive Power of Clinical Indicators for Heart Disease in Diverse Populations
+Investigate how gender and age group modify the relationships between key predictors and heart disease.
 
-Example Hypothesis (SLR):
-- **Null Hypothesis (H_0):** There is no linear relationship between maximum heart rate achieved (`thalach`) and the presence of heart disease (`num`).
-- **Alternative Hypothesis (H_a):** There is a negative linear relationship between maximum heart rate achieved (`thalach`) and the presence of heart disease (`num`). ($\beta_1<0$)
+## checking datasets
+```{r}
+ggplot(age_group_data, aes(x = thalach, y = num, color = as.factor(sex))) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Heart Disease Status (`num`) vs Maximum Heart Rate (`thalach`) by Gender",
+    x = "Maximum Heart Rate (thalach)",
+    y = "Heart Disease Status (num)",
+    color = "Gender"
+  ) +
+  theme_minimal()
+ggplot(age_group_data, aes(x = slope, y = num, color = as.factor(sex))) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Heart Disease Status (`num`) vs Slope of ST Segment (`slope`) by Gender",
+    x = "Slope of ST Segment (slope)",
+    y = "Heart Disease Status (num)",
+    color = "Gender"
+  ) +
+  theme_minimal()
+ggplot(age_group_data, aes(x = num, fill = as.factor(sex))) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Distribution of Heart Disease Status (`num`) by Gender",
+    x = "Heart Disease Status (num)",
+    fill = "Gender"
+  ) +
+  theme_minimal()
+```
+A negative trend between thalach and heart disease status is visible for both genders, with a steeper decline for males. This indicates that lower maximum heart rate is more predictive of heart disease in males.
+The relationship between slope and heart disease shows distinct patterns across genders. Males have a stronger positive association between higher slope values and the presence of heart disease.
+Heart disease status distribution (num) differs between genders, with males (gender=1) showing a higher density near num=1 (presence of heart disease). This aligns with previous findings of gender disparities in heart disease prevalence.
 
-$$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \epsilon $$
-Example Hypothesis (MLR):
-- **Null Hypothesis (H_0):** Maximum heart rate (`thalach`), fasting blood sugar (`fbs`), and the slope of the ST segment (`slope`) are not significant predictors of heart disease presence (`num`).
-- **Alternative Hypothesis (H_a):** At least one of these variables (`thalach`, `fbs`, `slope`) is a significant predictor of heart disease presence (`num`).
+```{r}
+# Scatterplot of `thalach` against `num` by `age_group`
+ggplot(age_group_data, aes(x = thalach, y = num, color = age_group)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Heart Disease Status (`num`) vs Maximum Heart Rate (`thalach`) by Age Group",
+    x = "Maximum Heart Rate (thalach)",
+    y = "Heart Disease Status (num)",
+    color = "Age Group"
+  ) +
+  theme_minimal()
 
-$$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{fbs} + \beta_3 \cdot \text{slope} + \epsilon $$
+# Scatterplot of `slope` against `num` by `age_group`
+ggplot(age_group_data, aes(x = slope, y = num, color = age_group)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Heart Disease Status (`num`) vs Slope of ST Segment (`slope`) by Age Group",
+    x = "Slope of ST Segment (slope)",
+    y = "Heart Disease Status (num)",
+    color = "Age Group"
+  ) +
+  theme_minimal()
 
-3. Influence of Age and Lifestyle Factors on Heart Disease
+# Density plot for `num` by `age_group`
+ggplot(age_group_data, aes(x = num, fill = age_group)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Distribution of Heart Disease Status (`num`) by Age Group",
+    x = "Heart Disease Status (num)",
+    fill = "Age Group"
+  ) +
+  theme_minimal()
+```
+A negative association is evident across all age groups, but the trend is most pronounced for the 40-60 age group. For individuals under 40 and above 60, the association is weaker, potentially due to smaller sample sizes or varying risk factors.
+Similar trends are observed across age groups, with higher slope values generally predicting heart disease. The relationship is strongest in the 40-60 age group, which also has the largest sample size.
+The distribution of heart disease status differs by age group. Individuals aged 40-60 have the highest density near num=1 (presence of heart disease), reflecting their higher overall risk in this dataset.
 
-Example Hypothesis (SLR):
-- **Null Hypothesis (H_0):** There is no linear relationship between age (`age`) and the presence of heart disease (`num`).
-- **Alternative Hypothesis (H_a):** There is a positive linear relationship between age (`age`) and the presence of heart disease (`num`). ($\beta_1>0$)
+##Hypothesis 1 (MLR):
+- **Null Hypothesis (H_0):** The relationships between maximum heart rate (`thalach`), the slope of the ST segment (`slope`), and heart disease status (`num`) do not vary by gender
+- **Alternative Hypothesis (H_a):**  At least one of these predictors interacts with gender to significantly influence heart disease status.
 
-$$ num = \beta_0 + \beta_1 \cdot \text{age} + \epsilon $$
-Example Hypothesis (MLR):
-- **Null Hypothesis (H_0):** Age (`age`), chest pain type (`cp`), and exercise-induced angina (`exang`) are not significant predictors of heart disease presence (`num`).
-- **Alternative Hypothesis (H_a):** At least one of these variables (`age`, `cp`, `exang`) is a significant predictor of heart disease presence (`num`).
+$$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{fbs} + \beta_3 \cdot \text{slope} + \beta_4 \cdot \text{sex} + \beta_5 \cdot \text{thalach*sex} + \beta_6  \cdot  \text{slope*sex} + \epsilon $$
+`thalach` and `slope` were identified as strong predictors in logistic regression and EDA. `fbs` has weaker significance and may be excluded in a stepwise selection process.
 
-$$ num = \beta_0 + \beta_1 \cdot \text{age} + \beta_2 \cdot \text{cp} + \beta_3 \cdot \text{exang} + \epsilon $$
+##Hypothesis 2 (MLR):
+- **Null Hypothesis (H_0):** The relationships between maximum heart rate (`thalach`), the slope of the ST segment (`slope`), and heart disease status (`num`) do not vary by age group
+- **Alternative Hypothesis (H_a):**  At least one of these predictors interacts with age group to significantly influence heart disease status.
+$$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{fbs} + \beta_3 \cdot \text{slope} + \beta_4 \cdot \text{age_group} + \beta_5 \cdot \text{thalach*age_group} + \beta_6 \cdot \text{slope*age_group} + \epsilon $$
+```{r}
+# Separate the data by gender
+male_data <- combined_data_two %>% filter(sex == 1)
+female_data <- combined_data_two %>% filter(sex == 0)
 
-4. Regional Patterns in Heart Disease Diagnostic Attributes
+# Fit the model with interaction terms for gender
+gender_model <- lm(num ~ thalach * sex + slope * sex + fbs, data = combined_data_two)
 
-Example Hypothesis (SLR):
-- **Null Hypothesis (H_0):** There is no linear relationship between diagnostic attributes (e.g., cholesterol, age) and heart disease (`num`) in each region.
-- **Alternative Hypothesis (H_a):**The relationship between diagnostic attributes (e.g., cholesterol, age) and heart disease (`num`) differs significantly across regions.
-- This hypothesis can be tested by performing SLR for each region and comparing the coefficients (beta_1 values) to see if they vary.
+# Summarize the model results
+summary(gender_model)
 
-Example Hypothesis (MLR):
-- **Null Hypothesis (H_0):** Regional differences do not significantly influence the predictive power of diagnostic factors for heart disease.
-- **Alternative Hypothesis (H_a):** Regional differences significantly influence the predictive power of diagnostic factors for heart disease.
+# Test the significance of interaction terms
+anova(gender_model)
+```
+Model Results:
+Significant Variables:
+Sex (p < 0.001): Being male significantly increases the likelihood of heart disease, with males having higher odds of heart disease compared to females.
+Slope (p < 0.001): A higher slope value (indicating abnormal ST depression) is associated with an increased likelihood of heart disease.
+thalach:sex (p = 0.029): The interaction between heart rate and gender is significant. This suggests that the relationship between heart rate and heart disease differs between males and females. Specifically, males may show a stronger association with heart rate.
+sex:slope (p = 0.011): The relationship between the slope of the ST segment and heart disease differs significantly between males and females, with a stronger association in males.
 
-$$ num = \beta_0 + \beta_1 \cdot \text{chol} + \beta_2 \cdot \text{age} + \beta_3 \cdot \text{region} + \beta_4 \cdot (\text{chol} \times \text{region}) + \beta_5 \cdot (\text{age} \times \text{region}) + \epsilon $$
+The interaction terms `thalach:sex` and `sex:slope` are significant, indicating that the relationships between thalach and heart disease, as well as slope and heart disease, differ by gender. Hence, gender modifies the relationship between clinical indicators and heart disease, supporting the alternative hypothesis.
+
+```{r}
+# Refine age groups
+age_group_data <- combined_data_two %>%
+  mutate(age_group = case_when(
+    age < 40 ~ "Under 40",
+    age >= 40 & age <= 60 ~ "40-60",
+    age > 60 ~ "Above 60"
+  ))
+# Summary of the dataset by age group
+table(age_group_data$age_group)
+
+# Fit the model with interaction terms for age group
+age_group_model <- lm(num ~ thalach * age_group + slope * age_group + fbs, data = age_group_data)
+
+# Summarize the model results
+summary(age_group_model)
+
+# Test the significance of interaction terms
+anova(age_group_model)
+
+```
+Model Results:
+Significant Variables:
+thalach (p < 0.001): Lower maximum heart rates are consistently associated with a higher likelihood of heart disease, regardless of age group.
+Slope (p < 0.001): A steeper ST segment slope is associated with a higher likelihood of heart disease, with a stronger association across age groups.
+Age Group (Above 60) (p = 0.203): The effect of being above 60 years old is not significant, suggesting that this group does not have a significantly different relationship with heart disease compared to the 40-60 group.
+Age Group (Under 40) (p = 0.103): Similar to the above-60 group, the under-40 age group shows a marginally non-significant relationship with heart disease.
+
+Interaction Effects:
+thalach:age_groupAbove 60 (p = 0.168): This interaction is non-significant, indicating that the effect of heart rate on heart disease does not vary significantly for individuals over 60.
+thalach:age_groupUnder 40 (p = 0.113): The interaction between heart rate and being under 40 is marginally non-significant, suggesting only a weak difference in how heart rate affects heart disease for younger individuals.
+
+Therefore, age does not modify the relationship between heart rate, slope, and heart disease in a statistically significant way. This does not support the alternative hypothesis, and the null hypothesis cannot be rejected.
+
+
+```{r}
+# Stepwise selection for the gender interaction model
+stepwise_gender_model <- step(gender_model, direction = "both")
+
+# Summarize the stepwise model results
+summary(stepwise_gender_model)
+
+# Stepwise selection for the age group interaction model
+stepwise_age_group_model <- step(age_group_model, direction = "both")
+
+# Summarize the stepwise model results
+summary(stepwise_age_group_model)
+
+```
+For the gender interaction model:
+The stepwise selection process retained thalach, sex, slope, and their interactions (`thalach:sex` and `sex:slope`) as significant predictors.
+The model explains 31.87% of the variance in heart disease status, with a highly significant F-statistic.
+This suggests that the significant interactions between gender and clinical indicators (heart rate and slope) are important predictors for heart disease.
+So the final model should be
+$$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \beta_3 \cdot \text{sex} + \beta_4 \cdot \text{thalach*sex} + \beta_5  \cdot \text{slope*sex} + \epsilon $$
+
+For the age group interaction model:
+After stepwise selection, the final model includes thalach, age_group, slope, and `thalach:age_group`.
+The model explains 25.26% of the variance, with significant contributions from thalach and slope. However, the interaction terms (thalach:age_group) are not significant, confirming that age group does not substantially modify the relationships between heart disease and these clinical indicators.
+So the final model should be
+$$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \beta_3 \cdot \text{age_group} + \beta_4 \cdot \text{thalach*age_group}+ \epsilon $$
+Given that num (heart disease status) is binary, future analyses should consider logistic regression for more accurate risk prediction based on diagnostic factors across regions/ demographics.
 
 # Logistic Regression Analyses 
 author: Thomas Tang
