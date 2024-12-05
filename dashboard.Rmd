@@ -116,15 +116,47 @@ renderPlotly({
     ) |> 
     count(sex) |> 
     mutate(sex = factor(sex, levels = c(0, 1), labels = c("Female", "Male"))) |>  
-    plot_ly(x = ~sex, y = ~n, color = ~sex, type = "bar", 
+    plot_ly(x = ~sex, 
+            y = ~n, 
+            color = ~sex, 
+            type = "bar", 
             hoverinfo = "text", 
-            text = ~paste("Sex: ", sex, "<br>Count: ", n))
+            text = ~paste("Sex: ", sex, "<br>Count: ", n)) |> 
+  layout(
+    title = paste("Count of Individuals by Sex for", input$region_choice),  
+    xaxis = list(title = "Sex"),  
+    yaxis = list(title = "Count")  
+  )
 })
 ```
 
-### Chart C
+### Age Distribution by Sex
 
 ```{r echo = FALSE}
-
+renderPlotly({
+  region_data = combined_df |> 
+    filter(
+      region == input$region_choice,  
+      age >= input$age_range[1],     
+      age <= input$age_range[2]     
+    ) |> 
+    mutate(sex = factor(sex, levels = c(0, 1), labels = c("Female", "Male")))  
+  
+  plot_ly(
+    data = region_data,
+    x = ~sex,
+    y = ~age,
+    type = "box",
+    color = ~sex,
+    hoverinfo = "text",
+    text = ~paste("Age: ", age, "<br>Sex: ", sex)
+  ) |> 
+  layout(
+    title = paste("Age Distribution by Sex for", input$region_choice),
+    xaxis = list(title = "Sex"),
+    yaxis = list(title = "Age"),
+    showlegend = FALSE
+  )
+})
 ```
 
