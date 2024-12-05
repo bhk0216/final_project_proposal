@@ -127,6 +127,15 @@ For binary and categorical variables, we use count (n) and percentage (pct) to d
 Based on the result of both continuous and discrete cases, we can find that except fbs, the rest of all other binary and categorical features are significantly different between case and control.
 
 # Discussion
-
+This analysis explored the relationships between diagnostic attributes and heart disease status across multiple regions, genders, and age groups, using a combination of exploratory data analysis and predictive modeling techniques. While the findings provide meaningful insights, they also reveal important limitations that should be addressed in future studies.
+Chest pain type (cp), maximum heart rate (thalach), exercise-induced angina (exang), and ST depression (oldpeak) emerged as the most significant predictors of heart disease across all models.
+Asymptomatic chest pain was the strongest indicator of heart disease among categorical variables, while lower maximum heart rates and higher ST depression values were strongly associated with heart disease among continuous variables.
+Patients from Switzerland exhibited a significantly higher baseline risk of heart disease compared to those from Cleveland, even after adjusting for other predictors. This regional effect underscores the potential role of demographic and healthcare disparities in diagnostic outcomes.
+Gender-separated logistic regression revealed that chest pain type and exercise-induced angina had stronger effects in females, highlighting the importance of gender-specific diagnostic markers in heart disease prediction.
+Male participants generally exhibited higher odds of heart disease, consistent with known gender disparities in heart disease prevalence.
+The 40-60 age group showed the strongest relationships between key predictors (e.g., maximum heart rate, slope of the ST segment) and heart disease status, possibly reflecting the higher prevalence of heart disease in middle-aged individuals.
+The study employed robust exploratory data analysis to understand variable distributions and relationships, guiding the modeling phase effectively.
+By utilizing both linear and logistic regression, the analysis captured complex relationships between predictors and heart disease status. The investigation of regional, gender-specific, and age group variations enriched the findings, providing a nuanced understanding of heart disease diagnostics.
+ 
 ###Limitation
 A key limitation of this analysis was the small sample size, particularly when the data was stratified by region or gender. This resulted in convergence issues and unstable coefficient estimates in the logistic regression models, making it difficult to draw reliable conclusions.

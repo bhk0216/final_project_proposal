@@ -58,7 +58,47 @@ sliderInput(
 ### Chart A
 
 ```{r echo = FALSE}
+renderPlotly({
+  # Filter the data reactively based on region and age range
+  region_data <- combined_df |>
+    filter(
+      region == input$region_choice,  # Filter by selected region
+      age >= input$age_range[1],      # Filter by lower age limit
+      age <= input$age_range[2]       # Filter by upper age limit
+    ) |>
+    select(age, trestbps, thalach, oldpeak) |>  # Select continuous variables
+    drop_na()  # Remove rows with missing values
+  
+  # Check if the filtered data is not empty
+  if (nrow(region_data) > 0) {
+    # Compute the correlation matrix
+    corr_matrix <- cor(region_data, use = "complete.obs")
 
+    # Create the heatmap
+    plot_ly(
+      z = corr_matrix,
+      x = colnames(corr_matrix),
+      y = colnames(corr_matrix),
+      type = "heatmap",
+      colorscale = "Viridis"
+    ) |>
+      layout(
+        title = paste("Correlation Heatmap for", input$region_choice),
+        xaxis = list(title = "Variables"),
+        yaxis = list(title = "Variables")
+      )
+  } else {
+    # Display a message if the filtered data is empty
+    plot_ly() |>
+      layout(
+        title = "No Data Available",
+        annotations = list(
+          text = "No data available for the selected region and age range.",
+          x = 0.5, y = 0.5, showarrow = FALSE
+        )
+      )
+  }
+})
 ```
 
 {data-width=350}
@@ -85,6 +125,29 @@ renderPlotly({
 ### Chart C
 
 ```{r echo = FALSE}
-
+renderPlotly({
+  combined_df |> 
+    filter(
+      region == input$region_choice,
+      age >= input$age_range[1],
+      age <= input$age_range[2]
+    ) |> 
+    group_by(sex) |> 
+    summarise(
+      total = n(),
+      heart_disease = sum(num == 1),
+      proportion = heart_disease / total
+    ) |> 
+    mutate(sex = factor(sex, levels = c(0, 1), labels = c("Female", "Male"))) |> 
+    plot_ly(
+      x = ~sex, y = ~proportion, type = "bar",
+      color = ~sex,
+      hoverinfo = "text",
+      text = ~paste("Sex: ", sex, "<br>Proportion: ", round(proportion, 2))
+    ) |> 
+    layout(title = "Proportion of Heart Disease by Gender",
+           xaxis = list(title = "Gender"),
+           yaxis = list(title = "Proportion"))
+})
 ```
 
