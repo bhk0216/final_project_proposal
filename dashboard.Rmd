@@ -4,10 +4,10 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
-    run_time: shiny
+runtime: shiny
 ---
 
-```{r setup, message = FALSE,include=FALSE}
+```{r setup, message = FALSE, echo = FALSE}
 library(shiny)
 library(tidyverse)
 
@@ -16,7 +16,7 @@ library(plotly)
 library(flexdashboard)
 ```
 
-```{r data import, message = FALSE, include=FALSE}
+```{r data import, message = FALSE, echo = FALSE}
 cleveland = read_csv("./data/cleveland.csv", na = "?")
 hungary = read_csv("./data/hungarian.csv", na = "?")
 long_beach = read_csv("./data/long_beach_va.csv", na = "?")
