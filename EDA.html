@@ -327,7 +327,7 @@ div.tocify {
   <a href="final_report.html">Report</a>
 </li>
 <li>
-  <a href="eda.html">EDA</a>
+  <a href="EDA.html">EDA</a>
 </li>
 <li>
   <a href="modelling.html">Modelling</a>
@@ -876,7 +876,7 @@ consistent across regions.</p>
        x = &quot;Age&quot;,
        y = &quot;Heart Disease Status&quot;,
        color = &quot;Sex&quot;)</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>In Hungary, the heart disease status (<code>num</code>) is limited to
 values 0 or 1, with no data available for statuses 2, 3, and 4, which
 also indicate the presence of heart disease. To ensure consistency
@@ -943,7 +943,7 @@ for(r in regions) {
   mtext(paste(&quot;Correlation Heatmap for&quot;, r), side = 3, line = 1, cex = 1.5)
 
 }</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-9-1.png" width="672" /><img src="eda_files/figure-html/unnamed-chunk-9-2.png" width="672" /><img src="eda_files/figure-html/unnamed-chunk-9-3.png" width="672" /><img src="eda_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-9-1.png" width="672" /><img src="EDA_files/figure-html/unnamed-chunk-9-2.png" width="672" /><img src="EDA_files/figure-html/unnamed-chunk-9-3.png" width="672" /><img src="EDA_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
 <div id="relationship-between-variables-and-heart-disease-status"
 class="section level4">
 <h4>Relationship Between Variables and Heart Disease Status</h4>
@@ -980,7 +980,7 @@ plot_age +
   labs(title = &quot;Boxplot of Age by Heart Disease Status&quot;,
        x = &quot;heart disease status&quot;,
        y = &quot;age&quot;)</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="resting-blood-pressure-in-mm-hg-trestbps"
 class="section level5">
@@ -1001,7 +1001,7 @@ plot_trestbps +
   labs(title = &quot;Boxplot of Resting Blood Pressure by Heart Disease Status&quot;,
        x = &quot;heart disease status&quot;,
        y = &quot;resting blood pressure (in mm Hg)&quot;)</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 <div id="maximum-heart-rate-thalach" class="section level5">
 <h5>Maximum Heart Rate (<code>thalach</code>)</h5>
@@ -1020,7 +1020,7 @@ plot_thalach +
   labs(title = &quot;Boxplot of Maximum Heart Rate by Heart Disease Status&quot;,
        x = &quot;heart disease status&quot;,
        y = &quot;maximum heart rate&quot;)</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 <div id="t-depression-oldpeak" class="section level5">
 <h5>T Depression (<code>oldpeak</code>)</h5>
@@ -1042,7 +1042,7 @@ plot_oldpeak +
   labs(title = &quot;Boxplot of T Depression by Heart Disease Status&quot;,
        x = &quot;heart disease status&quot;,
        y = &quot;T depression&quot;)</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 </div>
 </div>
@@ -1113,7 +1113,7 @@ ggplot(association_df, aes(x = reorder(Variable, CramersV), y = CramersV, fill =
     fill = &quot;Cramér&#39;s V&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>This part of graph is a macro-view of the participants, and in
 general terms, man would have less chance of getting heart disease than
 women.</p>
@@ -1127,7 +1127,7 @@ women.</p>
     fill = &quot;Heart Disease Status&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>Chest pain type 4 (asymptomatic) has the strongest association with
 getting heart disease across all locations. Chest pain type 1, 2, and 3
 tend to show fewer cases of heart disease, specifically, for chest pain
@@ -1147,7 +1147,7 @@ population characteristics.</p>
     fill = &quot;Heart Disease Status&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p>To interpret the graph, we need to know what is “slope”. In an
 exercise electrocardiogram(ECG), an “upward slope” on the ST segment
 generally indicates a normal response to exercise as the heart works
@@ -1173,7 +1173,7 @@ ggplot(combined_df |&gt; filter(!is.na(slope)), aes(x = slope, fill = num)) +
     fill = &quot;Heart Disease Status&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-17-1.png" width="672" />
+<p><img src="EDA_files/figure-html/unnamed-chunk-17-1.png" width="672" />
 For this graph, we can hardly make any conclusion, because whether the
 resting electrocardiographic results are normal or not, There was no
 significant reduction in the risk of developing the disease.</p>
@@ -1187,7 +1187,7 @@ significant reduction in the risk of developing the disease.</p>
     fill = &quot;Heart Disease Status&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>For the graphs list below, we can treat the variables as
 binary:<br />
 For those who have defect of thalassemia (6 and 7), they tend to have
@@ -1205,7 +1205,7 @@ to those &lt; 120 mg/dl.</p>
     fill = &quot;Heart Disease Status&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <pre class="r"><code># Plot for &#39;exang&#39; (Exercise-Induced Angina)
 ggplot(combined_df |&gt; filter(!is.na(exang)), aes(x = exang, fill = num)) +
   geom_bar(position = &quot;fill&quot;) +
@@ -1217,7 +1217,7 @@ ggplot(combined_df |&gt; filter(!is.na(exang)), aes(x = exang, fill = num)) +
     fill = &quot;Heart Disease Status&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(combined_df |&gt; filter(!is.na(fbs)), aes(x = fbs, fill = num)) +
   geom_bar(position = &quot;fill&quot;) +
   facet_wrap(~ region) +
@@ -1228,7 +1228,7 @@ ggplot(combined_df |&gt; filter(!is.na(exang)), aes(x = exang, fill = num)) +
     fill = &quot;Heart Disease Status&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="eda_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="EDA_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p>Though some variables may not suitable for the model, we can still
 conclude that the complications of hart disease may be include
 asymptomatic chest pain, abnormal Peak Exercise ST Segment, defect of
