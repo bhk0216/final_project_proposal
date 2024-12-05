@@ -125,7 +125,7 @@ for(r in regions) {
 }
 ```
 
-#### Relationship Between Variables and Heart Disease Status
+### Relationship Between Variables and Heart Disease Status
 Boxplots were generated for each continuous variable in relation to heart disease status (`num`) across different regions. This analysis aimed to visually explore potential relationships between these variables and the binary outcome of heart disease status, while also highlighting regional differences in the distributions of continuous variables. 
 
 ##### Age (`age`)
