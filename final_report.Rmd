@@ -9,7 +9,7 @@ output:
 ---
 
 # Members
-Stella Koo (bk2959), Yonghao YU (yy3564), Thomas Tang (tt3022)
+Stella Koo (bk2959), Yonghao YU (yy3564), Thomas Tang (tt3022), Yixin Zheng (yz4993)
 
 # Motivation
 
@@ -98,7 +98,25 @@ In our EDA, we have explored the correlation of each variables with num. However
 These variables will all be included in subsequent predictive modeling to improve the accuracy of heart disease diagnosis. The visualizations corroborate the statistical findings, providing a comprehensive understanding of how these discrete variables relate to heart disease across different regions.
 
 # Modelling Analysis
+## Linear Regression and the `num` variable
+Linear regression was conducted to explore the relationships between diagnostic attributes and heart disease status, with a focus on regional, gender-specific, and age group variations. Multiple linear regression (MLR) was prioritized over simple linear regression (SLR) to capture the complex interplay of multiple predictors. The final models for these three effects are as follows:
+
+1. Regional effects:
+   $$ num = \beta_0 + \beta_1 \cdot \text{trestbps} + \beta_2 \cdot \text{exang} + \beta_3 \cdot \text{region} + \beta_4 \cdot \text{(trestbps*region)} + \beta_5 \cdot \text{(exang*region)} + \epsilon $$
+
+2. Gender-specific effects:
+   $$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \beta_3 \cdot \text{sex} + \beta_4 \cdot \text{thalach*sex} + \beta_5  \cdot \text{slope*sex} + \epsilon $$
+
+3. Age group effects:
+   $$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \beta_3 \cdot \text{age_group} + \beta_4 \cdot \text{thalach*age_group}+ \epsilon $$
+
+The analysis revealed that resting blood pressure (`trestbps`) and exercise-induced angina (`exang`) are significant predictors of heart disease. Higher resting blood pressure modestly increases the likelihood of heart disease (p = 0.01027), while the presence of exercise-induced angina shows a strong positive association (p < 2 × 10^{-16}). Regional differences significantly impact baseline risk, with Long Beach (p = 0.00439) and Switzerland (p = 0.02857) exhibiting higher risks compared to Cleveland. Additionally, the interaction between exercise-induced angina and region (p = 0.02355) indicates that the effect of angina varies across regions, with Switzerland showing a notably lower impact ($\beta = -0.3967$). However, the interaction between blood pressure and region was not significant (p = 0.10689), suggesting minimal regional variability in the relationship between blood pressure and heart disease.
+
+Despite these findings, linear regression is unsuitable for modeling `num` because it is a categorical variable, violating the assumption of a continuous and normally distributed outcome. Residuals in such a model would deviate significantly from normality, as shown by a QQ-plot, and heteroscedasticity would arise due to inconsistent residual variance across predictors. These issues undermine the reliability of regression coefficients. Logistic regression is more appropriate for modeling binary outcomes, as it accommodates the categorical nature of `num` and provides more robust and interpretable results.
+
+## Logistic Regression
 The logistic regression analysis was conducted in three approaches: a combined model including all data, models separated by region, and models separated by gender. In the combined model, significant predictors of heart disease included chest pain type (cp), exercise-induced angina (exang), maximum heart rate achieved (thalach), and ST depression (oldpeak). Additionally, patients from Switzerland showed significantly higher odds of heart disease compared to the reference region (Cleveland), highlighting a regional effect in the combined analysis. The region-separated analysis was unsuccessful due to small sample sizes within each region, leading to unstable estimates and convergence issues. In the gender-separated analysis, chest pain and exercise-induced angina showed stronger effects in females compared to males, suggesting potential gender-specific diagnostic markers.
+
 ## Variable Selection
 ### For continuous case
 For continuous variables, we use mean and standard deviation (std) to describe the distribution in overall samples, samples of control(num = 0), and samples of case(num = 1). Then, we use t-test to examine whether the means of these variables are significantly different between case group and control group (significance level = 0.05).
