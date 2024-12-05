@@ -335,9 +335,7 @@ ggplot(region_data, aes(x = trestbps, y = num)) +
        x = "Blood Pressure (trestbps)", 
        y = "Heart Disease (num)") +
   theme_minimal()
-```
-The relationship between blood pressure (trestbps) and heart disease status (num) appears to vary across regions, with some regions showing steeper trends. This supports the inclusion of an interaction term (trestbps:region) in the model to account for regional differences in the effect of blood pressure on heart disease.
-```{r}
+
 ggplot(region_data, aes(x = exang, y = num)) +
   geom_point(aes(color = region_factor), alpha = 0.6) +
   geom_smooth(method = "lm", se = FALSE, aes(group = region_factor)) +
@@ -345,9 +343,7 @@ ggplot(region_data, aes(x = exang, y = num)) +
        x = "Exercise-Induced Angina (exang)", 
        y = "Heart Disease (num)") +
   theme_minimal()
-```
-The relationship between exang (exercise-induced angina) and num seems consistent within regions but with noticeable differences in slopes between regions. The interaction term (exang:region) is justified, as the impact of angina on heart disease likely depends on regional factors.
-```{r}
+
 ggplot(region_data, aes(x = factor(num))) +
   geom_bar(aes(fill = region_factor), position = "dodge") +
   labs(title = "Distribution of Heart Disease Status by Region", 
@@ -355,24 +351,9 @@ ggplot(region_data, aes(x = factor(num))) +
        y = "Count") +
   theme_minimal()
 ```
-The prevalence of heart disease (num) varies substantially across regions. Regions 1 and 4 show a higher proportion of individuals with heart disease. This reinforces the importance of considering regional effects in the model, as the baseline likelihood of heart disease is not uniform across regions.
-```{r}
-ggplot(region_data, aes(x = region_factor, y = trestbps)) +
-  geom_boxplot(aes(fill = region_factor)) +
-  labs(title = "Blood Pressure Distribution by Region", 
-       x = "Region", 
-       y = "Blood Pressure (trestbps)") +
-  theme_minimal()
-
-ggplot(region_data, aes(x = region_factor, y = exang)) +
-  geom_boxplot(aes(fill = region_factor)) +
-  labs(title = "Exercise-Induced Angina by Region", 
-       x = "Region", 
-       y = "Exercise-Induced Angina (exang)") +
-  theme_minimal()
-```
-Blood pressure (trestbps) varies by region, with differences in median and spread. Regions 3 and 4 exhibit higher variability. Variability in blood pressure distributions across regions highlights the potential for region-specific predictors to behave differently.
-The distribution of exang (0 vs. 1) appears consistent across regions, but Region 3 has noticeably fewer individuals overall. The low sample size for some regions (e.g., Region 3) may affect model reliability and should be accounted for in the analysis (e.g., by weighting or stratification).
+Scatterplots of Resting Blood Pressure (trestbps) show variability in the relationship between trestbps and heart disease across regions, justifying the inclusion of interaction terms.
+Plot for Exercise-Induced Angina (exang) is consistent within regions but varying slopes between regions highlight the importance of interaction effects.
+Plot of prevalence of Heart Disease (num) shows substantial differences in baseline heart disease prevalence across regions further support modeling regional effects.
 
 
 ## Hypothesis (MLR):
@@ -408,6 +389,7 @@ Investigate how gender and age group modify the relationships between key predic
 ```{r}
 ggplot(age_group_data, aes(x = thalach, y = num, color = as.factor(sex))) +
   geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, aes(group = sex)) +
   labs(
     title = "Heart Disease Status (`num`) vs Maximum Heart Rate (`thalach`) by Gender",
     x = "Maximum Heart Rate (thalach)",
@@ -415,8 +397,10 @@ ggplot(age_group_data, aes(x = thalach, y = num, color = as.factor(sex))) +
     color = "Gender"
   ) +
   theme_minimal()
+
 ggplot(age_group_data, aes(x = slope, y = num, color = as.factor(sex))) +
   geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE, aes(group = sex)) +
   labs(
     title = "Heart Disease Status (`num`) vs Slope of ST Segment (`slope`) by Gender",
     x = "Slope of ST Segment (slope)",
@@ -424,6 +408,7 @@ ggplot(age_group_data, aes(x = slope, y = num, color = as.factor(sex))) +
     color = "Gender"
   ) +
   theme_minimal()
+
 ggplot(age_group_data, aes(x = num, fill = as.factor(sex))) +
   geom_density(alpha = 0.5) +
   labs(
@@ -438,8 +423,8 @@ The relationship between slope and heart disease shows distinct patterns across 
 Heart disease status distribution (num) differs between genders, with males (gender=1) showing a higher density near num=1 (presence of heart disease). This aligns with previous findings of gender disparities in heart disease prevalence.
 
 ```{r}
-# Scatterplot of `thalach` against `num` by `age_group`
 ggplot(age_group_data, aes(x = thalach, y = num, color = age_group)) +
+  geom_smooth(method = "lm", se = FALSE, aes(group = age_group)) +
   geom_point(alpha = 0.5) +
   labs(
     title = "Heart Disease Status (`num`) vs Maximum Heart Rate (`thalach`) by Age Group",
@@ -449,8 +434,8 @@ ggplot(age_group_data, aes(x = thalach, y = num, color = age_group)) +
   ) +
   theme_minimal()
 
-# Scatterplot of `slope` against `num` by `age_group`
 ggplot(age_group_data, aes(x = slope, y = num, color = age_group)) +
+  geom_smooth(method = "lm", se = FALSE, aes(group = age_group)) +
   geom_point(alpha = 0.5) +
   labs(
     title = "Heart Disease Status (`num`) vs Slope of ST Segment (`slope`) by Age Group",
@@ -460,7 +445,6 @@ ggplot(age_group_data, aes(x = slope, y = num, color = age_group)) +
   ) +
   theme_minimal()
 
-# Density plot for `num` by `age_group`
 ggplot(age_group_data, aes(x = num, fill = age_group)) +
   geom_density(alpha = 0.5) +
   labs(
