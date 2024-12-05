@@ -9,14 +9,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Stella Koo" />
 
+<meta name="date" content="2024-11-26" />
 
-<title>final_report</title>
+<title>Report</title>
 
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -269,17 +271,17 @@ $(document).ready(function () {
 
 
 
+<h1 class="title toc-ignore">Report</h1>
+<h4 class="author">Stella Koo</h4>
+<h4 class="date">2024-11-26</h4>
 
 </div>
 
 
-<div id="report" class="section level1">
-<h1>Report</h1>
-<p>Stella Koo 2024-11-26</p>
-</div>
 <div id="members" class="section level1">
 <h1>Members</h1>
-<p>Stella Koo (bk2959), Yonghao YU (yy3564)</p>
+<p>Stella Koo (bk2959), Yonghao YU (yy3564), Thomas Tang (tt3022), Yixin
+Zheng (yz4993)</p>
 </div>
 <div id="motivation" class="section level1">
 <h1>Motivation</h1>
@@ -403,10 +405,111 @@ and heart disease status.</p>
 </div>
 <div id="discrete-variables" class="section level2">
 <h2>Discrete Variables</h2>
+<p>In our EDA, we have explored the correlation of each variables with
+num. However, when we incorporate them into our model, we also need to
+consider their validity. As a result, although variable slope and thal
+have good correlation with num, we still have to drop them because of
+their huge amount of missing values. Anyway, to gain a visualization of
+each variable with num, we have make some plot which give us a really
+clear way of assessing their effect.</p>
+<ul>
+<li>For cp, which we observed as the most relevant one in our discrete
+variables, the asymptomatic chest pain has the most clear effect on
+getting heart disease. While for the rest chest pain type, we can hardly
+say if they are the complications of the disease.</li>
+<li>the variable sex is very uneven in he number of male and female
+participants. However, we can still compare the portion of getting heart
+disease for male and female respectively, and as we can see from the
+graph, all the locations except Switzerland shows clear evidence that
+the risk for male of getting the disease is larger than that for female.
+For Switzerland, the observations are both close to 1 so we can
+attribute this finding to the data limitation, while the final
+conclusion remains unchanged.</li>
+<li>For both fbs and exang, the result is most straightforward. We can
+readily tell that for both gourps in value 1, which means people who
+ever experienced fasting blood sugar &gt; 120 mg/dl and Exercise-Induced
+Angin, are at higher risk of getting heart disease, making them strong
+predators when seeing if someone would have the disease.</li>
+<li>As respect to restecg, if we compare normal resting
+electrocardiographic results to the rest, we can observe the proportions
+of getting heart disease for the rest group appear either around or
+above the normal group. Although the effect is weak in predicting, we
+can still put this variable into our model to make it more
+unbiased.</li>
+</ul>
+<p>These variables will all be included in subsequent predictive
+modeling to improve the accuracy of heart disease diagnosis. The
+visualizations corroborate the statistical findings, providing a
+comprehensive understanding of how these discrete variables relate to
+heart disease across different regions.</p>
 </div>
 </div>
 <div id="modelling-analysis" class="section level1">
 <h1>Modelling Analysis</h1>
+<div id="linear-regression-and-the-num-variable" class="section level2">
+<h2>Linear Regression and the <code>num</code> variable</h2>
+<p>Linear regression was conducted to explore the relationships between
+diagnostic attributes and heart disease status, with a focus on
+regional, gender-specific, and age group variations. Multiple linear
+regression (MLR) was prioritized over simple linear regression (SLR) to
+capture the complex interplay of multiple predictors. The final models
+for these three effects are as follows:</p>
+<ol style="list-style-type: decimal">
+<li><p>Regional effects: <span class="math display">\[ num = \beta_0 +
+\beta_1 \cdot \text{trestbps} + \beta_2 \cdot \text{exang} + \beta_3
+\cdot \text{region} + \beta_4 \cdot \text{(trestbps*region)} + \beta_5
+\cdot \text{(exang*region)} + \epsilon \]</span></p></li>
+<li><p>Gender-specific effects: <span class="math display">\[ num =
+\beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} +
+\beta_3 \cdot \text{sex} + \beta_4 \cdot \text{thalach*sex} +
+\beta_5  \cdot \text{slope*sex} + \epsilon \]</span></p></li>
+<li><p>Age group effects: <span class="math display">\[ num = \beta_0 +
+\beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \beta_3
+\cdot \text{age_group} + \beta_4 \cdot \text{thalach*age_group}+
+\epsilon \]</span></p></li>
+</ol>
+<p>The analysis revealed that resting blood pressure
+(<code>trestbps</code>) and exercise-induced angina (<code>exang</code>)
+are significant predictors of heart disease. Higher resting blood
+pressure modestly increases the likelihood of heart disease (p =
+0.01027), while the presence of exercise-induced angina shows a strong
+positive association (p &lt; 2 × 10^{-16}). Regional differences
+significantly impact baseline risk, with Long Beach (p = 0.00439) and
+Switzerland (p = 0.02857) exhibiting higher risks compared to Cleveland.
+Additionally, the interaction between exercise-induced angina and region
+(p = 0.02355) indicates that the effect of angina varies across regions,
+with Switzerland showing a notably lower impact (<span
+class="math inline">\(\beta = -0.3967\)</span>). However, the
+interaction between blood pressure and region was not significant (p =
+0.10689), suggesting minimal regional variability in the relationship
+between blood pressure and heart disease.</p>
+<p>Despite these findings, linear regression is unsuitable for modeling
+<code>num</code> because it is a categorical variable, violating the
+assumption of a continuous and normally distributed outcome. Residuals
+in such a model would deviate significantly from normality, as shown by
+a QQ-plot, and heteroscedasticity would arise due to inconsistent
+residual variance across predictors. These issues undermine the
+reliability of regression coefficients. Logistic regression is more
+appropriate for modeling binary outcomes, as it accommodates the
+categorical nature of <code>num</code> and provides more robust and
+interpretable results.</p>
+</div>
+<div id="logistic-regression" class="section level2">
+<h2>Logistic Regression</h2>
+<p>The logistic regression analysis was conducted in three approaches: a
+combined model including all data, models separated by region, and
+models separated by gender. In the combined model, significant
+predictors of heart disease included chest pain type (cp),
+exercise-induced angina (exang), maximum heart rate achieved (thalach),
+and ST depression (oldpeak). Additionally, patients from Switzerland
+showed significantly higher odds of heart disease compared to the
+reference region (Cleveland), highlighting a regional effect in the
+combined analysis. The region-separated analysis was unsuccessful due to
+small sample sizes within each region, leading to unstable estimates and
+convergence issues. In the gender-separated analysis, chest pain and
+exercise-induced angina showed stronger effects in females compared to
+males, suggesting potential gender-specific diagnostic markers.</p>
+</div>
 <div id="variable-selection" class="section level2">
 <h2>Variable Selection</h2>
 <div id="for-continuous-case" class="section level3">
@@ -415,13 +518,16 @@ and heart disease status.</p>
 describe the distribution in overall samples, samples of control(num =
 0), and samples of case(num = 1). Then, we use t-test to examine whether
 the means of these variables are significantly different between case
-group and control group (significance level = 0.05). ### For discrete
-case For binary and categorical variables, we use count (n) and
-percentage (pct) to describe the distribution in overall samples,
-samples of control(num = 0), and samples of case(num = 1). Then, as the
-data meet the assumption, we use chi-sq test to examine whether the
-distribution of these variables are significantly different between case
 group and control group (significance level = 0.05).</p>
+</div>
+<div id="for-discrete-case" class="section level3">
+<h3>For discrete case</h3>
+<p>For binary and categorical variables, we use count (n) and percentage
+(pct) to describe the distribution in overall samples, samples of
+control(num = 0), and samples of case(num = 1). Then, as the data meet
+the assumption, we use chi-sq test to examine whether the distribution
+of these variables are significantly different between case group and
+control group (significance level = 0.05).</p>
 <p>Based on the result of both continuous and discrete cases, we can
 find that except fbs, the rest of all other binary and categorical
 features are significantly different between case and control.</p>
@@ -430,6 +536,11 @@ features are significantly different between case and control.</p>
 </div>
 <div id="discussion" class="section level1">
 <h1>Discussion</h1>
+<p>###Limitation A key limitation of this analysis was the small sample
+size, particularly when the data was stratified by region or gender.
+This resulted in convergence issues and unstable coefficient estimates
+in the logistic regression models, making it difficult to draw reliable
+conclusions.</p>
 </div>
 
 

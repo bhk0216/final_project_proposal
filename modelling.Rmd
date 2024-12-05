@@ -328,6 +328,10 @@ Include an interaction term between the diagnostic factor and region to capture 
 
 ## checking datasets
 ```{r}
+# Add numeric encoding for regions
+region_data <- combined_data_two %>%
+  mutate(region_factor = as.factor(region))
+
 ggplot(region_data, aes(x = trestbps, y = num)) +
   geom_point(aes(color = region_factor), alpha = 0.6) +
   geom_smooth(method = "lm", se = FALSE, aes(group = region_factor)) +
@@ -364,10 +368,6 @@ Alternative Hypothesis ($H_a$): At least one of these predictors significantly i
 $$ num = \beta_0 + \beta_1 \cdot \text{trestbps} + \beta_2 \cdot \text{exang} + \beta_3 \cdot \text{region} + \beta_4 \cdot \text{(trestbps*region)} + \beta_5 \cdot \text{(exang*region)} + \epsilon $$
 
 ```{r}
-# Add numeric encoding for regions
-region_data <- combined_data_two %>%
-  mutate(region_factor = as.factor(region))
-
 # fit the model with interaction terms
 region_model <- lm(num ~ trestbps * region_factor + exang * region_factor, data = region_data)
 
@@ -387,6 +387,14 @@ Investigate how gender and age group modify the relationships between key predic
 
 ## checking datasets
 ```{r}
+# Refine age groups
+age_group_data <- combined_data_two %>%
+  mutate(age_group = case_when(
+    age < 40 ~ "Under 40",
+    age >= 40 & age <= 60 ~ "40-60",
+    age > 60 ~ "Above 60"
+  ))
+
 ggplot(age_group_data, aes(x = thalach, y = num, color = as.factor(sex))) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm", se = FALSE, aes(group = sex)) +
@@ -493,13 +501,6 @@ sex:slope (p = 0.011): The relationship between the slope of the ST segment and 
 The interaction terms `thalach:sex` and `sex:slope` are significant, indicating that the relationships between thalach and heart disease, as well as slope and heart disease, differ by gender. Hence, gender modifies the relationship between clinical indicators and heart disease, supporting the alternative hypothesis.
 
 ```{r}
-# Refine age groups
-age_group_data <- combined_data_two %>%
-  mutate(age_group = case_when(
-    age < 40 ~ "Under 40",
-    age >= 40 & age <= 60 ~ "40-60",
-    age > 60 ~ "Above 60"
-  ))
 # Summary of the dataset by age group
 table(age_group_data$age_group)
 
