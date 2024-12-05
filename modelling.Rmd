@@ -375,7 +375,7 @@ Example Hypothesis (MLR):
 
 $$ num = \beta_0 + \beta_1 \cdot \text{chol} + \beta_2 \cdot \text{age} + \beta_3 \cdot \text{region} + \beta_4 \cdot (\text{chol} \times \text{region}) + \beta_5 \cdot (\text{age} \times \text{region}) + \epsilon $$
 
-
+# Logistic Regression Analyses 
 author: Thomas Tang
 ```{r warning=FALSE}
 cleveland <- read.csv("./data/cleveland.csv", header = FALSE)
@@ -446,7 +446,7 @@ Regional Effects:
     *Patients from Switzerland have much higher odds of heart disease compared to      Cleveland, Hungarian and Long Beach VA.
 
 
-###Separated by region:
+### Separated by region:
 ```{r warning=FALSE}
 cleveland_data <- cleaned_data %>% filter(region == "Cleveland")
 hungarian_data <- cleaned_data %>% filter(region == "Hungarian")
