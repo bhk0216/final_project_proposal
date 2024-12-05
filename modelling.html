@@ -327,7 +327,7 @@ div.tocify {
   <a href="final_report.html">Report</a>
 </li>
 <li>
-  <a href="eda.html">EDA</a>
+  <a href="EDA.html">EDA</a>
 </li>
 <li>
   <a href="modelling.html">Modelling</a>
@@ -431,9 +431,8 @@ switzerland = read_csv(&quot;./data/switzerland.csv&quot;, na = &quot;?&quot;) |
 <pre class="r"><code># |&gt; drop_na() Removes rows with any missing values (optional, adjust as needed) </code></pre>
 <pre class="r"><code>cor(cleveland$chol, cleveland$num, use = &quot;complete.obs&quot;)</code></pre>
 <pre><code>## [1] 0.08516361</code></pre>
-<div id="variable-selection-author-yonghao-yu" class="section level1">
-<h1>Variable Selection (author: Yonghao YU)</h1>
-<p>author: Yonghao YU</p>
+<div id="variable-selection" class="section level1">
+<h1>Variable Selection</h1>
 <div id="data-preprocessing" class="section level3">
 <h3>Data Preprocessing</h3>
 <pre class="r"><code>cleveland$region = &quot;Cleveland&quot;
@@ -506,7 +505,6 @@ print(case_data)</code></pre>
 ## 10    53     1     4      140   203     1       2     155     1     3.1     3
 ## # ℹ 521 more rows
 ## # ℹ 2 more variables: num &lt;dbl&gt;, region &lt;dbl&gt;</code></pre>
-<p>author: Yonghao YU</p>
 </div>
 <div id="for-continuous-case" class="section level3">
 <h3>For Continuous case</h3>
@@ -666,7 +664,6 @@ conti_des_df</code></pre>
 </table>
 <p>Based on the result, we can find that all five features are
 significantly different between case and control.</p>
-<p>author: Yonghao YU</p>
 </div>
 <div id="for-discrete-case" class="section level3">
 <h3>For Discrete case</h3>
@@ -810,7 +807,6 @@ between case and control.</p>
 </div>
 <div id="linear-regression" class="section level1">
 <h1>Linear Regression</h1>
-<p>(author: Yixin Zheng)</p>
 <p>Here we are prioritizing MLR over SLR, as the nature of heart disease
 involves multiple interacting factors (e.g., age, chest pain, and
 exercise-induced angina). Modeling a single variable may oversimplify
@@ -842,7 +838,7 @@ ggplot(region_data, aes(x = trestbps, y = num)) +
        y = &quot;Heart Disease (num)&quot;) +
   theme_minimal()</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(region_data, aes(x = exang, y = num)) +
   geom_point(aes(color = region_factor), alpha = 0.6) +
   geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = region_factor)) +
@@ -851,14 +847,14 @@ ggplot(region_data, aes(x = trestbps, y = num)) +
        y = &quot;Heart Disease (num)&quot;) +
   theme_minimal()</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
 <pre class="r"><code>ggplot(region_data, aes(x = factor(num))) +
   geom_bar(aes(fill = region_factor), position = &quot;dodge&quot;) +
   labs(title = &quot;Distribution of Heart Disease Status by Region&quot;, 
        x = &quot;Heart Disease Status (num)&quot;, 
        y = &quot;Count&quot;) +
   theme_minimal()</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-6-3.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
 <p>Scatterplots of Resting Blood Pressure (trestbps) show variability in
 the relationship between trestbps and heart disease across regions,
 justifying the inclusion of interaction terms. Plot for Exercise-Induced
@@ -962,7 +958,7 @@ ggplot(age_group_data, aes(x = thalach, y = num, color = as.factor(sex))) +
   ) +
   theme_minimal()</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(age_group_data, aes(x = slope, y = num, color = as.factor(sex))) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = sex)) +
@@ -974,7 +970,7 @@ ggplot(age_group_data, aes(x = thalach, y = num, color = as.factor(sex))) +
   ) +
   theme_minimal()</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
 <pre class="r"><code>ggplot(age_group_data, aes(x = num, fill = as.factor(sex))) +
   geom_density(alpha = 0.5) +
   labs(
@@ -983,7 +979,7 @@ ggplot(age_group_data, aes(x = thalach, y = num, color = as.factor(sex))) +
     fill = &quot;Gender&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
 <p>A negative trend between thalach and heart disease status is visible
 for both genders, with a steeper decline for males. This indicates that
 lower maximum heart rate is more predictive of heart disease in males.
@@ -1005,7 +1001,7 @@ prevalence.</p>
   ) +
   theme_minimal()</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(age_group_data, aes(x = slope, y = num, color = age_group)) +
   geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = age_group)) +
   geom_point(alpha = 0.5) +
@@ -1017,7 +1013,7 @@ prevalence.</p>
   ) +
   theme_minimal()</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
 <pre class="r"><code>ggplot(age_group_data, aes(x = num, fill = age_group)) +
   geom_density(alpha = 0.5) +
   labs(
@@ -1026,7 +1022,7 @@ prevalence.</p>
     fill = &quot;Age Group&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-9-3.png" width="672" />
+<p><img src="modelling_files/figure-html/unnamed-chunk-10-3.png" width="672" />
 A negative association is evident across all age groups, but the trend
 is most pronounced for the 40-60 age group. For individuals under 40 and
 above 60, the association is weaker, potentially due to smaller sample
@@ -1277,7 +1273,6 @@ demographics.</p>
 </div>
 <div id="logistic-regression-analyses" class="section level1">
 <h1>Logistic Regression Analyses</h1>
-<p>author: Thomas Tang</p>
 <pre class="r"><code>cleveland &lt;- read.csv(&quot;./data/cleveland.csv&quot;, header = FALSE)
 hungarian &lt;- read.csv(&quot;./data/hungarian.csv&quot;, header = FALSE)
 long_beach &lt;- read.csv(&quot;./data/long_beach_va.csv&quot;, header = FALSE)
@@ -1529,7 +1524,6 @@ significant predictors for both males and females.</p>
 <p>Gender-Specific Differences: Stronger effects of cp and exang in
 females suggest potential gender-specific diagnostic markers for heart
 disease.</p>
-<p>(author: Yonghao YU)</p>
 </div>
 <div id="try-random-forest-classifier" class="section level2">
 <h2>Try Random Forest Classifier!</h2>
@@ -1551,7 +1545,6 @@ class="section level3">
 <h3>First, construct the model with all predictors and then show the
 feature importance trends (the trend is descending according to the
 MeanDecreaseAccuracy)!</h3>
-<p>author: Yonghao YU</p>
 <pre class="r"><code>library(caret)</code></pre>
 <pre><code>## Loading required package: lattice</code></pre>
 <pre><code>## 
@@ -1609,7 +1602,7 @@ ggplot(var_imp_df, aes(x = reorder(Variable, -MeanDecreaseAccuracy))) +
        color = &quot;Metric&quot;) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 0, hjust = 1))</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-17-1.png" width="960" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-18-1.png" width="960" /></p>
 <p>Then we ranked the predictors descendingly based on the
 MeanDecreaseAccuracy which measures the decrease in overall model
 accuracy when the variable is permuted. And we show them in a line plot!
@@ -1660,7 +1653,7 @@ ggplot(data = cm_df, aes(x = Predicted, y = Actual, fill = Proportion)) +
     legend.title = element_text(size = 12),
     legend.text = element_text(size = 10)
   )</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
 <div id="extracting-detailed-statistics-from-the-confusion-matrix"
 class="section level3">
@@ -1736,8 +1729,8 @@ cat(&quot;RMSE of the model is:&quot;, rmse, &quot;\n&quot;)</code></pre>
 <pre><code>## RMSE of the model is: 0.4364358</code></pre>
 <pre class="r"><code>cat(&quot;R-squared: &quot;, R_squared, &quot;\n&quot;)</code></pre>
 <pre><code>## R-squared:  0.1996951</code></pre>
-<p>author: Yonghao YU Then investigate the AUC value and ROC curve to
-assess the model’s ability.</p>
+<p>Then investigate the AUC value and ROC curve to assess the model’s
+ability.</p>
 <pre class="r"><code>library(pROC)</code></pre>
 <pre><code>## Type &#39;citation(&quot;pROC&quot;)&#39; for a citation.</code></pre>
 <pre><code>## 
@@ -1770,7 +1763,7 @@ ggplot(data = roc_data, aes(x = FPR, y = TPR)) +
 ## ℹ Please use `linewidth` instead.
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>The AUC value of 0.85 indicates that the Random Forest model performs
 well in distinguishing between positive and negative classes.
 Specifically, there is an 85% chance that the model will rank a randomly
