@@ -1,11 +1,15 @@
 ---
 title: "Modelling"
+date: "2024-11-16"
 output:   
   html_document: default
   github_document: default
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
-```{r setup, message = FALSE}
+```{r setup}
 library(tidyverse)
 library(janitor)
 library(car)
@@ -33,23 +37,20 @@ process_data("./heart+disease/processed.va.data", "long_beach_va.csv")
 process_data("./heart+disease/processed.switzerland.data", "switzerland.csv")
 ```
 
+Interpreting num: The values for `num` represent the degree of narrowing
+in the coronary arteries: 0: No disease (\< 50% diameter narrowing).
+1-4: Increasing severity of disease (\> 50% diameter narrowing, with
+different severities).
 
-Interpreting num:
-The values for `num` represent the degree of narrowing in the coronary arteries:
-0: No disease (< 50% diameter narrowing).
-1-4: Increasing severity of disease (> 50% diameter narrowing, with different severities).
+For convenience, this variable will binarized: 0: No heart disease
+(value 0 in num). 1: Presence of heart disease (values 1-4 in num).
 
-For convenience, this variable will binarized:
-0: No heart disease (value 0 in num).
-1: Presence of heart disease (values 1-4 in num).
+\*but if we want to analyze the severity of heart disease num will be
+treated as a categorical variable. example code: cleaned_data \<- data
+\|\> mutate(num = factor(num, levels = c(0, 1, 2, 3, 4), labels = c("No
+Disease", "Mild", "Moderate", "Severe", "Very Severe")))
 
-*but if we want to analyze the severity of heart disease num will be treated as a categorical variable.
-example code:
-cleaned_data <- data |> 
-  mutate(num = factor(num, levels = c(0, 1, 2, 3, 4), 
-                      labels = c("No Disease", "Mild", "Moderate", "Severe", "Very Severe")))
-                      
-```{r message = FALSE}
+```{r data cleaning author: Yixin Zheng}
 cleveland <- read_csv("./data/cleveland.csv", na = "?") |> 
   clean_names() |> 
   mutate(num = if_else(num == 0, 0, 1)) # Binarize the `num` variable: 0 = no heart disease, 1 = heart disease
@@ -77,7 +78,9 @@ switzerland = read_csv("./data/switzerland.csv", na = "?") |>
 cor(cleveland$chol, cleveland$num, use = "complete.obs")
 ```
 
-# Variable Selection
+# Variable Selection (author: Yonghao YU)
+
+author: Yonghao YU
 
 ### Data Preprocessing
 
@@ -109,9 +112,15 @@ print(control_data)
 print(combined_data_two)
 ```
 
+author: Yonghao YU
 
 ### For Continues case
-For continuous variables, we use mean and standard deviation (std) to describe the distribution in overall samples, samples of control(num = 0), and samples of case(num = 1). Then, we use t-test to examine whether the means of these variables are significantly different between case group and control group (significance level = 0.05).
+
+For continuous variables, we use mean and standard deviation (std) to
+describe the distribution in overall samples, samples of control(num =
+0), and samples of case(num = 1). Then, we use t-test to examine whether
+the means of these variables are significantly different between case
+group and control group (significance level = 0.05).
 
 ```{r}
 # 1. Mean and Std for Continuous Variables (Overall)
@@ -189,10 +198,19 @@ conti_des_df = conti_des_df[, -grep("variable", colnames(conti_des_df))] |>
 conti_des_df
 ```
 
-Based on the result, we can find that all five features are significantly different between case and control.
+Based on the result, we can find that all five features are
+significantly different between case and control.
+
+author: Yonghao YU
 
 ### For Discrete case
-For binary and categorical variables, we use count (n) and percentage (pct) to describe the distribution in overall samples, samples of control(num = 0), and samples of case(num = 1). Then, as the data meet the assumption, we use chi-sq test to examine whether the distribution of these variables are significantly different between case group and control group (significance level = 0.05).
+
+For binary and categorical variables, we use count (n) and percentage
+(pct) to describe the distribution in overall samples, samples of
+control(num = 0), and samples of case(num = 1). Then, as the data meet
+the assumption, we use chi-sq test to examine whether the distribution
+of these variables are significantly different between case group and
+control group (significance level = 0.05).
 
 ```{r}
 list_cat_all = as.data.frame(list(
@@ -300,20 +318,34 @@ final_cat_count = cat_count_chisq |>
 print(final_cat_count)
 ```
 
-Based on the result, we can find that except fbs, the rest of all other binary and categorical features are significantly different between case and control.
+Based on the result, we can find that except fbs, the rest of all other
+binary and categorical features are significantly different between case
+and control.
 
 # Linear Regression
 
-Here we are prioritizing MLR over SLR, as the nature of heart disease involves multiple interacting factors (e.g., age, chest pain, and exercise-induced angina). Modeling a single variable may oversimplify these relationships and fail to capture their combined effects.
-For example, maximum heart rate (thalach) may interact with age or region, making it more meaningful to include these interactions in a multiple linear regression (MLR) model.
+(author: Yixin Zheng)
 
-1. Comparing Diagnostic Factors for Heart Disease Across Regions
-Explore whether certain diagnostic factors (e.g., blood pressure and exercise-induced angina) are more predictive of heart disease in one region compared to others.
- 
-Due to the high number of missing values in the `chol` column (particularly in Switzerland), alternative predictors should be used for analysis.
-Include an interaction term between the diagnostic factor and region to capture regional differences.
+Here we are prioritizing MLR over SLR, as the nature of heart disease
+involves multiple interacting factors (e.g., age, chest pain, and
+exercise-induced angina). Modeling a single variable may oversimplify
+these relationships and fail to capture their combined effects. For
+example, maximum heart rate (thalach) may interact with age or region,
+making it more meaningful to include these interactions in a multiple
+linear regression (MLR) model.
+
+1.  Comparing Diagnostic Factors for Heart Disease Across Regions
+    Explore whether certain diagnostic factors (e.g., blood pressure and
+    exercise-induced angina) are more predictive of heart disease in one
+    region compared to others.
+
+Due to the high number of missing values in the `chol` column
+(particularly in Switzerland), alternative predictors should be used for
+analysis. Include an interaction term between the diagnostic factor and
+region to capture regional differences.
 
 ## checking datasets
+
 ```{r}
 # Add numeric encoding for regions
 region_data <- combined_data_two %>%
@@ -342,15 +374,25 @@ ggplot(region_data, aes(x = factor(num))) +
        y = "Count") +
   theme_minimal()
 ```
-Scatterplots of Resting Blood Pressure (trestbps) show variability in the relationship between trestbps and heart disease across regions, justifying the inclusion of interaction terms.
-Plot for Exercise-Induced Angina (exang) is consistent within regions but varying slopes between regions highlight the importance of interaction effects.
-Plot of prevalence of Heart Disease (num) shows substantial differences in baseline heart disease prevalence across regions further support modeling regional effects.
 
+Scatterplots of Resting Blood Pressure (trestbps) show variability in
+the relationship between trestbps and heart disease across regions,
+justifying the inclusion of interaction terms. Plot for Exercise-Induced
+Angina (exang) is consistent within regions but varying slopes between
+regions highlight the importance of interaction effects. Plot of
+prevalence of Heart Disease (num) shows substantial differences in
+baseline heart disease prevalence across regions further support
+modeling regional effects.
 
 ## Hypothesis (MLR):
-Null Hypothesis ($H_0$: Blood pressure (`trestbps`) and exercise-induced angina (`exang`) do not significantly predict heart disease(`num`), and the relationship does not vary across regions.
 
-Alternative Hypothesis ($H_a$): At least one of these predictors significantly impacts heart disease, and the relationship differs by region.
+Null Hypothesis ($H_0$: Blood pressure (`trestbps`) and exercise-induced
+angina (`exang`) do not significantly predict heart disease(`num`), and
+the relationship does not vary across regions.
+
+Alternative Hypothesis ($H_a$): At least one of these predictors
+significantly impacts heart disease, and the relationship differs by
+region.
 
 $$ num = \beta_0 + \beta_1 \cdot \text{trestbps} + \beta_2 \cdot \text{exang} + \beta_3 \cdot \text{region} + \beta_4 \cdot \text{(trestbps*region)} + \beta_5 \cdot \text{(exang*region)} + \epsilon $$
 
@@ -364,15 +406,29 @@ summary(region_model)
 # Test significance of interaction terms
 anova(region_model)
 ```
-From the code result, we see that 
-- `trestbps` is positive ($\beta_1 = 0.0035$) and significant with p = 0.01027, indicating higher resting blood pressure modestly increases the likelihood of heart disease.
-- `exang` is positive ($\beta_2 = 0.4504$) and highly significant with p < 2*10^-16, suggesting that individuals with exercise-induced angina are more likely to have heart disease.
-- `region_factor` shows significant differences in the baseline likelihood of heart disease across regions: Baseline risk is higher in `Region 3 - Long Beach` ($\beta = 0.9268$, p = 0.00439) and `Region 4 - Switzerland` ($\beta = 1.010$, p = 0.02857) compared to Cleveland. Significant interaction for `exang * region` (p = 0.02355), Lower impact of exercise-induced angina in Switzerland ($\beta = -0.3967$, p = 0.00449). Interaction for `trestbps * region` is marginal (p=0.10689), with some variability in Region 3 (Long Beach, p=0.05446).
 
-2. Examining Predictive Power of Clinical Indicators for Heart Disease in Diverse Populations
-Investigate how gender and age group modify the relationships between key predictors and heart disease.
+From the code result, we see that - `trestbps` is positive
+($\beta_1 = 0.0035$) and significant with p = 0.01027, indicating higher
+resting blood pressure modestly increases the likelihood of heart
+disease. - `exang` is positive ($\beta_2 = 0.4504$) and highly
+significant with p \< 2\*10\^-16, suggesting that individuals with
+exercise-induced angina are more likely to have heart disease. -
+`region_factor` shows significant differences in the baseline likelihood
+of heart disease across regions: Baseline risk is higher in
+`Region 3 - Long Beach` ($\beta = 0.9268$, p = 0.00439) and
+`Region 4 - Switzerland` ($\beta = 1.010$, p = 0.02857) compared to
+Cleveland. Significant interaction for `exang * region` (p = 0.02355),
+Lower impact of exercise-induced angina in Switzerland
+($\beta = -0.3967$, p = 0.00449). Interaction for `trestbps * region` is
+marginal (p=0.10689), with some variability in Region 3 (Long Beach,
+p=0.05446).
+
+2.  Examining Predictive Power of Clinical Indicators for Heart Disease
+    in Diverse Populations Investigate how gender and age group modify
+    the relationships between key predictors and heart disease.
 
 ## checking datasets
+
 ```{r}
 # Refine age groups
 age_group_data <- combined_data_two %>%
@@ -413,9 +469,17 @@ ggplot(age_group_data, aes(x = num, fill = as.factor(sex))) +
   ) +
   theme_minimal()
 ```
-A negative trend between thalach and heart disease status is visible for both genders, with a steeper decline for males. This indicates that lower maximum heart rate is more predictive of heart disease in males.
-The relationship between slope and heart disease shows distinct patterns across genders. Males have a stronger positive association between higher slope values and the presence of heart disease.
-Heart disease status distribution (num) differs between genders, with males (gender=1) showing a higher density near num=1 (presence of heart disease). This aligns with previous findings of gender disparities in heart disease prevalence.
+
+A negative trend between thalach and heart disease status is visible for
+both genders, with a steeper decline for males. This indicates that
+lower maximum heart rate is more predictive of heart disease in males.
+The relationship between slope and heart disease shows distinct patterns
+across genders. Males have a stronger positive association between
+higher slope values and the presence of heart disease. Heart disease
+status distribution (num) differs between genders, with males (gender=1)
+showing a higher density near num=1 (presence of heart disease). This
+aligns with previous findings of gender disparities in heart disease
+prevalence.
 
 ```{r}
 ggplot(age_group_data, aes(x = thalach, y = num, color = age_group)) +
@@ -449,22 +513,37 @@ ggplot(age_group_data, aes(x = num, fill = age_group)) +
   ) +
   theme_minimal()
 ```
-A negative association is evident across all age groups, but the trend is most pronounced for the 40-60 age group. For individuals under 40 and above 60, the association is weaker, potentially due to smaller sample sizes or varying risk factors.
-Similar trends are observed across age groups, with higher slope values generally predicting heart disease. The relationship is strongest in the 40-60 age group, which also has the largest sample size.
-The distribution of heart disease status differs by age group. Individuals aged 40-60 have the highest density near num=1 (presence of heart disease), reflecting their higher overall risk in this dataset.
 
-##Hypothesis 1 (MLR):
+A negative association is evident across all age groups, but the trend
+is most pronounced for the 40-60 age group. For individuals under 40 and
+above 60, the association is weaker, potentially due to smaller sample
+sizes or varying risk factors. Similar trends are observed across age
+groups, with higher slope values generally predicting heart disease. The
+relationship is strongest in the 40-60 age group, which also has the
+largest sample size. The distribution of heart disease status differs by
+age group. Individuals aged 40-60 have the highest density near num=1
+(presence of heart disease), reflecting their higher overall risk in
+this dataset.
 
-- **Null Hypothesis (H_0):** The relationships between maximum heart rate (`thalach`), the slope of the ST segment (`slope`), and heart disease status (`num`) do not vary by gender
-- **Alternative Hypothesis (H_a):**  At least one of these predictors interacts with gender to significantly influence heart disease status.
+##Hypothesis 1 (MLR): - **Null Hypothesis (H_0):** The relationships
+between maximum heart rate (`thalach`), the slope of the ST segment
+(`slope`), and heart disease status (`num`) do not vary by gender -
+**Alternative Hypothesis (H_a):** At least one of these predictors
+interacts with gender to significantly influence heart disease status.
 
 $$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{fbs} + \beta_3 \cdot \text{slope} + \beta_4 \cdot \text{sex} + \beta_5 \cdot \text{thalach*sex} + \beta_6  \cdot  \text{slope*sex} + \epsilon $$
-`thalach` and `slope` were identified as strong predictors in logistic regression and EDA. `fbs` has weaker significance and may be excluded in a stepwise selection process.
+`thalach` and `slope` were identified as strong predictors in logistic
+regression and EDA. `fbs` has weaker significance and may be excluded in
+a stepwise selection process.
 
-##Hypothesis 2 (MLR):
-- **Null Hypothesis (H_0):** The relationships between maximum heart rate (`thalach`), the slope of the ST segment (`slope`), and heart disease status (`num`) do not vary by age group
-- **Alternative Hypothesis (H_a):**  At least one of these predictors interacts with age group to significantly influence heart disease status.
+##Hypothesis 2 (MLR): - **Null Hypothesis (H_0):** The relationships
+between maximum heart rate (`thalach`), the slope of the ST segment
+(`slope`), and heart disease status (`num`) do not vary by age group -
+**Alternative Hypothesis (H_a):** At least one of these predictors
+interacts with age group to significantly influence heart disease
+status.
 $$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{fbs} + \beta_3 \cdot \text{slope} + \beta_4 \cdot \text{age_group} + \beta_5 \cdot \text{thalach*age_group} + \beta_6 \cdot \text{slope*age_group} + \epsilon $$
+
 ```{r}
 # Separate the data by gender
 male_data <- combined_data_two %>% filter(sex == 1)
@@ -479,14 +558,25 @@ summary(gender_model)
 # Test the significance of interaction terms
 anova(gender_model)
 ```
-Model Results:
-Significant Variables:
-Sex (p < 0.001): Being male significantly increases the likelihood of heart disease, with males having higher odds of heart disease compared to females.
-Slope (p < 0.001): A higher slope value (indicating abnormal ST depression) is associated with an increased likelihood of heart disease.
-thalach:sex (p = 0.029): The interaction between heart rate and gender is significant. This suggests that the relationship between heart rate and heart disease differs between males and females. Specifically, males may show a stronger association with heart rate.
-sex:slope (p = 0.011): The relationship between the slope of the ST segment and heart disease differs significantly between males and females, with a stronger association in males.
 
-The interaction terms `thalach:sex` and `sex:slope` are significant, indicating that the relationships between thalach and heart disease, as well as slope and heart disease, differ by gender. Hence, gender modifies the relationship between clinical indicators and heart disease, supporting the alternative hypothesis.
+Model Results: Significant Variables: Sex (p \< 0.001): Being male
+significantly increases the likelihood of heart disease, with males
+having higher odds of heart disease compared to females. Slope (p \<
+0.001): A higher slope value (indicating abnormal ST depression) is
+associated with an increased likelihood of heart disease. thalach:sex (p
+= 0.029): The interaction between heart rate and gender is significant.
+This suggests that the relationship between heart rate and heart disease
+differs between males and females. Specifically, males may show a
+stronger association with heart rate. sex:slope (p = 0.011): The
+relationship between the slope of the ST segment and heart disease
+differs significantly between males and females, with a stronger
+association in males.
+
+The interaction terms `thalach:sex` and `sex:slope` are significant,
+indicating that the relationships between thalach and heart disease, as
+well as slope and heart disease, differ by gender. Hence, gender
+modifies the relationship between clinical indicators and heart disease,
+supporting the alternative hypothesis.
 
 ```{r}
 # Summary of the dataset by age group
@@ -502,19 +592,31 @@ summary(age_group_model)
 anova(age_group_model)
 
 ```
-Model Results:
-Significant Variables:
-thalach (p < 0.001): Lower maximum heart rates are consistently associated with a higher likelihood of heart disease, regardless of age group.
-Slope (p < 0.001): A steeper ST segment slope is associated with a higher likelihood of heart disease, with a stronger association across age groups.
-Age Group (Above 60) (p = 0.203): The effect of being above 60 years old is not significant, suggesting that this group does not have a significantly different relationship with heart disease compared to the 40-60 group.
-Age Group (Under 40) (p = 0.103): Similar to the above-60 group, the under-40 age group shows a marginally non-significant relationship with heart disease.
 
-Interaction Effects:
-thalach:age_groupAbove 60 (p = 0.168): This interaction is non-significant, indicating that the effect of heart rate on heart disease does not vary significantly for individuals over 60.
-thalach:age_groupUnder 40 (p = 0.113): The interaction between heart rate and being under 40 is marginally non-significant, suggesting only a weak difference in how heart rate affects heart disease for younger individuals.
+Model Results: Significant Variables: thalach (p \< 0.001): Lower
+maximum heart rates are consistently associated with a higher likelihood
+of heart disease, regardless of age group. Slope (p \< 0.001): A steeper
+ST segment slope is associated with a higher likelihood of heart
+disease, with a stronger association across age groups. Age Group (Above
+60) (p = 0.203): The effect of being above 60 years old is not
+significant, suggesting that this group does not have a significantly
+different relationship with heart disease compared to the 40-60 group.
+Age Group (Under 40) (p = 0.103): Similar to the above-60 group, the
+under-40 age group shows a marginally non-significant relationship with
+heart disease.
 
-Therefore, age does not modify the relationship between heart rate, slope, and heart disease in a statistically significant way. This does not support the alternative hypothesis, and the null hypothesis cannot be rejected.
+Interaction Effects: thalach:age_groupAbove 60 (p = 0.168): This
+interaction is non-significant, indicating that the effect of heart rate
+on heart disease does not vary significantly for individuals over 60.
+thalach:age_groupUnder 40 (p = 0.113): The interaction between heart
+rate and being under 40 is marginally non-significant, suggesting only a
+weak difference in how heart rate affects heart disease for younger
+individuals.
 
+Therefore, age does not modify the relationship between heart rate,
+slope, and heart disease in a statistically significant way. This does
+not support the alternative hypothesis, and the null hypothesis cannot
+be rejected.
 
 ```{r}
 # Stepwise selection for the gender interaction model
@@ -530,21 +632,32 @@ stepwise_age_group_model <- step(age_group_model, direction = "both")
 summary(stepwise_age_group_model)
 
 ```
-For the gender interaction model:
-The stepwise selection process retained thalach, sex, slope, and their interactions (`thalach:sex` and `sex:slope`) as significant predictors.
-The model explains 31.87% of the variance in heart disease status, with a highly significant F-statistic.
-This suggests that the significant interactions between gender and clinical indicators (heart rate and slope) are important predictors for heart disease.
-So the final model should be
+
+For the gender interaction model: The stepwise selection process
+retained thalach, sex, slope, and their interactions (`thalach:sex` and
+`sex:slope`) as significant predictors. The model explains 31.87% of the
+variance in heart disease status, with a highly significant F-statistic.
+This suggests that the significant interactions between gender and
+clinical indicators (heart rate and slope) are important predictors for
+heart disease. So the final model should be
 $$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \beta_3 \cdot \text{sex} + \beta_4 \cdot \text{thalach*sex} + \beta_5  \cdot \text{slope*sex} + \epsilon $$
 
-For the age group interaction model:
-After stepwise selection, the final model includes thalach, age_group, slope, and `thalach:age_group`.
-The model explains 25.26% of the variance, with significant contributions from thalach and slope. However, the interaction terms (thalach:age_group) are not significant, confirming that age group does not substantially modify the relationships between heart disease and these clinical indicators.
-So the final model should be
+For the age group interaction model: After stepwise selection, the final
+model includes thalach, age_group, slope, and `thalach:age_group`. The
+model explains 25.26% of the variance, with significant contributions
+from thalach and slope. However, the interaction terms
+(thalach:age_group) are not significant, confirming that age group does
+not substantially modify the relationships between heart disease and
+these clinical indicators. So the final model should be
 $$ num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \beta_3 \cdot \text{age_group} + \beta_4 \cdot \text{thalach*age_group}+ \epsilon $$
-Given that num (heart disease status) is binary, future analyses should consider logistic regression for more accurate risk prediction based on diagnostic factors across regions/ demographics.
+Given that num (heart disease status) is binary, future analyses should
+consider logistic regression for more accurate risk prediction based on
+diagnostic factors across regions/ demographics.
 
-# Logistic Regression Analyses 
+# Logistic Regression Analyses
+
+author: Thomas Tang
+
 ```{r warning=FALSE}
 cleveland <- read.csv("./data/cleveland.csv", header = FALSE)
 hungarian <- read.csv("./data/hungarian.csv", header = FALSE)
@@ -570,7 +683,9 @@ Dropped variables with excessive missing values (ca and thal).
 
 Removed rows with missing values in critical variables.
 
-Converted num to binary (0 = no heart disease, 1 = heart disease) and set as a factor.
+Converted num to binary (0 = no heart disease, 1 = heart disease) and
+set as a factor.
+
 ```{R}
 cleaned_data <- combined_data %>% select(-ca, -thal)
 critical_columns <- c("num", "age", "sex", "cp", "trestbps", "chol",
@@ -584,37 +699,36 @@ logistic_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
                       data = cleaned_data, family = binomial)
 summary(logistic_model)
 ```
-Significant Predictors (p-value < 0.05):
-sex (1.409350):
-    *Being male increases the log-odds of heart disease significantly.
-    *Odds Ratio: exp(1.469)=4.34 → Males are 4.34 times more likely to have heart      disease than females.
-    
-cp (chest pain):
-    *Higher chest pain levels increase the log-odds of heart disease.
-    *Odds Ratio: exp(0.668)=1.95 → A strong predictor for heart disease.
 
-thalach (max heart rate achieved):
-    *Higher heart rates decrease the log-odds of heart disease.
-    *Odds Ratio: exp(−0.014)=0.986, suggesting a protective effect.
+Significant Predictors (p-value \< 0.05):
 
-exang (exercise-induced angina):
-    *Presence of exercise-induced angina increases the odds of heart disease.
-    *Odds Ratio: exp(0.899)=2.46.
-oldpeak (ST depression):
-    *Higher ST depression values significantly increase the odds of heart disease.
-    *Odds Ratio: exp(0.669)=1.95.
-regionSwitzerland:
-    *Patients from Switzerland have significantly higher odds of heart disease compared to the reference region (Cleveland).
-    *Odds Ratio: exp(3.843)=46.64, suggesting a strong regional effect.
+sex (1.409350): *Being male increases the log-odds of heart disease
+significantly.*
 
-Non-Significant Predictors (p-value > 0.05):
-age, trestbps (resting blood pressure), chol (cholesterol), fbs (fasting blood sugar), restecg (resting ECG results), regionHungarian, regionLong_Beach_VA.
+cp (chest pain): *Higher chest pain levels increase the log-odds of
+heart disease.*
 
-Regional Effects:
-    *Patients from Switzerland have much higher odds of heart disease compared to      Cleveland, Hungarian and Long Beach VA.
+thalach (max heart rate achieved): *Higher heart rates decrease the
+log-odds of heart disease.*
 
+exang (exercise-induced angina): *Presence of exercise-induced angina
+increases the odds of heart disease.*
+
+oldpeak (ST depression): *Higher ST depression values significantly
+increase the odds of heart disease.*
+
+regionSwitzerland: *Patients from Switzerland have significantly higher
+odds of heart disease compared to the reference region (Cleveland).*
+
+Non-Significant Predictors (p-value \> 0.05): age, trestbps (resting
+blood pressure), chol (cholesterol), fbs (fasting blood sugar), restecg
+(resting ECG results), regionHungarian, regionLong_Beach_VA.
+
+Regional Effects: Patients from Switzerland have much higher odds of
+heart disease compared to Cleveland, Hungarian and Long Beach VA.
 
 ### Separated by region:
+
 ```{r warning=FALSE}
 cleveland_data <- cleaned_data %>% filter(region == "Cleveland")
 hungarian_data <- cleaned_data %>% filter(region == "Hungarian")
@@ -656,10 +770,16 @@ regional_results <- bind_rows(cleveland_results, hungarian_results,
 regional_results
 ```
 
-The logistic regression analysis separated by region failed due to insufficient sample sizes within each region. Logistic regression requires an adequate number of observations to produce reliable estimates. When the data was split by region, the limited number of cases led to unstable coefficients, inflated errors, and convergence issues. This highlights that the sample size per region was too small for meaningful analysis.
+The logistic regression analysis separated by region failed due to
+insufficient sample sizes within each region. Logistic regression
+requires an adequate number of observations to produce reliable
+estimates. When the data was split by region, the limited number of
+cases led to unstable coefficients, inflated errors, and convergence
+issues. This highlights that the sample size per region was too small
+for meaningful analysis.
 
+### Separated by gender:
 
-###Separated by gender:
 ```{r}
 male_data <- cleaned_data %>% filter(sex == 1)
 female_data <- cleaned_data %>% filter(sex == 0)
@@ -689,57 +809,55 @@ gender_results <- bind_rows(male_results, female_results)
 gender_results
 ```
 
-Males
-Significant Predictors (p-value < 0.05):
+Males Significant Predictors (p-value \< 0.05):
 
-Chest Pain (cp) (β=0.624, p<0.001):
-  Higher chest pain levels increase the odds of heart disease.
-  Odds Ratio= exp(0.624)=1.87.
-Max Heart Rate (thalach) (β=−0.026, p<0.001):
-  Higher maximum heart rates reduce the odds of heart disease.
-  Odds Ratio= exp(−0.026)=0.974 (protective effect).
-Exercise-Induced Angina (exang) (β=0.717, p=0.025):
-  Presence of exercise-induced angina significantly increases the odds of heart    disease.
-  Odds Ratio=exp(0.717)=2.05.
-ST Depression (oldpeak) (β=0.569, p<0.001):
-  Higher ST depression significantly increases the odds of heart disease.
-Odds Ratio = exp(0.569)=1.77.
+Chest Pain (cp): Higher chest pain levels increase the odds of heart
+disease.
 
-Non-Significant Predictors:
-age, trestbps, chol, fbs, restecg.
+Max Heart Rate (thalach): Higher maximum heart rates reduce the odds of
+heart disease.
 
-Females
-Significant Predictors (p-value < 0.05):
+Exercise-Induced Angina (exang): Presence of exercise-induced angina
+significantly increases the odds of heart disease.
 
-Chest Pain (cp) (β=0.927, p=0.006):
-  Stronger effect than males.
-  Odds Ratio = exp(0.927)=2.53.
-Exercise-Induced Angina (exang) (β=1.144, p=0.037):
-  Stronger effect than males.
-  Odds Ratio = exp(1.144)=3.14.
-ST Depression (oldpeak) (β=0.677,p=0.020):
-  Similar effect to males.
-  Odds Ratio = exp(0.677)=1.97.
-Non-Significant Predictors:
-age, trestbps, chol, fbs, restecg, thalach.
+ST Depression (oldpeak): Higher ST depression significantly increases
+the odds of heart disease.
 
-Conclusions
-Predictors for Both Genders:
-cp, exang, and oldpeak are significant predictors for both males and females.
+Non-Significant Predictors: age, trestbps, chol, fbs, restecg.
 
-Gender-Specific Differences:
-Stronger effects of cp and exang in females suggest potential gender-specific diagnostic markers for heart disease.
+Females Significant Predictors (p-value \< 0.05):
 
+Chest Pain (cp) : Stronger effect than males.
 
+Exercise-Induced Angina (exang) : Stronger effect than males.
+
+ST Depression (oldpeak): Similar effect to males.
+
+Non-Significant Predictors: age, trestbps, chol, fbs, restecg, thalach.
+
+Conclusions Predictors for Both Genders: cp, exang, and oldpeak are
+significant predictors for both males and females.
+
+Gender-Specific Differences: Stronger effects of cp and exang in females
+suggest potential gender-specific diagnostic markers for heart disease.
+
+(author: Yonghao YU)
 
 ## Try Random Forest Classifier!
 
 ### A brief intro to Random Forest Algorithm
 
-Random Forest is an ensemble learning algorithm used for classification and regression tasks. It builds multiple decision trees using bootstrap sampling (random subsets of data) and selects features randomly at each split to increase diversity.   Each tree predicts independently, and the final output is determined by majority voting (classification) or averaging (regression).   Random Forest is robust to overfitting, handles high-dimensional data well, and provides feature importance scores.
-
+Random Forest is an ensemble learning algorithm used for classification
+and regression tasks. It builds multiple decision trees using bootstrap
+sampling (random subsets of data) and selects features randomly at each
+split to increase diversity. Each tree predicts independently, and the
+final output is determined by majority voting (classification) or
+averaging (regression). Random Forest is robust to overfitting, handles
+high-dimensional data well, and provides feature importance scores.
 
 ### First, construct the model with all predictors and then show the feature importance trends (the trend is descending according to the MeanDecreaseAccuracy)!
+
+author: Yonghao YU
 
 ```{r,fig.width=10, fig.height=8}
 library(caret)
@@ -786,9 +904,16 @@ ggplot(var_imp_df, aes(x = reorder(Variable, -MeanDecreaseAccuracy))) +
   theme(axis.text.x = element_text(angle = 0, hjust = 1))
 ```
 
-Then we ranked the predictors descendingly based on the MeanDecreaseAccuracy which measures the decrease in overall model accuracy when the variable is permuted. And we show them in a line plot! Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out restecg and fbs predictors that have relatively small impact on our prediction. And then we can focus on the first seven predictors that have more impact on our prediction results!
+Then we ranked the predictors descendingly based on the
+MeanDecreaseAccuracy which measures the decrease in overall model
+accuracy when the variable is permuted. And we show them in a line plot!
+Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out
+restecg and fbs predictors that have relatively small impact on our
+prediction. And then we can focus on the first seven predictors that
+have more impact on our prediction results!
 
 ### Then, drop unsignificant features and build the model again, show the confusion matrix
+
 ```{r}
 variables2 = c("cp", "thalach", "oldpeak", "num","trestbps","region","slope", "exang","age")
 data2 = combined_data_two[, variables2]
@@ -830,6 +955,7 @@ ggplot(data = cm_df, aes(x = Predicted, y = Actual, fill = Proportion)) +
 ```
 
 ### Extracting detailed statistics from the confusion matrix
+
 ```{r}
 stats = rf_conf_matrix2$overall
 class_stats = rf_conf_matrix2$byClass
@@ -855,16 +981,20 @@ cat(sprintf("Detection Prevalence: %.4f\n", class_stats["Detection Prevalence"])
 cat(sprintf("Balanced Accuracy: %.4f\n", class_stats["Balanced Accuracy"]))
 ```
 
-From the model we can observe the following things: 
-1. The model correctly classified 80.95% of the instances.
-2. The true accuracy is expected to fall 95% of the time in (0.7213, 0.8796)
-3. The no information rate is 0.6095 which is less than the accuracy rate (p-value also indicate this), indicating the model we built actually capture some significant features.
-4. The Kappa is 0.6067 which is in the range (0.6,0.8), which indicate our classifier achieves relatively high level of classification
-5. High sensitivity (0.8049) indicates good identification of positives.
-6. High specificity (0.8125) indicates good identification of negatives.
-7. Balanced accuracy (0.8087) suggests the model balances its performance across both classes well.
+From the model we can observe the following things: 1. The model
+correctly classified 80.95% of the instances. 2. The true accuracy is
+expected to fall 95% of the time in (0.7213, 0.8796) 3. The no
+information rate is 0.6095 which is less than the accuracy rate (p-value
+also indicate this), indicating the model we built actually capture some
+significant features. 4. The Kappa is 0.6067 which is in the range
+(0.6,0.8), which indicate our classifier achieves relatively high level
+of classification 5. High sensitivity (0.8049) indicates good
+identification of positives. 6. High specificity (0.8125) indicates good
+identification of negatives. 7. Balanced accuracy (0.8087) suggests the
+model balances its performance across both classes well.
 
 ### Compute R-squared and RMSE for the classification model
+
 ```{r}
 rf_pred_numeric = as.numeric(rf_pred2)
 test_actual_numeric = as.numeric(testData2$num)
@@ -885,8 +1015,8 @@ cat("RMSE of the model is:", rmse, "\n")
 cat("R-squared: ", R_squared, "\n")
 ```
 
-
-### Then investigate the AUC value and ROC curve to assess the model's ability
+author: Yonghao YU \### Then investigate the AUC value and ROC curve to
+assess the model's ability
 
 ```{r}
 library(pROC)
@@ -912,11 +1042,25 @@ ggplot(data = roc_data, aes(x = FPR, y = TPR)) +
   theme_minimal()
 ```
 
-The AUC value of 0.85 indicates that the Random Forest model performs well in distinguishing between positive and negative classes. Specifically, there is an 85% chance that the model will rank a randomly chosen positive instance higher than a negative one. This reflects our model reaches good discrimination.
+The AUC value of 0.85 indicates that the Random Forest model performs
+well in distinguishing between positive and negative classes.
+Specifically, there is an 85% chance that the model will rank a randomly
+chosen positive instance higher than a negative one. This reflects our
+model reaches good discrimination.
 
-The ROC curve shows the trade-off between the True Positive Rate (Sensitivity) and the False Positive Rate (1 - Specificity) at various thresholds. The curve is well above the diagonal which represent random guessing, confirming the model performs better than random guessing. The initial steep rise indicates that the model achieves high sensitivity with a relatively low false positive rate, which is desirable. However, as the false positive rate increases, the curve flattens, highlighting diminishing returns in improving sensitivity further.
+The ROC curve shows the trade-off between the True Positive Rate
+(Sensitivity) and the False Positive Rate (1 - Specificity) at various
+thresholds. The curve is well above the diagonal which represent random
+guessing, confirming the model performs better than random guessing. The
+initial steep rise indicates that the model achieves high sensitivity
+with a relatively low false positive rate, which is desirable. However,
+as the false positive rate increases, the curve flattens, highlighting
+diminishing returns in improving sensitivity further.
 
-### Last, simulate the prediction which predicts the num with the new data based on the model we built!
+author: Yonghao YU \### Last, simulate the prediction which predicts the
+num with the new data based on the model we built!
+
+author: Yonghao YU
 
 ```{r}
 # construct a new dataframe which includes new data
@@ -937,4 +1081,5 @@ print("The prediction result is：")
 print(data.frame(new_data, Predicted_num = predicted_num))
 ```
 
-From the results, we can see that the model can generate some results based on the predictor values we put in!
+From the results, we can see that the model can generate some results
+based on the predictor values we put in!
