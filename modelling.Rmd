@@ -377,7 +377,7 @@ $$ num = \beta_0 + \beta_1 \cdot \text{chol} + \beta_2 \cdot \text{age} + \beta_
 
 
 author: Thomas Tang
-```{r }
+```{r warning=FALSE}
 cleveland <- read.csv("./data/cleveland.csv", header = FALSE)
 hungarian <- read.csv("./data/hungarian.csv", header = FALSE)
 long_beach <- read.csv("./data/long_beach_va.csv", header = FALSE)
@@ -397,8 +397,11 @@ combined_data <- combined_data %>%
   mutate(across(c(age, sex, cp, trestbps, chol, fbs, restecg, thalach,
                   exang, oldpeak, slope, ca, thal, num), as.numeric))
 ```
+
 Dropped variables with excessive missing values (ca and thal).
+
 Removed rows with missing values in critical variables.
+
 Converted num to binary (0 = no heart disease, 1 = heart disease) and set as a factor.
 ```{R}
 cleaned_data <- combined_data %>% select(-ca, -thal)
@@ -413,7 +416,6 @@ logistic_model <- glm(num ~ age + sex + cp + trestbps + chol + fbs +
                       data = cleaned_data, family = binomial)
 summary(logistic_model)
 ```
-(author= Thomas Tang)
 Significant Predictors (p-value < 0.05):
 sex (1.409350):
     *Being male increases the log-odds of heart disease significantly.
@@ -426,14 +428,15 @@ cp (chest pain):
 thalach (max heart rate achieved):
     *Higher heart rates decrease the log-odds of heart disease.
     *Odds Ratio: exp(−0.014)=0.986, suggesting a protective effect.
+
 exang (exercise-induced angina):
     *Presence of exercise-induced angina increases the odds of heart disease.
     *Odds Ratio: exp(0.899)=2.46.
 oldpeak (ST depression):
-    *Higher ST depression values significantly increase the odds of heart             disease.
+    *Higher ST depression values significantly increase the odds of heart disease.
     *Odds Ratio: exp(0.669)=1.95.
 regionSwitzerland:
-    *Patients from Switzerland have significantly higher odds of heart disease        compared to the reference region (Cleveland).
+    *Patients from Switzerland have significantly higher odds of heart disease compared to the reference region (Cleveland).
     *Odds Ratio: exp(3.843)=46.64, suggesting a strong regional effect.
 
 Non-Significant Predictors (p-value > 0.05):
@@ -442,8 +445,9 @@ age, trestbps (resting blood pressure), chol (cholesterol), fbs (fasting blood s
 Regional Effects:
     *Patients from Switzerland have much higher odds of heart disease compared to      Cleveland, Hungarian and Long Beach VA.
 
-separated by region:
-```{r}
+
+###separated by region:
+```{r warning=FALSE}
 cleveland_data <- cleaned_data %>% filter(region == "Cleveland")
 hungarian_data <- cleaned_data %>% filter(region == "Hungarian")
 long_beach_data <- cleaned_data %>% filter(region == "Long_Beach_VA")
