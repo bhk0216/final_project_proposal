@@ -6,7 +6,7 @@ navbar:
     - text: "Report"
       href: final_report.html  
     - text: "EDA"
-      href: EDA.html  
+      href: eda.html  
     - text: "Modelling"
       href: modelling.html  
     - text: "Dashboard"
