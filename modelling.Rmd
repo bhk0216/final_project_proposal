@@ -52,7 +52,7 @@ treated as a categorical variable. example code: cleaned_data \<- data
 \|\> mutate(num = factor(num, levels = c(0, 1, 2, 3, 4), labels = c("No
 Disease", "Mild", "Moderate", "Severe", "Very Severe")))
 
-```{r data cleaning author: Yixin Zheng}
+```{r}
 cleveland <- read_csv("./data/cleveland.csv", na = "?") |> 
   clean_names() |> 
   mutate(num = if_else(num == 0, 0, 1)) # Binarize the `num` variable: 0 = no heart disease, 1 = heart disease
@@ -80,9 +80,7 @@ switzerland = read_csv("./data/switzerland.csv", na = "?") |>
 cor(cleveland$chol, cleveland$num, use = "complete.obs")
 ```
 
-# Variable Selection (author: Yonghao YU)
-
-author: Yonghao YU
+# Variable Selection
 
 ### Data Preprocessing
 
@@ -113,8 +111,6 @@ print(case_data)
 print(control_data)
 print(combined_data_two)
 ```
-
-author: Yonghao YU
 
 ### For Continuous case
 
@@ -202,8 +198,6 @@ conti_des_df
 
 Based on the result, we can find that all five features are
 significantly different between case and control.
-
-author: Yonghao YU
 
 ### For Discrete case
 
@@ -326,8 +320,6 @@ and control.
 
 
 # Linear Regression
-
-(author: Yixin Zheng)
 
 Here we are prioritizing MLR over SLR, as the nature of heart disease
 involves multiple interacting factors (e.g., age, chest pain, and
@@ -664,8 +656,6 @@ diagnostic factors across regions/ demographics.
 
 # Logistic Regression Analyses
 
-author: Thomas Tang
-
 ```{r}
 cleveland <- read.csv("./data/cleveland.csv", header = FALSE)
 hungarian <- read.csv("./data/hungarian.csv", header = FALSE)
@@ -919,8 +909,6 @@ significant predictors for both males and females.
 Gender-Specific Differences: Stronger effects of cp and exang in females
 suggest potential gender-specific diagnostic markers for heart disease.
 
-(author: Yonghao YU)
-
 ## Try Random Forest Classifier!
 
 ### A brief intro to Random Forest Algorithm
@@ -935,7 +923,6 @@ high-dimensional data well, and provides feature importance scores.
 
 ### First, construct the model with all predictors and then show the feature importance trends (the trend is descending according to the MeanDecreaseAccuracy)!
 
-author: Yonghao YU
 
 ```{r,fig.width=10, fig.height=8}
 library(caret)
@@ -1093,7 +1080,6 @@ cat("RMSE of the model is:", rmse, "\n")
 cat("R-squared: ", R_squared, "\n")
 ```
 
-author: Yonghao YU
 Then investigate the AUC value and ROC curve to assess the model's ability.
 ```{r}
 library(pROC)
