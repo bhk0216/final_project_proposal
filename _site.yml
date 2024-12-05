@@ -19,7 +19,3 @@ navbar:
 output:
   html_document:
     theme: cosmo
-    
-site:
-  output_dir: "_site"
-  navbar: true
