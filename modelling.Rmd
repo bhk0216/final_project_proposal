@@ -1,6 +1,5 @@
 ---
 title: "Modelling"
-date: "2024-11-16"
 output:   
   html_document: default
   github_document: default

@@ -1,6 +1,5 @@
 Modelling
 ================
-2024-11-16
 
 ``` r
 library(tidyverse)
