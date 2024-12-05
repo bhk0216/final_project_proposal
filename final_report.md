@@ -1,7 +1,5 @@
 Report
 ================
-Stella Koo
-2024-11-26
 
 # Members
 

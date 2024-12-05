@@ -1,6 +1,5 @@
 Exploratory Data Analysis
 ================
-2024-11-16
 
 ## Data Cleaning & Preparing for Analysis
 
@@ -166,7 +165,7 @@ ggplot(combined_df, aes(x = age, y = num, color = factor(sex, levels = c(0,1), l
        color = "Sex")
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 In Hungary, the heart disease status (`num`) is limited to values 0 or
 1, with no data available for statuses 2, 3, and 4, which also indicate
@@ -240,7 +239,7 @@ for(r in regions) {
 }
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->![](EDA_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->![](eda_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->![](eda_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->![](eda_files/figure-gfm/unnamed-chunk-9-4.png)<!-- -->
 
 #### Relationship Between Variables and Heart Disease Status
 
@@ -282,7 +281,7 @@ plot_age +
        y = "age")
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ##### Resting Blood Pressure (in mm Hg, `trestbps`)
 
@@ -307,7 +306,7 @@ plot_trestbps +
        y = "resting blood pressure (in mm Hg)")
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ##### Maximum Heart Rate (`thalach`)
 
@@ -331,7 +330,7 @@ plot_thalach +
        y = "maximum heart rate")
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ##### T Depression (`oldpeak`)
 
@@ -358,7 +357,7 @@ plot_oldpeak +
        y = "T depression")
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ## Catagorical Variables
 
@@ -432,7 +431,7 @@ ggplot(association_df, aes(x = reorder(Variable, CramersV), y = CramersV, fill =
   theme_minimal()
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 This part of graph is a macro-view of the participants, and in general
 terms, man would have less chance of getting heart disease than women.
@@ -450,7 +449,7 @@ ggplot(combined_df, aes(x = sex, fill = num)) +
   theme_minimal()
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 Chest pain type 4 (asymptomatic) has the strongest association with
 getting heart disease across all locations. Chest pain type 1, 2, and 3
@@ -474,7 +473,7 @@ ggplot(combined_df, aes(x = cp, fill = num)) +
   theme_minimal()
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 To interpret the graph, we need to know what is “slope”. In an exercise
 electrocardiogram(ECG), an “upward slope” on the ST segment generally
@@ -505,7 +504,7 @@ ggplot(combined_df |> filter(!is.na(slope)), aes(x = slope, fill = num)) +
   theme_minimal()
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-17-1.png)<!-- --> For this graph,
+![](eda_files/figure-gfm/unnamed-chunk-17-1.png)<!-- --> For this graph,
 we can hardly make any conclusion, because whether the resting
 electrocardiographic results are normal or not, There was no significant
 reduction in the risk of developing the disease.
@@ -523,7 +522,7 @@ ggplot(combined_df |> filter(!is.na(restecg)), aes(x = restecg, fill = num)) +
   theme_minimal()
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
 
 For the graphs list below, we can treat the variables as binary:  
 For those who have defect of thalassemia (6 and 7), they tend to have
@@ -545,7 +544,7 @@ ggplot(combined_df |> filter(!is.na(thal)), aes(x = thal, fill = num)) +
   theme_minimal()
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 ``` r
 # Plot for 'exang' (Exercise-Induced Angina)
@@ -561,7 +560,7 @@ ggplot(combined_df |> filter(!is.na(exang)), aes(x = exang, fill = num)) +
   theme_minimal()
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
 
 ``` r
 ggplot(combined_df |> filter(!is.na(fbs)), aes(x = fbs, fill = num)) +
@@ -576,7 +575,7 @@ ggplot(combined_df |> filter(!is.na(fbs)), aes(x = fbs, fill = num)) +
   theme_minimal()
 ```
 
-![](EDA_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](eda_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 Though some variables may not suitable for the model, we can still
 conclude that the complications of hart disease may be include
