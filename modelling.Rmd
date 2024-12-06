@@ -311,7 +311,7 @@ final_cat_count = cat_count_chisq |>
   left_join(cat_count_case, by = c("variable", "category"))|>
   knitr::kable(digits = 3)
 
-print(final_cat_count)
+final_cat_count
 ```
 
 Based on the result, we can find that except fbs, the rest of all other
