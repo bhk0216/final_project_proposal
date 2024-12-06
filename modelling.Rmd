@@ -9,12 +9,15 @@ editor_options:
     wrap: 72
 ---
 
-```{r setup}
+```{r warning=FALSE, message=FALSE}
 library(tidyverse)
 library(janitor)
 library(car)
 library(skimr)
 library(broom)
+library(caret)
+library(randomForest)
+library(pROC)
 ```
 
 ```{r include = FALSE, eval=FALSE}
@@ -107,8 +110,6 @@ case_data = combined_data_two |>
   filter(num == 1)
 control_data = combined_data_two |>
   filter(num == 0)
-print(case_data)
-print(control_data)
 print(combined_data_two)
 ```
 
@@ -735,7 +736,7 @@ Regional Effects: Patients from Switzerland have much higher odds of
 heart disease compared to Cleveland, Hungarian and Long Beach VA.
 
 ### Separated by region:
-```{r}
+```{r warning=FALSE}
 extract_results <- function(model, region) {
   if (inherits(model, "try-error")) {
     return(data.frame(
@@ -816,7 +817,7 @@ for meaningful analysis.
 
 ### Separated by gender:
 
-```{r}
+```{r warning=FALSE}
 # Filter data for males and females
 male_data <- cleaned_data %>% filter(sex == 1)
 female_data <- cleaned_data %>% filter(sex == 0)
@@ -909,7 +910,8 @@ significant predictors for both males and females.
 Gender-Specific Differences: Stronger effects of cp and exang in females
 suggest potential gender-specific diagnostic markers for heart disease.
 
-## Try Random Forest Classifier!
+
+# Random Forest Classifier
 
 ### A brief intro to Random Forest Algorithm
 
@@ -925,9 +927,6 @@ high-dimensional data well, and provides feature importance scores.
 
 
 ```{r,fig.width=10, fig.height=8}
-library(caret)
-library(randomForest)
-
 # drop out the variable "ca" and "thal" which are have so many missing values inside
 variables = c("cp", "age", "thalach", "oldpeak", "num", "restecg", "fbs","trestbps","region", "slope", "exang")
 data = combined_data_two[, variables]        
@@ -1082,7 +1081,6 @@ cat("R-squared: ", R_squared, "\n")
 
 Then investigate the AUC value and ROC curve to assess the model's ability.
 ```{r}
-library(pROC)
 # Generate AUC value
 rf_prob = predict(rf_model2, testData2, type = "prob")
 roc_curve = roc(testData2$num, rf_prob[, 2], levels = rev(levels(testData2$num)))
