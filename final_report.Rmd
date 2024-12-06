@@ -6,7 +6,7 @@ output:
     toc_float: true
 ---
 
-# Members
+# Member
 
 Stella Koo (bk2959), Yonghao YU (yy3564), Thomas Tang (tt3022), Yixin Zheng (yz4993),
 Yanhao Shen (ys3875)
