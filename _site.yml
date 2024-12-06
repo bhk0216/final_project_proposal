@@ -10,7 +10,7 @@ navbar:
     - text: "Modelling"
       href: modelling.html  
     - text: "Dashboard"
-      href: 
+      href: https://ys3875.shinyapps.io/dashboardcopy/
     - icon: fa-github fa-lg
       href: https://github.com/bhk0216/p8105_final_project
       
