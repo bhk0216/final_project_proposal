@@ -332,7 +332,9 @@ div.tocify {
 <li>
   <a href="modelling.html">Modelling</a>
 </li>
-<li class="dropdown-header">Dashboard</li>
+<li>
+  <a href="https://ys3875.shinyapps.io/dashboardcopy/">Dashboard</a>
+</li>
 <li>
   <a href="https://github.com/bhk0216/p8105_final_project">
     <span class="fa fa-github fa-lg"></span>
@@ -361,7 +363,9 @@ library(janitor)</code></pre>
 ## 
 ##     chisq.test, fisher.test</code></pre>
 <pre class="r"><code>library(car)</code></pre>
+<pre><code>## Warning: package &#39;car&#39; was built under R version 4.4.2</code></pre>
 <pre><code>## Loading required package: carData</code></pre>
+<pre><code>## Warning: package &#39;carData&#39; was built under R version 4.4.2</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;car&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:dplyr&#39;:
@@ -386,7 +390,7 @@ Disease”, “Mild”, “Moderate”, “Severe”, “Very Severe”)))</p>
   clean_names() |&gt; 
   mutate(num = if_else(num == 0, 0, 1)) # Binarize the `num` variable: 0 = no heart disease, 1 = heart disease</code></pre>
 <pre><code>## Rows: 303 Columns: 14
-## ── Column specification ────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## dbl (14): age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpea...
 ## 
@@ -398,7 +402,7 @@ hungary = read_csv(&quot;./data/hungarian.csv&quot;, na = &quot;?&quot;) |&gt;
   clean_names() |&gt; 
   mutate(num = if_else(num == 0, 0, 1))</code></pre>
 <pre><code>## Rows: 294 Columns: 14
-## ── Column specification ────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## dbl (14): age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpea...
 ## 
@@ -410,7 +414,7 @@ long_beach = read_csv(&quot;./data/long_beach_va.csv&quot;, na = &quot;?&quot;) 
   clean_names() |&gt; 
   mutate(num = if_else(num == 0, 0, 1))</code></pre>
 <pre><code>## Rows: 200 Columns: 14
-## ── Column specification ────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## dbl (14): age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpea...
 ## 
@@ -422,7 +426,7 @@ switzerland = read_csv(&quot;./data/switzerland.csv&quot;, na = &quot;?&quot;) |
   clean_names() |&gt; 
   mutate(num = if_else(num == 0, 0, 1))</code></pre>
 <pre><code>## Rows: 123 Columns: 14
-## ── Column specification ────────────────────────────────────────────────────────────────
+## ── Column specification ──────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## dbl (14): age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpea...
 ## 
@@ -1296,7 +1300,8 @@ combined_data &lt;- combined_data %&gt;%
 ## ℹ In argument: `across(...)`.
 ## Caused by warning:
 ## ! NAs introduced by coercion
-## ℹ Run `dplyr::last_dplyr_warnings()` to see the 13 remaining warnings.</code></pre>
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 13 remaining
+##   warnings.</code></pre>
 <p>Dropped variables with excessive missing values (ca and thal).</p>
 <p>Removed rows with missing values in critical variables.</p>
 <p>Converted num to binary (0 = no heart disease, 1 = heart disease) and
@@ -1546,6 +1551,7 @@ class="section level3">
 feature importance trends (the trend is descending according to the
 MeanDecreaseAccuracy)!</h3>
 <pre class="r"><code>library(caret)</code></pre>
+<pre><code>## Warning: package &#39;caret&#39; was built under R version 4.4.2</code></pre>
 <pre><code>## Loading required package: lattice</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;caret&#39;</code></pre>
@@ -1553,6 +1559,7 @@ MeanDecreaseAccuracy)!</h3>
 ## 
 ##     lift</code></pre>
 <pre class="r"><code>library(randomForest)</code></pre>
+<pre><code>## Warning: package &#39;randomForest&#39; was built under R version 4.4.2</code></pre>
 <pre><code>## randomForest 4.7-1.2</code></pre>
 <pre><code>## Type rfNews() to see new features/changes/bug fixes.</code></pre>
 <pre><code>## 
@@ -1732,6 +1739,7 @@ cat(&quot;RMSE of the model is:&quot;, rmse, &quot;\n&quot;)</code></pre>
 <p>Then investigate the AUC value and ROC curve to assess the model’s
 ability.</p>
 <pre class="r"><code>library(pROC)</code></pre>
+<pre><code>## Warning: package &#39;pROC&#39; was built under R version 4.4.2</code></pre>
 <pre><code>## Type &#39;citation(&quot;pROC&quot;)&#39; for a citation.</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;pROC&#39;</code></pre>
@@ -1759,10 +1767,12 @@ ggplot(data = roc_data, aes(x = FPR, y = TPR)) +
     subtitle = paste(&quot;AUC =&quot;, round(auc_value, 2))
   ) +
   theme_minimal()</code></pre>
-<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2
+## 3.4.0.
 ## ℹ Please use `linewidth` instead.
 ## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
+## Call `lifecycle::last_lifecycle_warnings()` to see where this
+## warning was generated.</code></pre>
 <p><img src="modelling_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>The AUC value of 0.85 indicates that the Random Forest model performs
 well in distinguishing between positive and negative classes.

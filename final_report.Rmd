@@ -28,6 +28,9 @@ In the era where data-driven insights are reshaping healthcare, we hope this pro
 
 2.  Examining Predictive Power of Clinical Indicators for Heart Disease in Diverse Populations: predictive accuracy of clinical indicators (like cholesterol, blood pressure) for heart disease across various demographics.
 
+3.  Identifying significant clinical predictors of heart disease and determining their contribution to its likelihood.
+
+
 # Data
 
 The Heart Disease datasets were obtained from UC Irvine's Machine Learning Repository that can be accessed [here](https://archive.ics.uci.edu/dataset/45/heart+disease).
