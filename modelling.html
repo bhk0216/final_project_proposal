@@ -1591,50 +1591,11 @@ regional_results &lt;- bind_rows(cleveland_results, hungarian_results,
 
 # View the consolidated results
 regional_results</code></pre>
-<pre><code>##                         Region    Variable   Estimate   Std_Error     P_Value
-## (Intercept)...1      Cleveland (Intercept)  -6.409349    2.366230 0.006755232
-## age...2              Cleveland         age   0.023053    0.020784 0.267364906
-## sex...3              Cleveland         sex   1.914565    0.396304 0.000001358
-## cp...4               Cleveland          cp   0.800526    0.178457 0.000007263
-## trestbps...5         Cleveland    trestbps   0.019338    0.009695 0.046080113
-## chol...6             Cleveland        chol   0.005199    0.003250 0.109642498
-## fbs...7              Cleveland         fbs  -0.180112    0.442295 0.683845972
-## restecg...8          Cleveland     restecg   0.218637    0.162281 0.177892401
-## thalach...9          Cleveland     thalach  -0.025667    0.009002 0.004354982
-## exang...10           Cleveland       exang   1.016419    0.360867 0.004853456
-## oldpeak...11         Cleveland     oldpeak   0.590849    0.159641 0.000214661
-## (Intercept)...12     Hungarian (Intercept)  0.9770581    5.205882     0.85112
-## age...13             Hungarian         age -0.0816869    0.053147     0.12429
-## sex...14             Hungarian         sex  1.3560685    0.686609     0.04827
-## cp...15              Hungarian          cp  0.7316002    0.377536     0.05264
-## trestbps...16        Hungarian    trestbps  0.0301196    0.018586     0.10512
-## chol...17            Hungarian        chol  0.0008921    0.005399     0.86876
-## fbs...18             Hungarian         fbs 18.0146784 1879.516605     0.99235
-## restecg...19         Hungarian     restecg -0.6322004    0.773307     0.41363
-## thalach...20         Hungarian     thalach -0.0387646    0.019298     0.04456
-## exang...21           Hungarian       exang  0.1502774    0.732507     0.83745
-## oldpeak...22         Hungarian     oldpeak  0.9291678    0.536497     0.08329
-## (Intercept)...23 Long_Beach_VA (Intercept) -0.1366177    4.132572     0.97363
-## age...24         Long_Beach_VA         age  0.0179671    0.043592     0.68022
-## sex...25         Long_Beach_VA         sex  0.4559604    1.494038     0.76022
-## cp...26          Long_Beach_VA          cp -0.0288781    0.430241     0.94649
-## trestbps...27    Long_Beach_VA    trestbps -0.0107978    0.016764     0.51951
-## chol...28        Long_Beach_VA        chol -0.0007261    0.002764     0.79279
-## fbs...29         Long_Beach_VA         fbs  0.1762377    0.742500     0.81238
-## restecg...30     Long_Beach_VA     restecg -0.3073046    0.467326     0.51081
-## thalach...31     Long_Beach_VA     thalach  0.0014728    0.015106     0.92233
-## exang...32       Long_Beach_VA       exang  1.7745828    0.814390     0.02933
-## oldpeak...33     Long_Beach_VA     oldpeak  0.4119425    0.376181     0.27349
-## (Intercept)...34   Switzerland (Intercept)   -486.473      340147      0.9989
-## age...35           Switzerland         age    -17.612        6993      0.9980
-## sex...36           Switzerland         sex    140.075      195305      0.9994
-## cp...37            Switzerland          cp      2.696       12038      0.9998
-## trestbps...38      Switzerland    trestbps      6.806        2736      0.9980
-## fbs...39           Switzerland         fbs    -81.337      146745      0.9996
-## restecg...40       Switzerland     restecg     90.727      141387      0.9995
-## thalach...41       Switzerland     thalach      5.030        1970      0.9980
-## exang...42         Switzerland       exang    254.456      160479      0.9987
-## oldpeak...43       Switzerland     oldpeak   -120.142       84145      0.9989</code></pre>
+<pre><code>##          Region Variable Estimate Std_Error P_Value
+## 1     Cleveland       NA       NA        NA      NA
+## 2     Hungarian       NA       NA        NA      NA
+## 3 Long_Beach_VA       NA       NA        NA      NA
+## 4   Switzerland       NA       NA        NA      NA</code></pre>
 <p>The logistic regression analysis separated by region failed due to
 insufficient sample sizes within each region. Logistic regression
 requires an adequate number of observations to produce reliable
@@ -1700,27 +1661,9 @@ gender_results &lt;- bind_rows(male_results, female_results)
 
 # View the results
 gender_results</code></pre>
-<pre><code>##                  Gender    Variable     Estimate      P_Value
-## (Intercept)...1    Male (Intercept)  0.489143833 7.950815e-01
-## age...2            Male         age  0.011078627 5.269205e-01
-## cp...3             Male          cp  0.624244440 3.313681e-05
-## trestbps...4       Male    trestbps  0.006669625 3.869536e-01
-## chol...5           Male        chol -0.002816539 6.861250e-02
-## fbs...6            Male         fbs -0.077076106 8.326427e-01
-## restecg...7        Male     restecg  0.211261443 1.823296e-01
-## thalach...8        Male     thalach -0.026110546 1.359200e-04
-## exang...9          Male       exang  0.717197611 2.493970e-02
-## oldpeak...10       Male     oldpeak  0.568585698 7.846851e-05
-## (Intercept)...11 Female (Intercept) -7.814925653 2.096088e-02
-## age...12         Female         age  0.011405862 7.061182e-01
-## cp...13          Female          cp  0.927630109 6.578104e-03
-## trestbps...14    Female    trestbps  0.033262774 2.377657e-02
-## chol...15        Female        chol -0.003238931 3.579418e-01
-## fbs...16         Female         fbs  0.917958044 2.931882e-01
-## restecg...17     Female     restecg  0.017694465 9.499839e-01
-## thalach...18     Female     thalach -0.011055801 3.576929e-01
-## exang...19       Female       exang  1.143549158 3.724728e-02
-## oldpeak...20     Female     oldpeak  0.677208667 2.008123e-02</code></pre>
+<pre><code>##   Gender Variable Estimate P_Value
+## 1   Male       NA       NA      NA
+## 2 Female       NA       NA      NA</code></pre>
 <p>Males Significant Predictors (p-value &lt; 0.05):</p>
 <p>Chest Pain (cp): Higher chest pain levels increase the odds of heart
 disease.</p>
@@ -1956,8 +1899,7 @@ ggplot(data = roc_data, aes(x = FPR, y = TPR)) +
 <pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 ## ℹ Please use `linewidth` instead.
 ## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.</code></pre>
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.</code></pre>
 <p><img src="modelling_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 <p>The AUC value of 0.85 indicates that the Random Forest model performs
 well in distinguishing between positive and negative classes.
