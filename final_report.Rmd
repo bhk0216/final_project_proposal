@@ -183,11 +183,15 @@ In the gender-separated analysis, chest pain and exercise-induced angina showed 
 
 ## Random Forest Classifier
 
-Random Forest is an ensemble learning algorithm used for classification and regression tasks. It builds multiple decision trees using bootstrap sampling (random subsets of data) and selects features randomly at each split to increase diversity. Each tree predicts independently, and the final output is determined by majority voting (classification) or averaging (regression). Random Forest is robust to overfitting, handles high-dimensional data well, and provides feature importance scores. For the model building part, first, we construct the model with all predictors and then show the feature importance trends.Then we ranked the predictors descendingly based on the MeanDecreaseAccuracy which measures the decrease in overall model accuracy when the variable is permuted. And we show them in a line plot!
-Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out restecg and fbs predictors that have relatively small impact on ourprediction. And then we can focus on the first seven predictors that
-have more impact on our prediction results! Then, we drop unsignificant features and build the model again, and show the confusion matrix and relevant model performance statistics. Our model
-correctly classified 80.95% of the instances. 2. The true accuracy is expected to fall 95% of the time in (0.7213, 0.8796). The AUC value of 0.85 indicates that the Random Forest model performs well in distinguishing between two different classes. Specifically, there is an 85% chance that the model will rank a randomly chosen positive instance higher than a negative one. This reflects our
-model reaches good discrimination. Lastly, we simulate the prediction which predicts the num with the new data based on the model we built!
+Random Forest is an ensemble learning algorithm used for classification and regression tasks. It builds multiple decision trees using bootstrap sampling (random subsets of data) and selects features randomly at each split to increase diversity. Each tree predicts independently, and the final output is determined by majority voting (classification) or averaging (regression). Random Forest is robust to overfitting, handles high-dimensional data well, and provides feature importance scores. 
+
+For the model building part, first, we construct the model with all predictors and then show the feature importance trends.Then we ranked the predictors descendingly based on the MeanDecreaseAccuracy which measures the decrease in overall model accuracy when the variable is permuted. And we show them in a line plot!
+
+Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out restecg and fbs predictors that have relatively small impact on ourprediction. And then we can focus on the first seven predictors that have more impact on our prediction results! Then, we drop unsignificant features and build the model again, and show the confusion matrix and relevant model performance statistics. 
+
+Our model correctly classified 80.95% of the instances. 2. The true accuracy is expected to fall 95% of the time in (0.7213, 0.8796). The AUC value of 0.85 indicates that the Random Forest model performs well in distinguishing between two different classes. Specifically, there is an 85% chance that the model will rank a randomly chosen positive instance higher than a negative one.
+
+This reflects our model reaches good discrimination. Lastly, we simulate the prediction which predicts the num with the new data based on the model we built!
 
 
 # Discussion
@@ -205,12 +209,7 @@ Male participants generally exhibited higher odds of heart disease, consistent w
 
 The 40-60 age group showed the strongest relationships between key predictors (e.g., maximum heart rate, slope of the ST segment) and heart disease status, possibly reflecting the higher prevalence of heart disease in middle-aged individuals.
 
-The study employed robust exploratory data analysis to understand variable distributions and relationships, guiding the modeling phase effectively.
-
-By utilizing both linear and logistic regression, the analysis captured complex relationships between predictors and heart disease status.
-The investigation of regional, gender-specific, and age group variations enriched the findings, providing a nuanced understanding of heart disease diagnostics.
-
-### Limitation 
+The study employed robust exploratory data analysis to understand variable distributions and relationships, guiding the modeling phase effectively. By utilizing both linear and logistic regression, the analysis captured complex relationships between predictors and heart disease status. The investigation of regional, gender-specific, and age group variations enriched the findings, providing a nuanced understanding of heart disease diagnostics.
 
 A key limitation of this analysis was the small sample size, particularly when the data was stratified by region or gender.
 This resulted in convergence issues and unstable coefficient estimates in the logistic regression models, making it difficult to draw reliable conclusions.
