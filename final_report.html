@@ -557,6 +557,29 @@ heart disease across different regions.</p>
 </div>
 <div id="modelling-analysis" class="section level1">
 <h1>Modelling Analysis</h1>
+<div id="variable-selection" class="section level2">
+<h2>Variable Selection</h2>
+<div id="for-continuous-case" class="section level3">
+<h3>For continuous case</h3>
+<p>For continuous variables, we use mean and standard deviation (std) to
+describe the distribution in overall samples, samples of control(num =
+0), and samples of case(num = 1). Then, we use t-test to examine whether
+the means of these variables are significantly different between case
+group and control group (significance level = 0.05).</p>
+</div>
+<div id="for-discrete-case" class="section level3">
+<h3>For discrete case</h3>
+<p>For binary and categorical variables, we use count (n) and percentage
+(pct) to describe the distribution in overall samples, samples of
+control(num = 0), and samples of case(num = 1). Then, as the data meet
+the assumption, we use chi-sq test to examine whether the distribution
+of these variables are significantly different between case group and
+control group (significance level = 0.05).</p>
+<p>Based on the result of both continuous and discrete cases, we can
+find that except fbs, the rest of all other binary and categorical
+features are significantly different between case and control.</p>
+</div>
+</div>
 <div id="linear-regression-and-the-num-variable" class="section level2">
 <h2>Linear Regression and the <code>num</code> variable</h2>
 <p>Linear regression was conducted to explore the relationships between
@@ -621,28 +644,34 @@ convergence issues. In the gender-separated analysis, chest pain and
 exercise-induced angina showed stronger effects in females compared to
 males, suggesting potential gender-specific diagnostic markers.</p>
 </div>
-<div id="variable-selection" class="section level2">
-<h2>Variable Selection</h2>
-<div id="for-continuous-case" class="section level3">
-<h3>For continuous case</h3>
-<p>For continuous variables, we use mean and standard deviation (std) to
-describe the distribution in overall samples, samples of control(num =
-0), and samples of case(num = 1). Then, we use t-test to examine whether
-the means of these variables are significantly different between case
-group and control group (significance level = 0.05).</p>
-</div>
-<div id="for-discrete-case" class="section level3">
-<h3>For discrete case</h3>
-<p>For binary and categorical variables, we use count (n) and percentage
-(pct) to describe the distribution in overall samples, samples of
-control(num = 0), and samples of case(num = 1). Then, as the data meet
-the assumption, we use chi-sq test to examine whether the distribution
-of these variables are significantly different between case group and
-control group (significance level = 0.05).</p>
-<p>Based on the result of both continuous and discrete cases, we can
-find that except fbs, the rest of all other binary and categorical
-features are significantly different between case and control.</p>
-</div>
+<div id="random-forest-classifier" class="section level2">
+<h2>Random Forest Classifier</h2>
+<p>Random Forest is an ensemble learning algorithm used for
+classification and regression tasks. It builds multiple decision trees
+using bootstrap sampling (random subsets of data) and selects features
+randomly at each split to increase diversity. Each tree predicts
+independently, and the final output is determined by majority voting
+(classification) or averaging (regression). Random Forest is robust to
+overfitting, handles high-dimensional data well, and provides feature
+importance scores. For the model building part, first, we construct the
+model with all predictors and then show the feature importance
+trends.Then we ranked the predictors descendingly based on the
+MeanDecreaseAccuracy which measures the decrease in overall model
+accuracy when the variable is permuted. And we show them in a line plot!
+Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out
+restecg and fbs predictors that have relatively small impact on
+ourprediction. And then we can focus on the first seven predictors that
+have more impact on our prediction results! Then, we drop unsignificant
+features and build the model again, and show the confusion matrix and
+relevant model performance statistics. Our model correctly classified
+80.95% of the instances. 2. The true accuracy is expected to fall 95% of
+the time in (0.7213, 0.8796). The AUC value of 0.85 indicates that the
+Random Forest model performs well in distinguishing between two
+different classes. Specifically, there is an 85% chance that the model
+will rank a randomly chosen positive instance higher than a negative
+one. This reflects our model reaches good discrimination. Lastly, we
+simulate the prediction which predicts the num with the new data based
+on the model we built!</p>
 </div>
 </div>
 <div id="discussion" class="section level1">
