@@ -4,6 +4,7 @@ output:
   html_document:
     toc: true
     toc_float: true
+    code_folding: hide
 editor_options: 
   markdown: 
     wrap: 72
@@ -55,7 +56,7 @@ treated as a categorical variable. example code: cleaned_data \<- data
 \|\> mutate(num = factor(num, levels = c(0, 1, 2, 3, 4), labels = c("No
 Disease", "Mild", "Moderate", "Severe", "Very Severe")))
 
-```{r}
+```{r message=FALSE}
 cleveland <- read_csv("./data/cleveland.csv", na = "?") |> 
   clean_names() |> 
   mutate(num = if_else(num == 0, 0, 1)) # Binarize the `num` variable: 0 = no heart disease, 1 = heart disease
@@ -657,7 +658,7 @@ diagnostic factors across regions/ demographics.
 
 # Logistic Regression Analyses
 
-```{r}
+```{r warning=FALSE}
 cleveland <- read.csv("./data/cleveland.csv", header = FALSE)
 hungarian <- read.csv("./data/hungarian.csv", header = FALSE)
 long_beach <- read.csv("./data/long_beach_va.csv", header = FALSE)
@@ -764,13 +765,16 @@ extract_results <- function(model, region) {
     ))
   }
   
-  data.frame(
+  # Convert to data frame with explicit formatting
+  df <- data.frame(
     Region = region,
     Variable = rownames(coefficients),
-    Estimate = coefficients[, "Estimate"],
-    Std_Error = coefficients[, "Std. Error"],
-    P_Value = coefficients[, "Pr(>|z|)"]
+    Estimate = format(coefficients[, "Estimate"], digits = 4, scientific = FALSE),
+    Std_Error = format(coefficients[, "Std. Error"], digits = 4, scientific = FALSE),
+    P_Value = format(coefficients[, "Pr(>|z|)"], digits = 4, scientific = FALSE)
   )
+  
+  return(df)
 }
 
 # Filter data for each region
@@ -837,7 +841,6 @@ extract_results <- function(model, gender) {
       Gender = gender,
       Variable = NA,
       Estimate = NA,
-      Std_Error = NA,
       P_Value = NA
     ))
   }
@@ -853,7 +856,6 @@ extract_results <- function(model, gender) {
       Gender = gender,
       Variable = NA,
       Estimate = NA,
-      Std_Error = NA,
       P_Value = NA
     ))
   }
@@ -862,7 +864,6 @@ extract_results <- function(model, gender) {
     Gender = gender,
     Variable = rownames(coefficients),
     Estimate = coefficients[, "Estimate"],
-    Std_Error = coefficients[, "Std. Error"],
     P_Value = coefficients[, "Pr(>|z|)"]
   )
 }
