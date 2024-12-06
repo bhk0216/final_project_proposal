@@ -176,9 +176,12 @@ Logistic regression is more appropriate for modeling binary outcomes, as it acco
 ## Logistic Regression
 
 The logistic regression analysis was conducted in three approaches: a combined model including all data, models separated by region, and models separated by gender.
+
 In the combined model, significant predictors of heart disease included chest pain type (cp), exercise-induced angina (exang), maximum heart rate achieved (thalach), and ST depression (oldpeak).
 Additionally, patients from Switzerland showed significantly higher odds of heart disease compared to the reference region (Cleveland), highlighting a regional effect in the combined analysis.
+
 The region-separated analysis was unsuccessful due to small sample sizes within each region, leading to unstable estimates and convergence issues.
+
 In the gender-separated analysis, chest pain and exercise-induced angina showed stronger effects in females compared to males, suggesting potential gender-specific diagnostic markers.
 
 ## Random Forest Classifier
