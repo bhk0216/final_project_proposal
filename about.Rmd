@@ -1,0 +1,47 @@
+---
+title: "About"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+### Stella Koo
+
+E-mail: [bk2959\@cumc.columbia.edu](mailto:bk2959@cumc.columbia.edu){.email}
+
+Columbia Univeristy, Mailman School of Public Health\
+Master of Science in Biostatistics, Public Health and Data Science Track\
+Expected Graduation: June 2026
+
+### Yixin Zheng
+
+E-mail: [yz4993\@cumc.columbia.edu](mailto:yz4993.cumc.columbia.edu)
+
+Columbia Univeristy, Mailman School of Public Health\
+Master of Science in Biostatistics, Theory and Methods Track\
+Expected Graduation: June 2026\
+
+### Thomas Tang
+
+E-mail: [tt3022\@cumc.columbia.edu](mailto:tt3022@cumc.columbia.edu){.email}
+
+Columbia Univeristy, Mailman School of Public Health\
+Master of Science in Biostatistics, Public Health and Data Science Track\
+Expected Graduation: June 2026
+
+### Yonghao Yu
+
+E-mail: [yy3564\@cumc.columbia.edu](mailto:yy3564@cumc.columbia.edu){.email}
+
+Columbia Univeristy, Mailman School of Public Health\
+Master of Science in Biostatistics, Public Health and Data Science Track\
+Expected Graduation: June 2026
+
+### Yanhao Shen
+
+E-mail: [ys3875\@cumc.columbia.edu](mailto:ys3875@cumc.columbia.edu){.email}
+
+Columbia Univeristy, Mailman School of Public Health\
+Master of Science in Biostatistics, Public Health and Data Science Track\
+Expected Graduation: June 2026
