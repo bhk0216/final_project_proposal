@@ -6,7 +6,7 @@ output:
     toc_float: true
 ---
 
-# Motivation
+## Motivation
 
 Heart disease continues to be one of the primary causes of death globally, presenting diverse challenges across different regions, each with its unique set of risk factors.
 While medical advancements have improved diagnostic methods, there remain significant disparities in healthcare access and diagnostic accuracy, particularly in low-resource regions.
@@ -17,7 +17,7 @@ By leveraging datasets from four geographically distinct regions (the U.S., Hung
 
 In the era where data-driven insights are reshaping healthcare, we hope this project could provide accurate predictive models that are adaptable to diverse settings, which can support early intervention and potentially save lives across a wide array of populations and regions.
 
-# Initial Questions
+## Initial Questions
 
 1.  Comparing Diagnostic Factors for Heart Disease Across Regions: explore whether certain diagnostic factors (e.g., cholesterol levels, exercise-induced angina) are more predictive of heart disease in one region compared to others.
 
@@ -25,8 +25,7 @@ In the era where data-driven insights are reshaping healthcare, we hope this pro
 
 3.  Identifying significant clinical predictors of heart disease and determining their contribution to its likelihood.
 
-
-# Data
+## Data Source
 
 The Heart Disease datasets were obtained from UC Irvine's Machine Learning Repository that can be accessed [here](https://archive.ics.uci.edu/dataset/45/heart+disease).
 This directory contains four datasets focused on heart disease diagnosis, each representing a distinct geographic location and with attributes recorded as numeric values.
@@ -59,9 +58,9 @@ This project will focus on these processed datasets, which include the following
 14. num: diagnosis of heart disease (0 = < 50% diameter narrowing; 1 = > 50% diameter narrowing)
 ```
 
-# Exploratory Analysis
+## Exploratory Analysis
 
-## Data Cleaning and Preprocessing
+### Data Cleaning and Preprocessing
 
 The first step in the analysis was data cleaning, which involved handling any missing values across the datasets.
 After addressing missing data, descriptive statistics were computed for each variable to gain an understanding of the data’s distribution.
@@ -84,21 +83,21 @@ This was done to ensure consistency across the datasets.
 The datasets were merged into a single dataset, and an additional column indicating the region of the data was introduced.
 This column helped streamline the analysis, allowing us to perform regional comparisons more efficiently.
 
-## Initial Visualization
+### Initial Visualization
 
 The next step involved visualizing the overall data distribution.
 Specifically, `age` and `sex` were plotted against heart disease status (`num`) to get a general sense of participant distribution across regions.
 The initial visualization revealed that there were significantly more male participants than female participants.
 This finding suggested that sex may not be a strong predictor of heart disease status, and its role in the model should be carefully considered.
 
-## Variable Categorization
+### Variable Categorization
 
 Variables were then categorized into continuous and discrete types:
 
 -   **Continuous variables:** Age (`age`), Resting Blood Pressure (`trestbps`), Maximum Heart Rate Achieved (`thalach`), Depression Induced by Exercise (`oldpeak`)
 -   **Discrete variables:** Sex (`sex`), Chest Pain Type (`cp`), Fasting Blood Sugar (`fbs`), Resting Electrocardiographic Results (`restecg`), Exercise Induced Angina (`exang`)
 
-## Continuous Variables
+### Continuous Variables
 
 To assess potential multicollinearity, pairwise correlations between continuous variables were computed per region.
 The results showed no signs of multicollinearity, as all correlation coefficients were below the threshold of 0.7.
@@ -114,7 +113,7 @@ Key findings emerged from the exploratory data analysis:
 
 Building on these insights, regression analysis was conducted to further investigate the relationships between the diagnostic attributes and heart disease status.
 
-## Discrete Variables
+### Discrete Variables
 
 In our EDA, we have explored the correlation of each variables with num.
 However, when we incorporate them into our model, we also need to consider their validity.
@@ -129,16 +128,16 @@ Anyway, to gain a visualization of each variable with num, we have make some plo
 These variables will all be included in subsequent predictive modeling to improve the accuracy of heart disease diagnosis.
 The visualizations corroborate the statistical findings, providing a comprehensive understanding of how these discrete variables relate to heart disease across different regions.
 
-# Modelling Analysis
+## Modelling Analysis
 
-## Variable Selection
+### Variable Selection
 
-### For continuous case
+#### Continuous
 
 For continuous variables, we use mean and standard deviation (std) to describe the distribution in overall samples, samples of control(num = 0), and samples of case(num = 1).
 Then, we use t-test to examine whether the means of these variables are significantly different between case group and control group (significance level = 0.05).
 
-### For discrete case
+#### Discrete
 
 For binary and categorical variables, we use count (n) and percentage (pct) to describe the distribution in overall samples, samples of control(num = 0), and samples of case(num = 1).
 Then, as the data meet the assumption, we use chi-sq test to examine whether the distribution of these variables are significantly different between case group and control group (significance level = 0.05).
@@ -164,15 +163,14 @@ Additionally, the interaction between exercise-induced angina and region (p = 0.
 However, the interaction between blood pressure and region was not significant (p = 0.10689), suggesting minimal regional variability in the relationship between blood pressure and heart disease.
 
 Despite these findings, linear regression is unsuitable for modeling `num` because it is a categorical variable, violating the assumption of a continuous and normally distributed outcome.
-Residuals in such a model would deviate significantly from normality, as shown by a QQ-plot, and heteroscedasticity would arise due to inconsistent residual variance across predictors.
+Residuals in such a model would deviate significantly from normality, and heteroscedasticity would arise due to inconsistent residual variance across predictors.
 These issues undermine the reliability of regression coefficients.
-Logistic regression is more appropriate for modeling binary outcomes, as it accommodates the categorical nature of `num` and provides more robust and interpretable results.
 
 ## Logistic Regression
 
 The logistic regression analysis was conducted in three approaches: a combined model including all data, models separated by region, and models separated by gender.
 
-In the combined model, significant predictors of heart disease included chest pain type (cp), exercise-induced angina (exang), maximum heart rate achieved (thalach), and ST depression (oldpeak).
+In the combined model, significant predictors of heart disease included chest pain type (`cp`), exercise-induced angina (`exang`), maximum heart rate achieved (`thalach`), and ST depression (`oldpeak`).
 Additionally, patients from Switzerland showed significantly higher odds of heart disease compared to the reference region (Cleveland), highlighting a regional effect in the combined analysis.
 
 The region-separated analysis was unsuccessful due to small sample sizes within each region, leading to unstable estimates and convergence issues.
@@ -181,33 +179,66 @@ In the gender-separated analysis, chest pain and exercise-induced angina showed 
 
 ## Random Forest Classifier
 
-Random Forest is an ensemble learning algorithm used for classification and regression tasks. It builds multiple decision trees using bootstrap sampling (random subsets of data) and selects features randomly at each split to increase diversity. Each tree predicts independently, and the final output is determined by majority voting (classification) or averaging (regression). Random Forest is robust to overfitting, handles high-dimensional data well, and provides feature importance scores. 
+Random Forest is an ensemble learning algorithm used for classification and regression tasks.
+It builds multiple decision trees using bootstrap sampling (random subsets of data) and selects features randomly at each split to increase diversity.
+Each tree predicts independently, and the final output is determined by majority voting (classification) or averaging (regression).
+Random Forest is robust to overfitting, handles high-dimensional data well, and provides feature importance scores.
 
-For the model building part, first, we construct the model with all predictors and then show the feature importance trends.Then we ranked the predictors descendingly based on the MeanDecreaseAccuracy which measures the decrease in overall model accuracy when the variable is permuted. And we show them in a line plot!
+For the model building part, first, we construct the model with all predictors and then show the feature importance trends.Then we ranked the predictors descendingly based on the MeanDecreaseAccuracy which measures the decrease in overall model accuracy when the variable is permuted.
+And we show them in a line plot!
 
-Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out restecg and fbs predictors that have relatively small impact on ourprediction. And then we can focus on the first seven predictors that have more impact on our prediction results! Then, we drop unsignificant features and build the model again, and show the confusion matrix and relevant model performance statistics. 
+Based on the MeanDecreaseAccuracy and MeanDecreaseGini, we can drop out restecg and fbs predictors that have relatively small impact on ourprediction.
+And then we can focus on the first seven predictors that have more impact on our prediction results!
+Then, we drop unsignificant features and build the model again, and show the confusion matrix and relevant model performance statistics.
 
-Our model correctly classified 80.95% of the instances. 2. The true accuracy is expected to fall 95% of the time in (0.7213, 0.8796). The AUC value of 0.85 indicates that the Random Forest model performs well in distinguishing between two different classes. Specifically, there is an 85% chance that the model will rank a randomly chosen positive instance higher than a negative one.
+Our model correctly classified 80.95% of the instances.
+2.
+The true accuracy is expected to fall 95% of the time in (0.7213, 0.8796).
+The AUC value of 0.85 indicates that the Random Forest model performs well in distinguishing between two different classes.
+Specifically, there is an 85% chance that the model will rank a randomly chosen positive instance higher than a negative one.
 
-This reflects our model reaches good discrimination. Lastly, we simulate the prediction which predicts the num with the new data based on the model we built!
+This reflects our model reaches good discrimination.
+Lastly, we simulate the prediction which predicts the num with the new data based on the model we built!
 
+## Dashboard
 
-# Discussion
+We developed a **R Shiny Dashboard** to provide interactive visualizations of the relationships and distributions of key variables in the heart disease dataset.
+The dashboard consists of three primary components:
 
-This analysis explored the relationships between diagnostic attributes and heart disease status across multiple regions, genders, and age groups, using a combination of exploratory data analysis and predictive modeling techniques.
-While the findings provide meaningful insights, they also reveal important limitations that should be addressed in future studies.
-Chest pain type (cp), maximum heart rate (thalach), exercise-induced angina (exang), and ST depression (oldpeak) emerged as the most significant predictors of heart disease across all models.
+1.  **Correlation Heatmap** This section presents a heatmap of the correlation matrix for selected continuous variables (`age`, `trestbps`, `thalach`, `oldpeak`) within the chosen region and age range. The heatmap helps identify patterns and relationships between variables, offering insights into how strongly they are correlated.
 
-Asymptomatic chest pain was the strongest indicator of heart disease among categorical variables, while lower maximum heart rates and higher ST depression values were strongly associated with heart disease among continuous variables.
-Patients from Switzerland exhibited a significantly higher baseline risk of heart disease compared to those from Cleveland, even after adjusting for other predictors.
-This regional effect underscores the potential role of demographic and healthcare disparities in diagnostic outcomes.
+<!-- -->
 
-Gender-separated logistic regression revealed that chest pain type and exercise-induced angina had stronger effects in females, highlighting the importance of gender-specific diagnostic markers in heart disease prediction.
-Male participants generally exhibited higher odds of heart disease, consistent with known gender disparities in heart disease prevalence.
+2.  **Count of Individuals by Sex** This bar chart illustrates the distribution of individuals by sex (`Male` or `Female`) within the selected region and age range. Users can easily assess gender imbalances in the dataset and explore differences in representation across regions.
 
-The 40-60 age group showed the strongest relationships between key predictors (e.g., maximum heart rate, slope of the ST segment) and heart disease status, possibly reflecting the higher prevalence of heart disease in middle-aged individuals.
+3.  **Age Distribution by Sex** This box plot visualizes the age distribution of males and females for the selected region and age range. It highlights demographic differences.
 
-The study employed robust exploratory data analysis to understand variable distributions and relationships, guiding the modeling phase effectively. By utilizing both linear and logistic regression, the analysis captured complex relationships between predictors and heart disease status. The investigation of regional, gender-specific, and age group variations enriched the findings, providing a nuanced understanding of heart disease diagnostics.
+## Conclusion
 
-A key limitation of this analysis was the small sample size, particularly when the data was stratified by region or gender.
-This resulted in convergence issues and unstable coefficient estimates in the logistic regression models, making it difficult to draw reliable conclusions.
+Our analysis identified chest pain type (`cp`), exercise-induced angina (`exang`), maximum heart rate achieved (`thalach`), ST depression (`oldpeak`), resting blood pressure (`trestbps`), region (`region`), and age (`age`) as critical predictors of heart disease.
+
+To balance interpretability and predictive accuracy, we report two final models: a *logistic regression model* and a *Random Forest classifier*.
+
+The logistic regression model is suited for clinical decision-making as it provides interpretable insights into the relationships between predictors and heart disease, adjusting for regional and demographic differences:
+
+-   Strong associations were observed for chest pain type and exercise-induced angina across all regions.
+
+-   Regional differences highlighted higher odds of heart disease in Switzerland compared to Cleveland.
+
+Random Forest model provides robust, accurate predictions across diverse settings, as it achieved 80.95% accuracy and an AUC of 0.85.
+Feature importance analysis ranked `cp`, `exang`, and `thalach` as the most impactful predictors, while less relevant variables such as `restecg` and `fbs` were excluded.
+The model's ability to capture complex, non-linear relationships makes it ideal for large-scale applications.
+
+Together, they form a comprehensive approach to improving heart disease diagnosis and supporting targeted healthcare interventions.
+
+## Discussion
+
+This study highlights the importance of tailored diagnostic approaches in addressing regional and demographic variability in heart disease predictors.
+
+However, limitations such as small sample sizes within regions, gender imbalances, and missing values in certain predictors restrict the generalizability of our results.
+
+Future research should focus on collecting larger, more diverse datasets and incorporating additional predictors, such as genetic or lifestyle factors, to better capture the complexity of heart disease risk.
+Real-time and longitudinal studies could also improve model adaptability to evolving healthcare needs.
+
+These insights can guide healthcare systems in refining diagnostic criteria, allocating resources efficiently, and developing personalized interventions.
+By addressing disparities in healthcare access and diagnostic accuracy, our models provide a foundation for enhancing patient outcomes globally.

@@ -358,8 +358,8 @@ div.tocify {
 </div>
 
 
-<div id="motivation" class="section level1">
-<h1>Motivation</h1>
+<div id="motivation" class="section level2">
+<h2>Motivation</h2>
 <p>Heart disease continues to be one of the primary causes of death
 globally, presenting diverse challenges across different regions, each
 with its unique set of risk factors. While medical advancements have
@@ -383,8 +383,8 @@ adaptable to diverse settings, which can support early intervention and
 potentially save lives across a wide array of populations and
 regions.</p>
 </div>
-<div id="initial-questions" class="section level1">
-<h1>Initial Questions</h1>
+<div id="initial-questions" class="section level2">
+<h2>Initial Questions</h2>
 <ol style="list-style-type: decimal">
 <li><p>Comparing Diagnostic Factors for Heart Disease Across Regions:
 explore whether certain diagnostic factors (e.g., cholesterol levels,
@@ -398,8 +398,8 @@ various demographics.</p></li>
 determining their contribution to its likelihood.</p></li>
 </ol>
 </div>
-<div id="data" class="section level1">
-<h1>Data</h1>
+<div id="data-source" class="section level2">
+<h2>Data Source</h2>
 <p>The Heart Disease datasets were obtained from UC Irvine’s Machine
 Learning Repository that can be accessed <a
 href="https://archive.ics.uci.edu/dataset/45/heart+disease">here</a>.
@@ -431,10 +431,10 @@ following attributes:</p>
 13. thal: 3 = normal; 6 = fixed defect; 7 = reversable defect
 14. num: diagnosis of heart disease (0 = &lt; 50% diameter narrowing; 1 = &gt; 50% diameter narrowing)</code></pre>
 </div>
-<div id="exploratory-analysis" class="section level1">
-<h1>Exploratory Analysis</h1>
-<div id="data-cleaning-and-preprocessing" class="section level2">
-<h2>Data Cleaning and Preprocessing</h2>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory Analysis</h2>
+<div id="data-cleaning-and-preprocessing" class="section level3">
+<h3>Data Cleaning and Preprocessing</h3>
 <p>The first step in the analysis was data cleaning, which involved
 handling any missing values across the datasets. After addressing
 missing data, descriptive statistics were computed for each variable to
@@ -461,8 +461,8 @@ column indicating the region of the data was introduced. This column
 helped streamline the analysis, allowing us to perform regional
 comparisons more efficiently.</p>
 </div>
-<div id="initial-visualization" class="section level2">
-<h2>Initial Visualization</h2>
+<div id="initial-visualization" class="section level3">
+<h3>Initial Visualization</h3>
 <p>The next step involved visualizing the overall data distribution.
 Specifically, <code>age</code> and <code>sex</code> were plotted against
 heart disease status (<code>num</code>) to get a general sense of
@@ -472,8 +472,8 @@ female participants. This finding suggested that sex may not be a strong
 predictor of heart disease status, and its role in the model should be
 carefully considered.</p>
 </div>
-<div id="variable-categorization" class="section level2">
-<h2>Variable Categorization</h2>
+<div id="variable-categorization" class="section level3">
+<h3>Variable Categorization</h3>
 <p>Variables were then categorized into continuous and discrete
 types:</p>
 <ul>
@@ -487,8 +487,8 @@ Resting Electrocardiographic Results (<code>restecg</code>), Exercise
 Induced Angina (<code>exang</code>)</li>
 </ul>
 </div>
-<div id="continuous-variables" class="section level2">
-<h2>Continuous Variables</h2>
+<div id="continuous-variables" class="section level3">
+<h3>Continuous Variables</h3>
 <p>To assess potential multicollinearity, pairwise correlations between
 continuous variables were computed per region. The results showed no
 signs of multicollinearity, as all correlation coefficients were below
@@ -512,8 +512,8 @@ weaker in others (Long Beach, Switzerland).</li>
 further investigate the relationships between the diagnostic attributes
 and heart disease status.</p>
 </div>
-<div id="discrete-variables" class="section level2">
-<h2>Discrete Variables</h2>
+<div id="discrete-variables" class="section level3">
+<h3>Discrete Variables</h3>
 <p>In our EDA, we have explored the correlation of each variables with
 num. However, when we incorporate them into our model, we also need to
 consider their validity. As a result, although variable slope and thal
@@ -553,20 +553,20 @@ comprehensive understanding of how these discrete variables relate to
 heart disease across different regions.</p>
 </div>
 </div>
-<div id="modelling-analysis" class="section level1">
-<h1>Modelling Analysis</h1>
-<div id="variable-selection" class="section level2">
-<h2>Variable Selection</h2>
-<div id="for-continuous-case" class="section level3">
-<h3>For continuous case</h3>
+<div id="modelling-analysis" class="section level2">
+<h2>Modelling Analysis</h2>
+<div id="variable-selection" class="section level3">
+<h3>Variable Selection</h3>
+<div id="continuous" class="section level4">
+<h4>Continuous</h4>
 <p>For continuous variables, we use mean and standard deviation (std) to
 describe the distribution in overall samples, samples of control(num =
 0), and samples of case(num = 1). Then, we use t-test to examine whether
 the means of these variables are significantly different between case
 group and control group (significance level = 0.05).</p>
 </div>
-<div id="for-discrete-case" class="section level3">
-<h3>For discrete case</h3>
+<div id="discrete" class="section level4">
+<h4>Discrete</h4>
 <p>For binary and categorical variables, we use count (n) and percentage
 (pct) to describe the distribution in overall samples, samples of
 control(num = 0), and samples of case(num = 1). Then, as the data meet
@@ -576,6 +576,7 @@ control group (significance level = 0.05).</p>
 <p>Based on the result of both continuous and discrete cases, we can
 find that except fbs, the rest of all other binary and categorical
 features are significantly different between case and control.</p>
+</div>
 </div>
 </div>
 <div id="linear-regression-and-the-num-variable" class="section level2">
@@ -618,13 +619,10 @@ between blood pressure and heart disease.</p>
 <p>Despite these findings, linear regression is unsuitable for modeling
 <code>num</code> because it is a categorical variable, violating the
 assumption of a continuous and normally distributed outcome. Residuals
-in such a model would deviate significantly from normality, as shown by
-a QQ-plot, and heteroscedasticity would arise due to inconsistent
-residual variance across predictors. These issues undermine the
-reliability of regression coefficients. Logistic regression is more
-appropriate for modeling binary outcomes, as it accommodates the
-categorical nature of <code>num</code> and provides more robust and
-interpretable results.</p>
+in such a model would deviate significantly from normality, and
+heteroscedasticity would arise due to inconsistent residual variance
+across predictors. These issues undermine the reliability of regression
+coefficients.</p>
 </div>
 <div id="logistic-regression" class="section level2">
 <h2>Logistic Regression</h2>
@@ -632,8 +630,9 @@ interpretable results.</p>
 combined model including all data, models separated by region, and
 models separated by gender.</p>
 <p>In the combined model, significant predictors of heart disease
-included chest pain type (cp), exercise-induced angina (exang), maximum
-heart rate achieved (thalach), and ST depression (oldpeak).
+included chest pain type (<code>cp</code>), exercise-induced angina
+(<code>exang</code>), maximum heart rate achieved
+(<code>thalach</code>), and ST depression (<code>oldpeak</code>).
 Additionally, patients from Switzerland showed significantly higher odds
 of heart disease compared to the reference region (Cleveland),
 highlighting a regional effect in the combined analysis.</p>
@@ -675,48 +674,81 @@ instance higher than a negative one.</p>
 simulate the prediction which predicts the num with the new data based
 on the model we built!</p>
 </div>
+<div id="dashboard" class="section level2">
+<h2>Dashboard</h2>
+<p>We developed a <strong>R Shiny Dashboard</strong> to provide
+interactive visualizations of the relationships and distributions of key
+variables in the heart disease dataset. The dashboard consists of three
+primary components:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Correlation Heatmap</strong> This section presents a heatmap
+of the correlation matrix for selected continuous variables
+(<code>age</code>, <code>trestbps</code>, <code>thalach</code>,
+<code>oldpeak</code>) within the chosen region and age range. The
+heatmap helps identify patterns and relationships between variables,
+offering insights into how strongly they are correlated.</li>
+</ol>
+<!-- -->
+<ol start="2" style="list-style-type: decimal">
+<li><p><strong>Count of Individuals by Sex</strong> This bar chart
+illustrates the distribution of individuals by sex (<code>Male</code> or
+<code>Female</code>) within the selected region and age range. Users can
+easily assess gender imbalances in the dataset and explore differences
+in representation across regions.</p></li>
+<li><p><strong>Age Distribution by Sex</strong> This box plot visualizes
+the age distribution of males and females for the selected region and
+age range. It highlights demographic differences.</p></li>
+</ol>
 </div>
-<div id="discussion" class="section level1">
-<h1>Discussion</h1>
-<p>This analysis explored the relationships between diagnostic
-attributes and heart disease status across multiple regions, genders,
-and age groups, using a combination of exploratory data analysis and
-predictive modeling techniques. While the findings provide meaningful
-insights, they also reveal important limitations that should be
-addressed in future studies. Chest pain type (cp), maximum heart rate
-(thalach), exercise-induced angina (exang), and ST depression (oldpeak)
-emerged as the most significant predictors of heart disease across all
-models.</p>
-<p>Asymptomatic chest pain was the strongest indicator of heart disease
-among categorical variables, while lower maximum heart rates and higher
-ST depression values were strongly associated with heart disease among
-continuous variables. Patients from Switzerland exhibited a
-significantly higher baseline risk of heart disease compared to those
-from Cleveland, even after adjusting for other predictors. This regional
-effect underscores the potential role of demographic and healthcare
-disparities in diagnostic outcomes.</p>
-<p>Gender-separated logistic regression revealed that chest pain type
-and exercise-induced angina had stronger effects in females,
-highlighting the importance of gender-specific diagnostic markers in
-heart disease prediction. Male participants generally exhibited higher
-odds of heart disease, consistent with known gender disparities in heart
-disease prevalence.</p>
-<p>The 40-60 age group showed the strongest relationships between key
-predictors (e.g., maximum heart rate, slope of the ST segment) and heart
-disease status, possibly reflecting the higher prevalence of heart
-disease in middle-aged individuals.</p>
-<p>The study employed robust exploratory data analysis to understand
-variable distributions and relationships, guiding the modeling phase
-effectively. By utilizing both linear and logistic regression, the
-analysis captured complex relationships between predictors and heart
-disease status. The investigation of regional, gender-specific, and age
-group variations enriched the findings, providing a nuanced
-understanding of heart disease diagnostics.</p>
-<p>A key limitation of this analysis was the small sample size,
-particularly when the data was stratified by region or gender. This
-resulted in convergence issues and unstable coefficient estimates in the
-logistic regression models, making it difficult to draw reliable
-conclusions.</p>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>Our analysis identified chest pain type (<code>cp</code>),
+exercise-induced angina (<code>exang</code>), maximum heart rate
+achieved (<code>thalach</code>), ST depression (<code>oldpeak</code>),
+resting blood pressure (<code>trestbps</code>), region
+(<code>region</code>), and age (<code>age</code>) as critical predictors
+of heart disease.</p>
+<p>To balance interpretability and predictive accuracy, we report two
+final models: a <em>logistic regression model</em> and a <em>Random
+Forest classifier</em>.</p>
+<p>The logistic regression model is suited for clinical decision-making
+as it provides interpretable insights into the relationships between
+predictors and heart disease, adjusting for regional and demographic
+differences:</p>
+<ul>
+<li><p>Strong associations were observed for chest pain type and
+exercise-induced angina across all regions.</p></li>
+<li><p>Regional differences highlighted higher odds of heart disease in
+Switzerland compared to Cleveland.</p></li>
+</ul>
+<p>Random Forest model provides robust, accurate predictions across
+diverse settings, as it achieved 80.95% accuracy and an AUC of 0.85.
+Feature importance analysis ranked <code>cp</code>, <code>exang</code>,
+and <code>thalach</code> as the most impactful predictors, while less
+relevant variables such as <code>restecg</code> and <code>fbs</code>
+were excluded. The model’s ability to capture complex, non-linear
+relationships makes it ideal for large-scale applications.</p>
+<p>Together, they form a comprehensive approach to improving heart
+disease diagnosis and supporting targeted healthcare interventions.</p>
+</div>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
+<p>This study highlights the importance of tailored diagnostic
+approaches in addressing regional and demographic variability in heart
+disease predictors.</p>
+<p>However, limitations such as small sample sizes within regions,
+gender imbalances, and missing values in certain predictors restrict the
+generalizability of our results.</p>
+<p>Future research should focus on collecting larger, more diverse
+datasets and incorporating additional predictors, such as genetic or
+lifestyle factors, to better capture the complexity of heart disease
+risk. Real-time and longitudinal studies could also improve model
+adaptability to evolving healthcare needs.</p>
+<p>These insights can guide healthcare systems in refining diagnostic
+criteria, allocating resources efficiently, and developing personalized
+interventions. By addressing disparities in healthcare access and
+diagnostic accuracy, our models provide a foundation for enhancing
+patient outcomes globally.</p>
 </div>
 
 

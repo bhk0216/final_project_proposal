@@ -5,16 +5,15 @@ output:
     toc: true
     toc_float: true
 ---
-Influence of Diagnostic Factors on Heart Disease Across Regions
+Regional and Demographic Variations in Clinical Predictors of Heart Disease
 
 ![](cvd.PNG)
 
 ## **Introduction**
 
-Heart disease is a leading cause of death globally, with various risk factors and disparities in diagnostic accuracy and healthcare access, particularly in low-resource regions.
+Heart disease remains a leading cause of death worldwide, influenced by diverse risk factors and disparities in diagnostic accuracy, healthcare access, and regional prevalence patterns. Understanding these variations is critical for tailoring effective interventions.
 
-This project analyzes data from the [UCI Heart Disease dataset](https://archive.ics.uci.edu/dataset/45/heart+disease) across four regions to assess the associations of clinical indicators with heart disease across regions and demographics.
-By developing predictive models tailored to diverse settings, we aim to support early interventions and improve outcomes across varied populations.
+This project analyzes data from the [UCI Heart Disease dataset](https://archive.ics.uci.edu/dataset/45/heart+disease) to explore the predictive power of clinical indicators on heart disease across regions and demographics. We aim to identify the most significant predictors of heart disease and their relative contributions to its likelihood.
 
 ## **Screencast** 
 
