@@ -9,15 +9,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Stella Koo (bk2959), Yanhao Shen (ys3875), Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)" />
 
 
-<title>Influence of Diagnostic Attributes on Heart Disease Across Regions</title>
+<title>Heart Disease Research Project</title>
 
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -30,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -222,6 +224,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -229,6 +294,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -249,16 +324,19 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="final_report.html">Report</a>
-</li>
-<li>
   <a href="eda.html">EDA</a>
 </li>
 <li>
   <a href="modelling.html">Modelling</a>
 </li>
 <li>
+  <a href="final_report.html">Report</a>
+</li>
+<li>
   <a href="https://ys3875.shinyapps.io/dashboardcopy/">Dashboard</a>
+</li>
+<li>
+  <a href="about.html">About</a>
 </li>
 <li>
   <a href="https://github.com/bhk0216/p8105_final_project">
@@ -275,23 +353,60 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Influence of Diagnostic Attributes on Heart
-Disease Across Regions</h1>
-<h4 class="author">Stella Koo (bk2959), Yanhao Shen (ys3875), Yixin
-Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)</h4>
+<h1 class="title toc-ignore">Heart Disease Research Project</h1>
 
 </div>
 
 
+<p>Influence of Diagnostic Factors on Heart Disease Across Regions</p>
 <p><img src="cvd.PNG" /></p>
+<div id="introduction" class="section level2">
+<h2><strong>Introduction</strong></h2>
+<p>Heart disease is a leading cause of death globally, with various risk
+factors and disparities in diagnostic accuracy and healthcare access,
+particularly in low-resource regions.</p>
+<p>This project analyzes data from the <a
+href="https://archive.ics.uci.edu/dataset/45/heart+disease">UCI Heart
+Disease dataset</a> across four regions to assess the associations of
+clinical indicators with heart disease across regions and demographics.
+By developing predictive models tailored to diverse settings, we aim to
+support early interventions and improve outcomes across varied
+populations.</p>
+</div>
+<div id="screencast" class="section level2">
+<h2><strong>Screencast</strong></h2>
+<p>Click on the video below to learn about our project, explore the
+site’s content, and discover the key findings.</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/6p1_L_elU_g" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
 </iframe>
+</div>
+<div id="group-members" class="section level2">
+<h2><strong>Group members</strong></h2>
+<p>learn more about us in the <a href="about.html">About</a>
+section.</p>
+<p>Stella Koo (bk2959)</p>
+<p>Yixin Zheng (yz4993)</p>
+<p>Thomas Tang (tt3022)</p>
+<p>Yonghao YU (yy3564)</p>
+<p>Yanhao Shen (ys3875)</p>
+</div>
+<div id="side-note" class="section level2">
+<h2><strong>Side Note</strong></h2>
 <p>The Repository for Dashboard can be found in the following link: <a
 href="https://github.com/ys3875/dashboard1.github.io.git"
 class="uri">https://github.com/ys3875/dashboard1.github.io.git</a></p>
+</div>
+<div id="special-thanks" class="section level2">
+<h2><strong>Special Thanks</strong></h2>
+<p>Special thanks to Professor Jeff Goldsmith for guiding us through the
+data science course. And also to our TA, Ms. Peng Su, for her invaluable
+assistance with building the website!</p>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -324,6 +439,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

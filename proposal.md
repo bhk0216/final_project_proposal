@@ -1,11 +1,6 @@
 Proposal
 ================
 
-## Group members (names and UNIs)
-
-Stella Koo (bk2959), Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao
-YU (yy3564), Yanhao Shen (ys3875)
-
 ## Project Title
 
 The Influence of Diagnostic Attributes on Heart Disease Across Regions

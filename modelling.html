@@ -16,7 +16,7 @@
 <script src="site_libs/header-attrs-2.28/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/journal.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -328,16 +328,19 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="final_report.html">Report</a>
-</li>
-<li>
   <a href="eda.html">EDA</a>
 </li>
 <li>
   <a href="modelling.html">Modelling</a>
 </li>
 <li>
+  <a href="final_report.html">Report</a>
+</li>
+<li>
   <a href="https://ys3875.shinyapps.io/dashboardcopy/">Dashboard</a>
+</li>
+<li>
+  <a href="about.html">About</a>
 </li>
 <li>
   <a href="https://github.com/bhk0216/p8105_final_project">
@@ -375,40 +378,41 @@ library(broom)
 library(caret)
 library(randomForest)
 library(pROC)</code></pre>
-<p>Interpreting num: The values for <code>num</code> represent the
-degree of narrowing in the coronary arteries: 0: No disease (&lt; 50%
-diameter narrowing). 1-4: Increasing severity of disease (&gt; 50%
-diameter narrowing, with different severities).</p>
-<p>For convenience, this variable will binarized: 0: No heart disease
-(value 0 in num). 1: Presence of heart disease (values 1-4 in num).</p>
-<p>*but if we want to analyze the severity of heart disease num will be
-treated as a categorical variable. example code: cleaned_data &lt;- data
-|&gt; mutate(num = factor(num, levels = c(0, 1, 2, 3, 4), labels = c(“No
-Disease”, “Mild”, “Moderate”, “Severe”, “Very Severe”)))</p>
+<div id="data-import" class="section level2">
+<h2>Data Import</h2>
+</div>
+<div id="interpreting-num" class="section level2">
+<h2>Interpreting <code>num</code>:</h2>
+<p>The values for <code>num</code> represent the degree of narrowing in
+the coronary arteries:</p>
+<p>0: No disease (&lt; 50% diameter narrowing).</p>
+<p>1-4: Increasing severity of disease (&gt; 50% diameter narrowing,
+with different severities).</p>
+<p>For convenience, this variable will binarized:</p>
+<p>0: No heart disease (value 0 in <code>num</code>).</p>
+<p>1: Presence of heart disease (values 1-4 in <code>num</code>).</p>
+<p>*but if we want to analyze the severity of heart disease in the
+future, <code>num</code> will be treated as a categorical variable.</p>
+<p>example code:
+<code>cleaned_data &lt;- data |&gt; mutate(num = factor(num, levels = c(0, 1, 2, 3, 4), labels = c("No Disease", "Mild", "Moderate", "Severe", "Very Severe")))</code></p>
 <pre class="r"><code>cleveland &lt;- read_csv(&quot;./data/cleveland.csv&quot;, na = &quot;?&quot;) |&gt; 
   clean_names() |&gt; 
   mutate(num = if_else(num == 0, 0, 1)) # Binarize the `num` variable: 0 = no heart disease, 1 = heart disease
 
-# |&gt; drop_na() Removes rows with any missing values (optional, adjust as needed)
-
 hungary = read_csv(&quot;./data/hungarian.csv&quot;, na = &quot;?&quot;) |&gt; 
   clean_names() |&gt; 
   mutate(num = if_else(num == 0, 0, 1))
-# |&gt; drop_na() Removes rows with any missing values (optional, adjust as needed)
 
 long_beach = read_csv(&quot;./data/long_beach_va.csv&quot;, na = &quot;?&quot;) |&gt; 
   clean_names() |&gt; 
   mutate(num = if_else(num == 0, 0, 1))
-# |&gt; drop_na() Removes rows with any missing values (optional, adjust as needed)
 
 switzerland = read_csv(&quot;./data/switzerland.csv&quot;, na = &quot;?&quot;) |&gt; 
   clean_names() |&gt; 
-  mutate(num = if_else(num == 0, 0, 1))
-# |&gt; drop_na() Removes rows with any missing values (optional, adjust as needed) </code></pre>
-<pre class="r"><code>cor(cleveland$chol, cleveland$num, use = &quot;complete.obs&quot;)</code></pre>
-<pre><code>## [1] 0.08516361</code></pre>
-<div id="variable-selection" class="section level1">
-<h1>Variable Selection</h1>
+  mutate(num = if_else(num == 0, 0, 1))</code></pre>
+</div>
+<div id="variable-selection" class="section level2">
+<h2>Variable Selection</h2>
 <div id="data-preprocessing" class="section level3">
 <h3>Data Preprocessing</h3>
 <pre class="r"><code>cleveland$region = &quot;Cleveland&quot;
@@ -973,29 +977,27 @@ other binary and categorical features are significantly different
 between case and control.</p>
 </div>
 </div>
-<div id="linear-regression" class="section level1">
-<h1>Linear Regression</h1>
+<div id="linear-regression" class="section level2">
+<h2>Linear Regression</h2>
 <p>Here we are prioritizing MLR over SLR, as the nature of heart disease
-involves multiple interacting factors (e.g., age, chest pain, and
-exercise-induced angina). Modeling a single variable may oversimplify
-these relationships and fail to capture their combined effects. For
-example, maximum heart rate (thalach) may interact with age or region,
-making it more meaningful to include these interactions in a multiple
-linear regression (MLR) model.</p>
-<ol style="list-style-type: decimal">
-<li>Comparing Diagnostic Factors for Heart Disease Across Regions
-Explore whether certain diagnostic factors (e.g., blood pressure and
-exercise-induced angina) are more predictive of heart disease in one
-region compared to others.</li>
-</ol>
+involves multiple interacting factors. Modeling a single variable may
+oversimplify these relationships and fail to capture their combined
+effects. For example, maximum heart rate (<code>thalach</code>) may
+interact with age or region, making it more meaningful to include these
+interactions in a multiple linear regression (MLR) model.</p>
+<div id="comparing-diagnostic-factors-for-heart-disease-across-regions"
+class="section level3">
+<h3>Comparing Diagnostic Factors for Heart Disease Across Regions</h3>
+<p><em>Explore whether certain diagnostic factors (e.g., blood pressure
+and exercise-induced angina) are more predictive of heart disease in one
+region compared to others.</em></p>
 <p>Due to the high number of missing values in the <code>chol</code>
 column (particularly in Switzerland), alternative predictors should be
 used for analysis. Include an interaction term between the diagnostic
 factor and region to capture regional differences.</p>
-<div id="checking-datasets" class="section level2">
-<h2>checking datasets</h2>
-<pre class="r"><code># Add numeric encoding for regions
-region_data &lt;- combined_data_two %&gt;%
+<div id="checking-dataset" class="section level4">
+<h4>checking dataset</h4>
+<pre class="r"><code>region_data &lt;- combined_data_two %&gt;%
   mutate(region_factor = as.factor(region))
 
 ggplot(region_data, aes(x = trestbps, y = num)) +
@@ -1005,8 +1007,7 @@ ggplot(region_data, aes(x = trestbps, y = num)) +
        x = &quot;Blood Pressure (trestbps)&quot;, 
        y = &quot;Heart Disease (num)&quot;) +
   theme_minimal()</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(region_data, aes(x = exang, y = num)) +
   geom_point(aes(color = region_factor), alpha = 0.6) +
   geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = region_factor)) +
@@ -1014,26 +1015,26 @@ ggplot(region_data, aes(x = trestbps, y = num)) +
        x = &quot;Exercise-Induced Angina (exang)&quot;, 
        y = &quot;Heart Disease (num)&quot;) +
   theme_minimal()</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
 <pre class="r"><code>ggplot(region_data, aes(x = factor(num))) +
   geom_bar(aes(fill = region_factor), position = &quot;dodge&quot;) +
   labs(title = &quot;Distribution of Heart Disease Status by Region&quot;, 
        x = &quot;Heart Disease Status (num)&quot;, 
        y = &quot;Count&quot;) +
   theme_minimal()</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
-<p>Scatterplots of Resting Blood Pressure (trestbps) show variability in
-the relationship between trestbps and heart disease across regions,
-justifying the inclusion of interaction terms. Plot for Exercise-Induced
-Angina (exang) is consistent within regions but varying slopes between
-regions highlight the importance of interaction effects. Plot of
-prevalence of Heart Disease (num) shows substantial differences in
-baseline heart disease prevalence across regions further support
-modeling regional effects.</p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
+<p>Scatterplots of Resting Blood Pressure (<code>trestbps</code>) show
+variability in the relationship between <code>trestbps</code> and heart
+disease across regions, justifying the inclusion of interaction terms.
+Plot for Exercise-Induced Angina (<code>exang</code>) is consistent
+within regions but varying slopes between regions highlight the
+importance of interaction effects. Plot of prevalence of Heart Disease
+(<code>num</code>) shows substantial differences in baseline heart
+disease prevalence across regions further support modeling regional
+effects.</p>
 </div>
-<div id="hypothesis-mlr" class="section level2">
-<h2>Hypothesis (MLR):</h2>
+<div id="hypothesis-mlr" class="section level4">
+<h4>Hypothesis (MLR):</h4>
 <p>Null Hypothesis (<span class="math inline">\(H_0\)</span>: Blood
 pressure (<code>trestbps</code>) and exercise-induced angina
 (<code>exang</code>) do not significantly predict heart
@@ -1046,7 +1047,7 @@ the relationship differs by region.</p>
 \text{trestbps} + \beta_2 \cdot \text{exang} + \beta_3 \cdot
 \text{region} + \beta_4 \cdot \text{(trestbps*region)} + \beta_5 \cdot
 \text{(exang*region)} + \epsilon \]</span></p>
-<pre class="r"><code># fit the model with interaction terms
+<pre class="r"><code># fit the model
 region_model &lt;- lm(num ~ trestbps * region_factor + exang * region_factor, data = region_data)
 
 # summarize the model
@@ -1067,7 +1068,7 @@ region_model_summary</code></pre>
 ## 10 region_factor2:exang    -0.159       0.111     -1.43   1.53e- 1
 ## 11 region_factor3:exang    -0.154       0.121     -1.28   2.02e- 1
 ## 12 region_factor4:exang    -0.397       0.139     -2.85   4.49e- 3</code></pre>
-<pre class="r"><code># Test significance of interaction terms
+<pre class="r"><code># test significance
 anova(region_model)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
@@ -1081,33 +1082,39 @@ anova(region_model)</code></pre>
 ## Residuals              519 89.184  0.1718                      
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>From the code result, we see that - <code>trestbps</code> is positive
-(<span class="math inline">\(\beta_1 = 0.0035\)</span>) and significant
-with p = 0.01027, indicating higher resting blood pressure modestly
-increases the likelihood of heart disease. - <code>exang</code> is
-positive (<span class="math inline">\(\beta_2 = 0.4504\)</span>) and
-highly significant with p &lt; 2*10^-16, suggesting that individuals
-with exercise-induced angina are more likely to have heart disease. -
-<code>region_factor</code> shows significant differences in the baseline
-likelihood of heart disease across regions: Baseline risk is higher in
-<code>Region 3 - Long Beach</code> (<span class="math inline">\(\beta =
-0.9268\)</span>, p = 0.00439) and <code>Region 4 - Switzerland</code>
-(<span class="math inline">\(\beta = 1.010\)</span>, p = 0.02857)
-compared to Cleveland. Significant interaction for
-<code>exang * region</code> (p = 0.02355), Lower impact of
-exercise-induced angina in Switzerland (<span
-class="math inline">\(\beta = -0.3967\)</span>, p = 0.00449).
-Interaction for <code>trestbps * region</code> is marginal (p=0.10689),
-with some variability in Region 3 (Long Beach, p=0.05446).</p>
-<ol start="2" style="list-style-type: decimal">
-<li>Examining Predictive Power of Clinical Indicators for Heart Disease
-in Diverse Populations Investigate how gender and age group modify the
-relationships between key predictors and heart disease.</li>
-</ol>
+<p>From the code result, we see that</p>
+<p><code>trestbps</code> is positive (<span
+class="math inline">\(\beta_1 = 0.0035\)</span>) and significant with p
+= 0.01027, indicating higher resting blood pressure modestly increases
+the likelihood of heart disease.</p>
+<p><code>exang</code> is positive (<span class="math inline">\(\beta_2 =
+0.4504\)</span>) and highly significant with p &lt; 2*10^-16, suggesting
+that individuals with exercise-induced angina are more likely to have
+heart disease.</p>
+<p><code>region_factor</code> shows significant differences in the
+baseline likelihood of heart disease across regions:</p>
+<p>Baseline risk is higher in <code>Region 3 - Long Beach</code> (<span
+class="math inline">\(\beta = 0.9268\)</span>, p = 0.00439) and
+<code>Region 4 - Switzerland</code> (<span class="math inline">\(\beta =
+1.010\)</span>, p = 0.02857) compared to Cleveland.</p>
+<p>Significant interaction for <code>exang * region</code> (p =
+0.02355), Lower impact of exercise-induced angina in Switzerland (<span
+class="math inline">\(\beta = -0.3967\)</span>, p = 0.00449).</p>
+<p>Interaction for <code>trestbps * region</code> is marginal
+(p=0.10689), with some variability in Region 3 (Long Beach,
+p=0.05446).</p>
 </div>
-<div id="checking-datasets-1" class="section level2">
-<h2>checking datasets</h2>
-<pre class="r"><code># Refine age groups
+</div>
+<div
+id="examining-predictive-power-of-clinical-indicators-for-heart-disease-in-diverse-populations"
+class="section level3">
+<h3>Examining Predictive Power of Clinical Indicators for Heart Disease
+in Diverse Populations</h3>
+<p><em>Investigate how gender and age group modify the relationships
+between key predictors and heart disease.</em></p>
+<div id="checking-dataset-1" class="section level4">
+<h4>checking dataset</h4>
+<pre class="r"><code># create age groups
 age_group_data &lt;- combined_data_two %&gt;%
   mutate(age_group = case_when(
     age &lt; 40 ~ &quot;Under 40&quot;,
@@ -1125,8 +1132,7 @@ ggplot(age_group_data, aes(x = thalach, y = num, color = as.factor(sex))) +
     color = &quot;Gender&quot;
   ) +
   theme_minimal()</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(age_group_data, aes(x = slope, y = num, color = as.factor(sex))) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = sex)) +
@@ -1137,8 +1143,7 @@ ggplot(age_group_data, aes(x = thalach, y = num, color = as.factor(sex))) +
     color = &quot;Gender&quot;
   ) +
   theme_minimal()</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
 <pre class="r"><code>ggplot(age_group_data, aes(x = num, fill = as.factor(sex))) +
   geom_density(alpha = 0.5) +
   labs(
@@ -1147,17 +1152,17 @@ ggplot(age_group_data, aes(x = thalach, y = num, color = as.factor(sex))) +
     fill = &quot;Gender&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
-<p>A negative trend between thalach and heart disease status is visible
-for both genders, with a steeper decline for males. This indicates that
-lower maximum heart rate is more predictive of heart disease in males.
-The relationship between slope and heart disease shows distinct patterns
-across genders. Males have a stronger positive association between
-higher slope values and the presence of heart disease. Heart disease
-status distribution (num) differs between genders, with males (gender=1)
-showing a higher density near num=1 (presence of heart disease). This
-aligns with previous findings of gender disparities in heart disease
-prevalence.</p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<p>A negative trend between <code>thalach</code> and <code>num</code> is
+visible for both genders, with a more rapid decline for males. This
+indicates that lower maximum heart rate is more predictive of heart
+disease in males. The relationship between slope and heart disease shows
+distinct patterns across genders. Males have a stronger positive
+association between higher slope values and the presence of heart
+disease. Heart disease status distribution (<code>num</code>) differs
+between genders, with males (gender=1) showing a higher density near
+<code>num</code>=1 (presence of heart disease). This aligns with
+previous findings of gender disparities in heart disease prevalence.</p>
 <pre class="r"><code>ggplot(age_group_data, aes(x = thalach, y = num, color = age_group)) +
   geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = age_group)) +
   geom_point(alpha = 0.5) +
@@ -1168,8 +1173,7 @@ prevalence.</p>
     color = &quot;Age Group&quot;
   ) +
   theme_minimal()</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>ggplot(age_group_data, aes(x = slope, y = num, color = age_group)) +
   geom_smooth(method = &quot;lm&quot;, se = FALSE, aes(group = age_group)) +
   geom_point(alpha = 0.5) +
@@ -1180,8 +1184,7 @@ prevalence.</p>
     color = &quot;Age Group&quot;
   ) +
   theme_minimal()</code></pre>
-<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-11-2.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
 <pre class="r"><code>ggplot(age_group_data, aes(x = num, fill = age_group)) +
   geom_density(alpha = 0.5) +
   labs(
@@ -1190,23 +1193,28 @@ prevalence.</p>
     fill = &quot;Age Group&quot;
   ) +
   theme_minimal()</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-11-3.png" width="672" />
-A negative association is evident across all age groups, but the trend
-is most pronounced for the 40-60 age group. For individuals under 40 and
-above 60, the association is weaker, potentially due to smaller sample
-sizes or varying risk factors. Similar trends are observed across age
-groups, with higher slope values generally predicting heart disease. The
-relationship is strongest in the 40-60 age group, which also has the
-largest sample size. The distribution of heart disease status differs by
-age group. Individuals aged 40-60 have the highest density near num=1
+<p><img src="modelling_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+<p>A negative association is evident across all age groups, but the
+trend is most pronounced for the 40-60 age group.</p>
+<p>For individuals under 40 and above 60, the association is weaker,
+potentially due to smaller sample sizes or varying risk factors.</p>
+<p>Similar trends are observed across age groups, with higher slope
+values generally predicting heart disease. The relationship is strongest
+in the 40-60 age group, which also has the largest sample size.</p>
+<p>The distribution of heart disease status differs by age group.
+Individuals aged 40-60 have the highest density near <code>num</code>=1
 (presence of heart disease), reflecting their higher overall risk in
 this dataset.</p>
-<p>##Hypothesis 1 (MLR): - <strong>Null Hypothesis (H_0):</strong> The
+</div>
+<div id="hypothesis-for-gender-mlr" class="section level4">
+<h4>Hypothesis for Gender (MLR):</h4>
+<p>Null Hypothesis (<span class="math inline">\(H_0\)</span>): The
 relationships between maximum heart rate (<code>thalach</code>), the
 slope of the ST segment (<code>slope</code>), and heart disease status
-(<code>num</code>) do not vary by gender - <strong>Alternative
-Hypothesis (H_a):</strong> At least one of these predictors interacts
-with gender to significantly influence heart disease status.</p>
+(<code>num</code>) do not vary by gender Alternative Hypothesis (<span
+class="math inline">\(H_a\)</span>): At least one of these predictors
+interacts with gender to significantly influence heart disease
+status.</p>
 <p><span class="math display">\[ num = \beta_0 + \beta_1 \cdot
 \text{thalach} + \beta_2 \cdot \text{fbs} + \beta_3 \cdot \text{slope} +
 \beta_4 \cdot \text{sex} + \beta_5 \cdot \text{thalach*sex} +
@@ -1214,24 +1222,28 @@ with gender to significantly influence heart disease status.</p>
 <code>thalach</code> and <code>slope</code> were identified as strong
 predictors in logistic regression and EDA. <code>fbs</code> has weaker
 significance and may be excluded in a stepwise selection process.</p>
-<p>##Hypothesis 2 (MLR): - <strong>Null Hypothesis (H_0):</strong> The
+</div>
+<div id="hypothesis-for-age-group-mlr" class="section level4">
+<h4>Hypothesis for Age Group (MLR):</h4>
+<p>Null Hypothesis (<span class="math inline">\(H_0\)</span>): The
 relationships between maximum heart rate (<code>thalach</code>), the
 slope of the ST segment (<code>slope</code>), and heart disease status
-(<code>num</code>) do not vary by age group - <strong>Alternative
-Hypothesis (H_a):</strong> At least one of these predictors interacts
-with age group to significantly influence heart disease status. <span
-class="math display">\[ num = \beta_0 + \beta_1 \cdot \text{thalach} +
-\beta_2 \cdot \text{fbs} + \beta_3 \cdot \text{slope} + \beta_4 \cdot
-\text{age_group} + \beta_5 \cdot \text{thalach*age_group} + \beta_6
-\cdot \text{slope*age_group} + \epsilon \]</span></p>
-<pre class="r"><code># Separate the data by gender
+(<code>num</code>) do not vary by age group</p>
+<p>Alternative Hypothesis (<span class="math inline">\(H_a\)</span>): At
+least one of these predictors interacts with age group to significantly
+influence heart disease status. <span class="math display">\[ num =
+\beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{fbs} +
+\beta_3 \cdot \text{slope} + \beta_4 \cdot \text{age_group} + \beta_5
+\cdot \text{thalach*age_group} + \beta_6 \cdot \text{slope*age_group} +
+\epsilon \]</span></p>
+<pre class="r"><code># separate by gender
 male_data &lt;- combined_data_two %&gt;% filter(sex == 1)
 female_data &lt;- combined_data_two %&gt;% filter(sex == 0)
 
-# Fit the model with interaction terms for gender
+# fit the model
 gender_model &lt;- lm(num ~ thalach * sex + slope * sex + fbs, data = combined_data_two)
 
-# Summarize the model results
+# summarize the results
 gender_model_summary &lt;- broom::tidy(gender_model)
 gender_model_summary</code></pre>
 <pre><code>## # A tibble: 7 × 5
@@ -1244,7 +1256,7 @@ gender_model_summary</code></pre>
 ## 5 fbs          0.0226    0.0487      0.463 0.644     
 ## 6 thalach:sex -0.00421   0.00193    -2.19  0.0292    
 ## 7 sex:slope   -0.196     0.0771     -2.55  0.0111</code></pre>
-<pre class="r"><code># Test the significance of interaction terms
+<pre class="r"><code># test the significance
 anova(gender_model)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
@@ -1259,33 +1271,35 @@ anova(gender_model)</code></pre>
 ## Residuals   524 86.014  0.1641                       
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>Model Results: Significant Variables: Sex (p &lt; 0.001): Being male
-significantly increases the likelihood of heart disease, with males
-having higher odds of heart disease compared to females. Slope (p &lt;
-0.001): A higher slope value (indicating abnormal ST depression) is
-associated with an increased likelihood of heart disease. thalach:sex (p
-= 0.029): The interaction between heart rate and gender is significant.
-This suggests that the relationship between heart rate and heart disease
-differs between males and females. Specifically, males may show a
-stronger association with heart rate. sex:slope (p = 0.011): The
-relationship between the slope of the ST segment and heart disease
-differs significantly between males and females, with a stronger
-association in males.</p>
+<p>From the code result, we see that</p>
+<p><code>Sex</code> (p &lt; 0.001): Being male significantly increases
+the likelihood of heart disease, with males having higher odds of heart
+disease compared to females.</p>
+<p><code>Slope</code> (p &lt; 0.001): A higher slope value (indicating
+abnormal ST depression) is associated with an increased likelihood of
+heart disease.</p>
+<p><code>thalach:sex</code> (p = 0.029): The interaction between heart
+rate and gender is significant. This suggests that the relationship
+between heart rate and heart disease differs between males and females.
+Specifically, males may show a stronger association with heart rate.</p>
+<p><code>sex:slope</code> (p = 0.011): The relationship between the
+slope of the ST segment and heart disease differs significantly between
+males and females, with a stronger association in males.</p>
 <p>The interaction terms <code>thalach:sex</code> and
 <code>sex:slope</code> are significant, indicating that the
 relationships between thalach and heart disease, as well as slope and
 heart disease, differ by gender. Hence, gender modifies the relationship
 between clinical indicators and heart disease, supporting the
 alternative hypothesis.</p>
-<pre class="r"><code># Summary of the dataset by age group
+<pre class="r"><code># summary of the dataset by age group
 table(age_group_data$age_group)</code></pre>
 <pre><code>## 
 ##    40-60 Above 60 Under 40 
 ##      362      143       26</code></pre>
-<pre class="r"><code># Fit the model with interaction terms for age group
+<pre class="r"><code># fit the model
 age_group_model &lt;- lm(num ~ thalach * age_group + slope * age_group + fbs, data = age_group_data)
 
-# Summarize the model results
+# summarize the  results
 age_group_summary &lt;- broom::tidy(age_group_model)
 age_group_summary</code></pre>
 <pre><code>## # A tibble: 10 × 5
@@ -1301,7 +1315,7 @@ age_group_summary</code></pre>
 ##  8 thalach:age_groupUnder 40 -0.00761  0.00446     -1.71  8.83e- 2
 ##  9 age_groupAbove 60:slope   -0.0517   0.0722      -0.716 4.74e- 1
 ## 10 age_groupUnder 40:slope   -0.124    0.170       -0.728 4.67e- 1</code></pre>
-<pre class="r"><code># Test the significance of interaction terms
+<pre class="r"><code># test the significance
 anova(age_group_model)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
@@ -1316,29 +1330,33 @@ anova(age_group_model)</code></pre>
 ## Residuals         521 94.183  0.1808                       
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<p>Model Results: Significant Variables: thalach (p &lt; 0.001): Lower
-maximum heart rates are consistently associated with a higher likelihood
-of heart disease, regardless of age group. Slope (p &lt; 0.001): A
-steeper ST segment slope is associated with a higher likelihood of heart
-disease, with a stronger association across age groups. Age Group (Above
-60) (p = 0.203): The effect of being above 60 years old is not
-significant, suggesting that this group does not have a significantly
-different relationship with heart disease compared to the 40-60 group.
-Age Group (Under 40) (p = 0.103): Similar to the above-60 group, the
-under-40 age group shows a marginally non-significant relationship with
-heart disease.</p>
-<p>Interaction Effects: thalach:age_groupAbove 60 (p = 0.168): This
-interaction is non-significant, indicating that the effect of heart rate
-on heart disease does not vary significantly for individuals over 60.
-thalach:age_groupUnder 40 (p = 0.113): The interaction between heart
-rate and being under 40 is marginally non-significant, suggesting only a
-weak difference in how heart rate affects heart disease for younger
-individuals.</p>
+<p>From the code result, we see that</p>
+<p><code>thalach</code> (p &lt; 0.001): Lower maximum heart rates are
+consistently associated with a higher likelihood of heart disease,
+regardless of age group.</p>
+<p><code>slope</code> (p &lt; 0.001): A steeper ST segment slope is
+associated with a higher likelihood of heart disease, with a stronger
+association across age groups.</p>
+<p><code>age_groupAbove 60</code> (p = 0.203): The effect of being above
+60 years old is not significant, suggesting that this group does not
+have a significantly different relationship with heart disease compared
+to the 40-60 group.</p>
+<p><code>age_groupUnder 40</code> (p = 0.103): Similar to the above-60
+group, the under-40 age group shows a marginally non-significant
+relationship with heart disease.</p>
+<p>Interaction Effects:</p>
+<p><code>thalach:age_groupAbove 60</code> (p = 0.168): This interaction
+is non-significant, indicating that the effect of heart rate on heart
+disease does not vary significantly for individuals over 60.</p>
+<p><code>thalach:age_groupUnder 40</code> (p = 0.113): The interaction
+between heart rate and being under 40 is marginally non-significant,
+suggesting only a weak difference in how heart rate affects heart
+disease for younger individuals.</p>
 <p>Therefore, age does not modify the relationship between heart rate,
 slope, and heart disease in a statistically significant way. This does
 not support the alternative hypothesis, and the null hypothesis cannot
 be rejected.</p>
-<pre class="r"><code># Stepwise selection for the gender interaction model
+<pre class="r"><code># stepwise selection for the gender interaction model
 stepwise_gender_model &lt;- step(gender_model, direction = &quot;both&quot;)</code></pre>
 <pre><code>## Start:  AIC=-952.55
 ## num ~ thalach * sex + slope * sex + fbs
@@ -1357,7 +1375,7 @@ stepwise_gender_model &lt;- step(gender_model, direction = &quot;both&quot;)</co
 ## + fbs          1   0.03520 86.014 -952.55
 ## - thalach:sex  1   0.75965 86.809 -951.67
 ## - sex:slope    1   1.03649 87.086 -949.98</code></pre>
-<pre class="r"><code># Summarize the stepwise model results
+<pre class="r"><code># summarize the stepwise model results
 stepwise_gender_summary &lt;- broom::tidy(stepwise_gender_model)
 stepwise_gender_summary</code></pre>
 <pre><code>## # A tibble: 6 × 5
@@ -1369,7 +1387,7 @@ stepwise_gender_summary</code></pre>
 ## 4 slope        0.326     0.0676      4.83  0.00000180
 ## 5 thalach:sex -0.00413   0.00192    -2.15  0.0318    
 ## 6 sex:slope   -0.193     0.0766     -2.51  0.0122</code></pre>
-<pre class="r"><code># Stepwise selection for the age group interaction model
+<pre class="r"><code># stepwise selection for the age group interaction model
 stepwise_age_group_model &lt;- step(age_group_model, direction = &quot;both&quot;)</code></pre>
 <pre><code>## Start:  AIC=-898.37
 ## num ~ thalach * age_group + slope * age_group + fbs
@@ -1399,7 +1417,7 @@ stepwise_age_group_model &lt;- step(age_group_model, direction = &quot;both&quot
 ## + fbs                1    0.0519  94.349 -901.44
 ## + age_group:slope    2    0.1610  94.240 -900.06
 ## - slope              1    5.8231 100.224 -873.37</code></pre>
-<pre class="r"><code># Summarize the stepwise model results
+<pre class="r"><code># summarize the stepwise model results
 stepwise_age_group_summary &lt;- broom::tidy(stepwise_age_group_model)
 stepwise_age_group_summary</code></pre>
 <pre><code>## # A tibble: 7 × 5
@@ -1413,10 +1431,11 @@ stepwise_age_group_summary</code></pre>
 ## 6 thalach:age_groupAbove 60  0.00247  0.00179       1.38 1.68e- 1
 ## 7 thalach:age_groupUnder 40 -0.00593  0.00373      -1.59 1.13e- 1</code></pre>
 <p>For the gender interaction model: The stepwise selection process
-retained thalach, sex, slope, and their interactions
-(<code>thalach:sex</code> and <code>sex:slope</code>) as significant
-predictors. The model explains 31.87% of the variance in heart disease
-status, with a highly significant F-statistic. This suggests that the
+retained <code>thalach</code>, <code>sex</code>, <code>slope</code>, and
+their interactions (<code>thalach:sex</code> and <code>sex:slope</code>)
+as significant predictors.</p>
+<p>The model explains 31.87% of the variance in heart disease status,
+with a highly significant F-statistic. This suggests that the
 significant interactions between gender and clinical indicators (heart
 rate and slope) are important predictors for heart disease. So the final
 model should be <span class="math display">\[ num = \beta_0 + \beta_1
@@ -1424,23 +1443,25 @@ model should be <span class="math display">\[ num = \beta_0 + \beta_1
 \text{sex} + \beta_4 \cdot \text{thalach*sex} + \beta_5  \cdot
 \text{slope*sex} + \epsilon \]</span></p>
 <p>For the age group interaction model: After stepwise selection, the
-final model includes thalach, age_group, slope, and
-<code>thalach:age_group</code>. The model explains 25.26% of the
-variance, with significant contributions from thalach and slope.
-However, the interaction terms (thalach:age_group) are not significant,
-confirming that age group does not substantially modify the
-relationships between heart disease and these clinical indicators. So
-the final model should be <span class="math display">\[ num = \beta_0 +
-\beta_1 \cdot \text{thalach} + \beta_2 \cdot \text{slope} + \beta_3
-\cdot \text{age_group} + \beta_4 \cdot \text{thalach*age_group}+
-\epsilon \]</span> Given that num (heart disease status) is binary,
-future analyses should consider logistic regression for more accurate
-risk prediction based on diagnostic factors across regions/
+final model includes <code>thalach</code>, <code>age_group</code>,
+<code>slope</code>, and <code>thalach:age_group</code>. The model
+explains 25.26% of the variance, with significant contributions from
+thalach and slope. However, the interaction terms (thalach:age_group)
+are not significant, confirming that age group does not substantially
+modify the relationships between heart disease and these clinical
+indicators. So the final model should be <span class="math display">\[
+num = \beta_0 + \beta_1 \cdot \text{thalach} + \beta_2 \cdot
+\text{slope} + \beta_3 \cdot \text{age_group} + \beta_4 \cdot
+\text{thalach*age_group}+ \epsilon \]</span></p>
+<p>However, given that <code>num</code> (heart disease status) is
+binary, future analyses should consider logistic regression for more
+accurate risk prediction based on diagnostic factors across regions/
 demographics.</p>
 </div>
 </div>
-<div id="logistic-regression-analyses" class="section level1">
-<h1>Logistic Regression Analyses</h1>
+</div>
+<div id="logistic-regression-analyses" class="section level2">
+<h2>Logistic Regression Analyses</h2>
 <pre class="r"><code>cleveland &lt;- read.csv(&quot;./data/cleveland.csv&quot;, header = FALSE)
 hungarian &lt;- read.csv(&quot;./data/hungarian.csv&quot;, header = FALSE)
 long_beach &lt;- read.csv(&quot;./data/long_beach_va.csv&quot;, header = FALSE)
@@ -1744,11 +1765,10 @@ females suggest potential gender-specific diagnostic markers for heart
 disease.</p>
 </div>
 </div>
-<div id="random-forest-classifier" class="section level1">
-<h1>Random Forest Classifier</h1>
-<div id="a-brief-intro-to-random-forest-algorithm"
-class="section level3">
-<h3>A brief intro to Random Forest Algorithm</h3>
+<div id="random-forest-classifier" class="section level2">
+<h2>Random Forest Classifier</h2>
+<div id="random-forest-algorithm" class="section level3">
+<h3>Random Forest Algorithm</h3>
 <p>Random Forest is an ensemble learning algorithm used for
 classification and regression tasks. It builds multiple decision trees
 using bootstrap sampling (random subsets of data) and selects features
@@ -1758,12 +1778,11 @@ independently, and the final output is determined by majority voting
 overfitting, handles high-dimensional data well, and provides feature
 importance scores.</p>
 </div>
-<div
-id="first-construct-the-model-with-all-predictors-and-then-show-the-feature-importance-trends-the-trend-is-descending-according-to-the-meandecreaseaccuracy"
-class="section level3">
-<h3>First, construct the model with all predictors and then show the
+<div id="construct-the-model" class="section level3">
+<h3>Construct the model</h3>
+<p>First, construct the model with all predictors and then show the
 feature importance trends (the trend is descending according to the
-MeanDecreaseAccuracy)!</h3>
+MeanDecreaseAccuracy)!</p>
 <pre class="r"><code># drop out the variable &quot;ca&quot; and &quot;thal&quot; which are have so many missing values inside
 variables = c(&quot;cp&quot;, &quot;age&quot;, &quot;thalach&quot;, &quot;oldpeak&quot;, &quot;num&quot;, &quot;restecg&quot;, &quot;fbs&quot;,&quot;trestbps&quot;,&quot;region&quot;, &quot;slope&quot;, &quot;exang&quot;)
 data = combined_data_two[, variables]        
@@ -1803,7 +1822,7 @@ ggplot(var_imp_df, aes(x = reorder(Variable, -MeanDecreaseAccuracy))) +
        color = &quot;Metric&quot;) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 0, hjust = 1))</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-19-1.png" width="960" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-18-1.png" width="960" /></p>
 <p>Then we ranked the predictors descendingly based on the
 MeanDecreaseAccuracy which measures the decrease in overall model
 accuracy when the variable is permuted. And we show them in a line plot!
@@ -1812,11 +1831,10 @@ restecg and fbs predictors that have relatively small impact on our
 prediction. And then we can focus on the first seven predictors that
 have more impact on our prediction results!</p>
 </div>
-<div
-id="then-drop-unsignificant-features-and-build-the-model-again-show-the-confusion-matrix"
-class="section level3">
-<h3>Then, drop unsignificant features and build the model again, show
-the confusion matrix</h3>
+<div id="confusion-matrix" class="section level3">
+<h3>Confusion Matrix</h3>
+<p>Then, drop unsignificant features and build the model again, show the
+confusion matrix</p>
 <pre class="r"><code>variables2 = c(&quot;cp&quot;, &quot;thalach&quot;, &quot;oldpeak&quot;, &quot;num&quot;,&quot;trestbps&quot;,&quot;region&quot;,&quot;slope&quot;, &quot;exang&quot;,&quot;age&quot;)
 data2 = combined_data_two[, variables2]
 data2$num = as.factor(data2$num)
@@ -1854,11 +1872,11 @@ ggplot(data = cm_df, aes(x = Predicted, y = Actual, fill = Proportion)) +
     legend.title = element_text(size = 12),
     legend.text = element_text(size = 10)
   )</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
-<div id="extracting-detailed-statistics-from-the-confusion-matrix"
-class="section level3">
-<h3>Extracting detailed statistics from the confusion matrix</h3>
+<div id="extracting" class="section level3">
+<h3>Extracting</h3>
+<p>Extracting detailed statistics from the confusion matrix</p>
 <pre class="r"><code>stats = rf_conf_matrix2$overall
 class_stats = rf_conf_matrix2$byClass
 
@@ -1908,9 +1926,9 @@ identification of positives. 6. High specificity (0.8125) indicates good
 identification of negatives. 7. Balanced accuracy (0.8087) suggests the
 model balances its performance across both classes well.</p>
 </div>
-<div id="compute-r-squared-and-rmse-for-the-classification-model"
-class="section level3">
-<h3>Compute R-squared and RMSE for the classification model</h3>
+<div id="classification-model" class="section level3">
+<h3>Classification model</h3>
+<p>Compute R-squared and RMSE for the classification model</p>
 <pre class="r"><code>rf_pred_numeric = as.numeric(rf_pred2)
 test_actual_numeric = as.numeric(testData2$num)
 
@@ -1958,7 +1976,7 @@ ggplot(data = roc_data, aes(x = FPR, y = TPR)) +
 ## This warning is displayed once every 8 hours.
 ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 ## generated.</code></pre>
-<p><img src="modelling_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="modelling_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>The AUC value of 0.85 indicates that the Random Forest model performs
 well in distinguishing between positive and negative classes.
 Specifically, there is an 85% chance that the model will rank a randomly

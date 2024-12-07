@@ -1,13 +1,47 @@
 ---
-title: "Influence of Diagnostic Attributes on Heart Disease Across Regions"
-author: "Stella Koo (bk2959), Yanhao Shen (ys3875), Yixin Zheng (yz4993), Thomas Tang (tt3022), Yonghao YU (yy3564)"
-output:
-  html_document
+title: "Heart Disease Research Project"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
 ---
+Influence of Diagnostic Factors on Heart Disease Across Regions
 
 ![](cvd.PNG)
 
+## **Introduction**
+
+Heart disease is a leading cause of death globally, with various risk factors and disparities in diagnostic accuracy and healthcare access, particularly in low-resource regions.
+
+This project analyzes data from the [UCI Heart Disease dataset](https://archive.ics.uci.edu/dataset/45/heart+disease) across four regions to assess the associations of clinical indicators with heart disease across regions and demographics.
+By developing predictive models tailored to diverse settings, we aim to support early interventions and improve outcomes across varied populations.
+
+## **Screencast** 
+
+Click on the video below to learn about our project, explore the site's content, and discover the key findings.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/6p1_L_elU_g" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-The Repository for Dashboard can be found in the following link: https://github.com/ys3875/dashboard1.github.io.git
+## **Group members**
+
+learn more about us in the [About](about.html) section.
+
+Stella Koo (bk2959)
+
+Yixin Zheng (yz4993)
+
+Thomas Tang (tt3022)
+
+Yonghao YU (yy3564)
+
+Yanhao Shen (ys3875)
+
+
+## **Side Note**
+
+The Repository for Dashboard can be found in the following link: <https://github.com/ys3875/dashboard1.github.io.git>
+
+
+## **Special Thanks**
+Special thanks to Professor Jeff Goldsmith for guiding us through the data science course. And also to our TA, Ms. Peng Su, for her invaluable assistance with building the website! 
+

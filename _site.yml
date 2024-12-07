@@ -3,17 +3,19 @@ output_dir: "."
 navbar:
   title: "Home"
   right:
-    - text: "Report"
-      href: final_report.html  
     - text: "EDA"
       href: eda.html  
     - text: "Modelling"
       href: modelling.html  
+    - text: "Report"
+      href: final_report.html  
     - text: "Dashboard"
       href: https://ys3875.shinyapps.io/dashboardcopy/
+    - text: "About"
+      href: about.html
     - icon: fa-github fa-lg
       href: https://github.com/bhk0216/p8105_final_project
       
 output:
   html_document:
-    theme: cosmo
+    theme: journal

@@ -1,15 +1,10 @@
 ---
 title: "Report"
-output:   
+output: 
   html_document:
     toc: true
     toc_float: true
 ---
-
-# Members
-
-Stella Koo (bk2959), Yonghao YU (yy3564), Thomas Tang (tt3022), Yixin Zheng (yz4993),
-Yanhao Shen (ys3875)
 
 # Motivation
 
